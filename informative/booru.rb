@@ -44,7 +44,7 @@ class Booru
 	end
 		
 	def execute (m, selector, tags)
-		m.reply(generate_url(selector, tags) || "Format: !booru <selector> <tags>; Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}, true);
+		m.reply(generate_url(selector, tags) || "You have #{!tags ? 'listed no tags' : 'used an invalid selector'}. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}, true);
 	end
 
 end
