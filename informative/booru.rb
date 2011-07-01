@@ -40,11 +40,11 @@ class Booru
 	def generate_selector_list
 		selectors = [];
 		@@selectors.each {|key, value| selectors << key.to_s; }
-		selectors.join(", ");
+		selectors[0..-2].join(", ") + ", and " + selectors[-1]
 	end
 		
 	def execute (m, selector, tags)
-		m.reply(generate_url(selector, tags) || "Format: !booru <selector> <comma-separated list of tags>; Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}, true);
+		m.reply(generate_url(selector, tags) || "Format: !booru <selector> <tags>; Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}, true);
 	end
 
 end
