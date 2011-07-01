@@ -1,5 +1,9 @@
 # -*- coding: UTF-8 -*-
 
+# Just a note: This was probably my first Cinch plugin, and I was in the process
+# of converting it to use JSON instead of a plain text file. I might try to
+# finish it at some point.
+
 require 'cinch'
 require 'date'
 require 'net/ftp'
