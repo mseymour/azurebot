@@ -28,7 +28,7 @@ class Weather
 		case modifier
 			when :default
 				template % {
-					:location => w.measurements[0].query,
+					:location => w.measurements[0].query.split.map(&:capitalize).join(" "),
 					:condition => w.current.condition,
 					:temperature => "#{w.temperature.c}°C",
 					:dew_point => "#{w.dew_point.c}°C",
@@ -39,7 +39,7 @@ class Weather
 					:sunset => w.measurements[1].current.sun.set }
 			when "-f"
 				template % {
-					:location => w.measurements[0].query,
+					:location => w.measurements[0].query.split.map(&:capitalize).join(" "),
 					:condition => w.current.condition,
 					:temperature => "#{w.temperature.to_s.sub(/\s/,'°')}",
 					:dew_point => "#{w.dew_point.to_s.sub(/\s/,'°')}",
