@@ -41,7 +41,7 @@
 * `!dict <string>` _Unfinished/not working_
 * `!jargon <string>`
 * `!autogreet [on|off]`
-* `!qdb [id]` _Currently only accesses (#shakesoda's)[irc://irc.freenode.net/shakesoda] QDB._
+* `!qdb [id]` _Currently only accesses [#shakesoda's](irc://irc.freenode.net/shakesoda) QDB._
 * `!request [request]` _Unfinished/unused_
 * `!tw<itter> [username] <-info>`
 * `!uptime` _unfinished_
