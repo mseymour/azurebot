@@ -29,34 +29,34 @@ require_relative 'plugins/informative/qdb'
 require_relative 'plugins/informative/uptime'
 
 bot = Cinch::Bot.new do
-  configure do |c|
-    c.nick            = $nick
-    c.server          = "irc.freenode.net"
-    c.port            = 6697
-    c.verbose         = true
-    c.channels        = ["#shakesoda"]
+	configure do |c|
+		c.nick            = $nick
+		c.server          = "irc.freenode.net"
+		c.port            = 6697
+		c.verbose         = true
+		c.channels        = ["#shakesoda"]
 		c.realname        = "Questions? /msg Azure."
 		c.user            = "AB2"
 		#c.password        = "password"
 		c.ssl.use         = true
-		
+
 		c.plugins.plugins = [
 			Cinch::Plugins::BasicCTCP, 
 			Cinch::Plugins::DownForEveryone, 
 			Cinch::Plugins::Identify,
-			
+
 			Commands, Kickban, Toolbox, PrivToolbox,
 			Attack, Decide, Dice, Dongs, Fb2kControl, Rainbow, Ryder,
 			BotInfo, Booru, Twitter5, UrbanDictionary, Weather, QDB, Uptime
 		]
-		
+
 		# Bot admins
 		admins = %w{ azure }
-		
+
 		c.plugins.options[Twitter5] = YAML::load_file('D:\ircbot\twitter_oauth_config.yaml')
-    c.plugins.options[Toolbox] = { :admins => admins }
-    c.plugins.options[PrivToolbox] = { :admins => admins }
-    c.plugins.options[BotInfo] = { :template => %q{D:\ircbot\info_template.txt}, :owner => admins[0] }
+		c.plugins.options[Toolbox] = { :admins => admins }
+		c.plugins.options[PrivToolbox] = { :admins => admins }
+		c.plugins.options[BotInfo] = { :template => %q{D:\ircbot\info_template.txt}, :owner => admins[0] }
 		
   end
 end
