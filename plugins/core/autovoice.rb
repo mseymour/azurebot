@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 require 'cinch'
+require_relative '../../modules/authenticate'
 
 # Give this bot ops in a channel and it'll auto voice visitors
 #
@@ -9,16 +10,13 @@ require 'cinch'
 
 class Autovoice
   include Cinch::Plugin
+  include Authenticate
+  
   plugin "autovoice"
   listen_to :join
   react_on :channel
   help "autovoice (on|off) -- turns autovoice on or off."
   match /autovoice (on|off)$/
-
-  def check_user(user)
-    user.refresh # be sure to refresh the data, or someone could steal the nick
-    config[:admins].include?(user.authname)
-  end
   
   def listen(m)
     #@bot.debug("#{self.class.name} → #{config[:enabled_channels].inspect}");
@@ -34,7 +32,7 @@ class Autovoice
 
   def execute(m, option)
     begin
-      return unless check_user(m.user)
+      return unless Auth::is_admin?(m.user)
       
       @autovoice = option == "on"
       

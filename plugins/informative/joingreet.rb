@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 require 'cinch'
-require 'pp'
+require_relative '../../modules/authenticate'
 
 # Give this bot ops in a channel and it'll auto op
 # visitors
@@ -11,6 +11,7 @@ require 'pp'
 
 class JoinGreet
   include Cinch::Plugin
+  include Authenticate
   plugin "autogreet"
   listen_to :join
   help "autogreet (on|off) -- turns autoop on or off."
@@ -22,12 +23,6 @@ class JoinGreet
     #@admins = ["Georgette_Lemare", "Helma01", "Kanata", "BlackRose", "Lain", "Lain|the-wiredless", "azure"]
   #end
 
-  def check_user(user)
-    user.refresh # be sure to refresh the data, or someone could steal
-                 # the nick
-    config[:admins].include?(user.authname)
-  end
-  
   def listen(m)
     unless m.user.nick == bot.nick
       if config[:enabled_channels].include?(m.channel.name)
@@ -49,7 +44,7 @@ class JoinGreet
 
   def execute(m, option)
     begin
-      return unless check_user(m.user)
+      return unless Auth::is_admin?(m.user)
       if m.channel.nil? then raise("This is not a channel!") end
     
       @autogreet = option == "on"

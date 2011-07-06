@@ -36,6 +36,10 @@ Thumbs.db
 # Sensitive bot files #
 #######################
 
+# directories
+databases/*
+
+# files
 bot_badnik.rb
 bot_freenode.rb
 bot_rizon.rb

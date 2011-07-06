@@ -46,7 +46,7 @@ class Weather
 			when :default
 				template % {
 					:location => w.measurements[0].query.split.map(&:capitalize).join(" "),
-					:condition => w.current.condition + " #{@@unicon[w.measurements[1].current.icon.to_sym]}",
+					:condition => w.current.condition + " #{@@unicon[w.measurements[1].current.icon.to_sym]}" || "?",
 					:temperature => "#{w.temperature.c}°C",
 					:dew_point => "#{w.dew_point.c}°C",
 					:humidity => w.current.humidity,

@@ -8,10 +8,16 @@
 ### Administrator-only commands:
 
 #### Public and private:
+* `!admin`
+* `!+admin`
+* `!-admin`
 * `~join [channel]`
 * `~part <channel>`
 * `~quit <message>`
 * `~nick [nick]`
+* `!autogreet [on|off]`
+* `!autoop <on|off>`
+* `!autovoice <on|off>`
 
 #### Private only:
 * `say [channel] [message]`
@@ -40,7 +46,6 @@
 * `!azurebot` _(or whatever the bot's initial nick is)_
 * `!dict <string>` _Unfinished/not working_
 * `!jargon <string>`
-* `!autogreet [on|off]`
 * `!qdb [id]` _Currently only accesses [#shakesoda's](irc://irc.freenode.net/shakesoda) QDB._
 * `!request [request]` _Unfinished/unused_
 * `!tw<itter> [username] <-info>`

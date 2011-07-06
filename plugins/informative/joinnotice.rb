@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 require 'cinch'
+require_relative '../_ext/blank.rb'
 
 class JoinNotice
   include Cinch::Plugin
@@ -8,9 +9,10 @@ class JoinNotice
   listen_to :join
   
   def listen(m)
-    if config[:greetings].include?(m.channel.name)
-      unless m.user.nick == bot.nick
-        m.user.notice(open(config[:greetings][m.channel.name], &:read))
+    unless m.user.nick == bot.nick
+      notice = open(config[:greetings] % { :channel => m.channel.name }, &:read) rescue nil
+      if !notice.blank?
+        m.user.notice(notice)
       end
     end
   end
