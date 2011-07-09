@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-require 'cinch'
-require_relative '../_ext/irc_color'
+require_relative '../_ext/string'
 
 class Dongs
   include Cinch::Plugin

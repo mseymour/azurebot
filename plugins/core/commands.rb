@@ -9,7 +9,7 @@ class Commands
   plugin "commands"
   help "!c(ommands) - Get a list of defined commands to ask about"
 
-  match /c(?:ommands)?/
+  match /commands/
 
   def execute(m)
     helpful = @bot.plugins.select do |plugin|

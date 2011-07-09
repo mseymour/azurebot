@@ -1,4 +1,5 @@
-require 'cinch'
+# -*- coding: UTF-8 -*-
+
 require_relative '../../modules/authenticate'
 
 class Auth

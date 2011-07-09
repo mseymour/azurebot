@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-require 'cinch'
-require_relative '../_ext/blank.rb'
+require 'active_support/core_ext'
 
 class JoinNotice
   include Cinch::Plugin

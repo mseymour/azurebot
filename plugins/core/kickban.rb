@@ -1,8 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-require 'cinch'
-require 'pp'
-
 class Kickban
   include Cinch::Plugin
 

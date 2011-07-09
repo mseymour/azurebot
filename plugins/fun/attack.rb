@@ -1,9 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-require 'cinch'
-require 'random/online'
 require_relative '../_ext/string'
-require_relative '../_ext/irc_color'
 
 class Attack
   include Cinch::Plugin

@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-require 'cinch'
 require 'open-uri'
 require 'nokogiri'
 require 'cgi'

@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
-require 'cinch'
+
 require_relative '../../modules/authenticate'
 require_relative '../../modules/stringhelpers'
-require 'active_support'
+#require 'active_support'
 require 'active_support/core_ext'
-require_relative '../_ext/irc_color'
+require_relative '../_ext/string'
 
 class BotInfo
   include Cinch::Plugin

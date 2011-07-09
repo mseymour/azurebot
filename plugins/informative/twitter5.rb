@@ -5,11 +5,10 @@
 # azTwitter4 - using Grackle
 # Twitter5 - using Twitter (https://github.com/jnunemaker/twitter)
 
-require 'cinch'
 require 'twitter'
 require 'date'
-require_relative '../_ext/irc_color'
-require_relative '../_ext/blank.rb'
+require_relative '../_ext/string'
+require 'active_support/core_ext'
 
 class Twitter5
   

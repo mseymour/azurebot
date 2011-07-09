@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-require 'cinch'
 require_relative '../../modules/bones-dice/dicebox'
 
 class Dice

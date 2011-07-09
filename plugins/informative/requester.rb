@@ -4,7 +4,6 @@
 # of converting it to use JSON instead of a plain text file. I might try to
 # finish it at some point.
 
-require 'cinch'
 require 'date'
 require 'net/ftp'
 require 'json'

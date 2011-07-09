@@ -1,7 +1,5 @@
 # -*- coding: UTF-8 -*-
-
-require 'cinch'
-require 'barometer'
+require 'barometer'
 require_relative '../_ext/blank.rb'
 		
 class Weather

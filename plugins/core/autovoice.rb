@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-require 'cinch'
 require_relative '../../modules/authenticate'
 
 # Give this bot ops in a channel and it'll auto voice visitors

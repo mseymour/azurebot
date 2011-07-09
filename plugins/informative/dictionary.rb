@@ -4,7 +4,6 @@
 # I have not done much development on it for a while, so it may or may not be
 # really buggy.
 
-require 'cinch'
 require 'open-uri'
 require 'nokogiri'
 require 'cgi'

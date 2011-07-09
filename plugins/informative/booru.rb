@@ -1,7 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-require 'cinch'
-
 class Booru
   include Cinch::Plugin
 

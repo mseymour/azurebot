@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-require 'cinch'
 require 'active_support'
 require 'active_support/core_ext'
 require 'ruby-wmi'

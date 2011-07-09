@@ -1,7 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-require 'cinch'
-
 class Fb2kControl
   include Cinch::Plugin
   plugin "foobar2000"

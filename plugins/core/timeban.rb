@@ -1,4 +1,5 @@
-require 'cinch'
+# -*- coding: UTF-8 -*-
+
 require 'time'
 require 'active_support/core_ext'
 require_relative '../../modules/stringhelpers'
