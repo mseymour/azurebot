@@ -38,10 +38,12 @@ Thumbs.db
 
 # directories
 databases/*
+logs/*
 
 # files
 bot_badnik.rb
 bot_freenode.rb
 bot_rizon.rb
 bot_vortexirc.rb
+bot_irchighway.rb
 twitter_oauth_config.yaml

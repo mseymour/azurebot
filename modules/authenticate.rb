@@ -14,6 +14,10 @@ module Authenticate
 			a = Admin.first(:nick => user.authname)
 			not a.nil?
 		end
+	
+		def Auth.head_admin
+			Admin.first[:nick].to_s
+		end
 	end
 
 end

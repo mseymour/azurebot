@@ -1,7 +1,5 @@
 # Azurebot
-## a Ruby-powered IRC bot using the [Cinch IRC bot framework](https://github.com/cinchrb/cinch "Cinch at github")
-
-- - -
+a Ruby-powered IRC bot using the [Cinch IRC bot framework](https://github.com/cinchrb/cinch "Cinch at github")
 
 ## List of current commands available (subject to change depending on plugins loaded):
 

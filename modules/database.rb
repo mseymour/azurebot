@@ -7,7 +7,7 @@ module Database
 	def Database.setup! (dbfile)
 		raise "No database selected!" if dbfile == nil
 				
-		DataMapper::Logger.new($stdout, :debug)
+		DataMapper::Logger.new('d:\ircbot\logs\database.log')
 		DataMapper.setup(:default, { :adapter => 'sqlite', :path => dbfile })
 		
 		# If database doesn't exist, create. Else update
