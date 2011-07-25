@@ -8,25 +8,28 @@ class Toolbox
 
 	prefix /^~/
   match /join (.+)/, method: :join
-  match /part(?: (.+))?/, method: :part
+  match /part(?: (\S+)\s?(.+)?)?/, method: :part
   match /quit(?: (.+))?/, method: :quit
 	match /nick (.+)/, method: :nick
-	#match /opadmin$/, method: :opadmin
+	match /opadmin$/, method: :opadmin
 
   def join(m, channel)
     return unless Auth::is_admin?(m.user)
-    Channel(channel).join
+    channel.split(", ").each {|ch|
+      Channel(ch).join
+    }
   end
 
-  def part(m, channel)
+  def part(m, channel, msg)
     return unless Auth::is_admin?(m.user)
     channel ||= m.channel
-    Channel(channel).part if channel
+    msg ||= m.user.nick
+    Channel(channel).part(msg) if channel
   end
 
   def quit(m, msg)
     return unless Auth::is_admin?(m.user)
-		msg ||= nil
+		msg ||= m.user.nick
     bot.quit(msg)
   end
 
@@ -35,9 +38,9 @@ class Toolbox
 		bot.nick=(nick) if nick
 	end
 
-  #def opadmin(m)
-		#return unless Auth::is_admin?(m.user)
-		#m.channel.op(m.user);
-  #end
+  def opadmin(m)
+		return unless Auth::is_admin?(m.user)
+		m.channel.op(m.user.nick);
+  end
 
 end

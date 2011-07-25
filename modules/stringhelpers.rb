@@ -4,7 +4,7 @@ require 'time'
 
 module StringHelpers
 
-  def time_diff_in_natural_language(from_time, to_time)
+  def time_diff_in_natural_language(from_time, to_time, acro = false)
     # TODO: cite the source of the method
     # TODO: Move this function to a separate file in ../_ext/ and have it a method of the Date class with an argument of "to_time".
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
@@ -17,9 +17,17 @@ module StringHelpers
 			delta = (distance_in_seconds / 1.send(interval)).floor
 			delta -= 1 if from_time + delta.send(interval) > to_time
 			from_time += delta.send(interval)
-			components << "#{delta} #{delta > 1 ? interval.pluralize : interval}" if delta > 0
+      if acro
+        components << "#{delta}#{interval[0].downcase}" if delta > 0
+      else
+        components << "#{delta} #{delta > 1 ? interval.pluralize : interval}" if delta > 0
+      end
     end
-    components.join(", ")
+    if acro
+      components.join(" ")
+    else
+      components.join(", ")
+    end
   end
 
 end

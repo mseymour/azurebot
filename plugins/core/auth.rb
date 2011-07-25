@@ -7,6 +7,8 @@ class Auth
 	include Authenticate
 	react_on :channel
 
+	prefix /^~/
+
 	match /admin$/, method: :main_admin
 	def main_admin(m)
 		begin
