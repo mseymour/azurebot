@@ -50,7 +50,7 @@ class AdminHandler
 		#outgoing_mask = "#{m.user.nick}!#{m.user.data[:user]}@#{m.user.data[:host]}"
 		return unless config[:admins].logged_in?(m.prefix)
 		config[:admins].logout! m.prefix #change back to m.user.mask once fixed in cinch
-		@bot.debug "#{m.prefix} has been automatically logged out."
+		@bot.debug "#{m.prefix} has been automagically logged out."
 	end
 
 end
