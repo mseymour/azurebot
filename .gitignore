@@ -42,6 +42,7 @@ logs/*
 
 # files
 bot_badnik.rb
+<<<<<<< HEAD
 bot_base.rb
 bot_rizon.rb
 bot_irch.rb
@@ -49,3 +50,10 @@ bot_irch.rb
 config/admin-password
 config/twitter_oauth.yaml
 config/greetings/rizon/
+=======
+bot_freenode.rb
+bot_rizon.rb
+bot_vortexirc.rb
+bot_irchighway.rb
+twitter_oauth_config.yaml
+>>>>>>> master
