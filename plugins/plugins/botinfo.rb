@@ -10,7 +10,7 @@ class BotInfo
 
   set(
     plugin_name: "botinfo",
-    help: "Notices you information about me.\nUsage: !#{$nick}",
+    help: "Notices you information about me.\nUsage: `!#{$nick}`",
     required_options: [:template, :owner, :admins])
 
     def regexp_process (local_r, bot_r = nil)

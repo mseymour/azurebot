@@ -56,7 +56,7 @@ Usage: `!booru <selector> <comma-separated list of tags>`; use `!booru` to get a
 
 Notices you information about me.
 
-Usage: !Azurebot
+Usage: `!Azurebot`
 
 ### Decider (`Decide`)
 
