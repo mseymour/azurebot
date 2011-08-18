@@ -23,7 +23,7 @@ class BotInfo
       end
     end
 
-    match /retrieve plugin classes/, method: :e_rpc
+    match /retrieve plugin classes/, method: :e_rpc # Yes, I know that the command is a misnomer. 
     def e_rpc m
 
       documentation = []
@@ -87,10 +87,6 @@ class BotInfo
   def format_notice! user
     plugin_list = [];
     @bot.plugins.each {|p| 
-      #require 'ap'
-      #ap p.class.methods - Object.methods - Kernel.methods
-      #ap p.class.help_message
-      #ap p.class.matchers
       plugin_list << p.class.plugin_name
     };
 
