@@ -5,7 +5,7 @@ class Booru
 
 	set(
 		plugin_name: "Booru",
-		help: "Generates a handy link to a *booru search\nUsage: !booru <selector> <comma-separated list of tags>; use !booru to get a list of tags.")
+		help: "Generates a handy link to a *booru search\nUsage: `!booru <selector> <comma-separated list of tags>`; use `!booru` to get a list of tags.")
 
 	@@selectors = {
 		:dan => "http://danbooru.donmai.us/post?tags=%<tags>s",

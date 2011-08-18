@@ -22,7 +22,7 @@ class Twitter5
   include Cinch::Plugin
   set(
     plugin_name: "Twitter", 
-    help: "Gets the current tweet of the user specified. If it is blank, it will return Twitter's official account instead.\nUsage: !tw<itter> [username] <info>", 
+    help: "Gets the current tweet of the user specified. If it is blank, it will return Twitter's official account instead.\nUsage: `!tw<itter> [username] <info>`", 
     required_options: [:access_keys])
   
   # Class variables

@@ -7,7 +7,7 @@ class Weather
   include Cinch::Plugin
   	set( 
   		plugin_name: "Weather", 
-  		help: "Grabs the current weather from Google and WeatherUnderground.\nUsage: !weather [query]")
+  		help: "Grabs the current weather from Google and WeatherUnderground.\nUsage: `!weather [query]`")
 
 	@@unicon = {
 	:clear => "☀☀☀",

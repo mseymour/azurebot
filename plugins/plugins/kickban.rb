@@ -5,7 +5,7 @@ class Kickban
   include Cinch::Plugin
   set(
     plugin_name: "Kickban", 
-    help: "Various commands used for kickbanning users.\nUsage: !moon [nick] -- kickbans the selected user with a My Little Pony: Friendship Is Magic-themed kick reason.",
+    help: "Various commands used for kickbanning users.\nUsage: `!moon [nick]` -- kicks the selected user with a My Little Pony: Friendship Is Magic-themed kick reason.\nUsage: `!sun` -- Kickbans the selected user [MLP-themed]\nUsage: `!banana` -- Kicks too. Don't ask.",
     react_on: :channel)
 
   def check_user(users, user)

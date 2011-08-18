@@ -10,7 +10,7 @@ class AutoVoice
   
   set(
     plugin_name: "Auto Voice",
-    help: "Automatically voices nicks upon join.\nUsage: !autovoice [on|off] -- turns autovoice on or off.",
+    help: "Automatically voices nicks upon join.\nUsage: `!autovoice [on|off]` -- turns autovoice on or off. (Admins only)",
     react_on: :channel)
   
   listen_to :join

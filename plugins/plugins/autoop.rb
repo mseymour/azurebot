@@ -10,7 +10,7 @@ class AutoOP
   
   set(
     plugin_name: "Auto OP",
-    help: "Automatically ops nicks upon join.\nUsage: !autoop [on|off] -- turns autoop on or off.",
+    help: "Automatically ops nicks upon join.\nUsage: `!autoop [on|off]` -- turns autoop on or off. (Admins only)",
     react_on: :channel)
   
   listen_to :join

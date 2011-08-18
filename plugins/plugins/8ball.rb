@@ -5,7 +5,7 @@ class Eightball
 	
 	set(
 		plugin_name: "8ball",
-		help: "The Magic 8ball has all the answers!\nUsage: !8ball [question? <question? <...>>]",
+		help: "The Magic 8ball has all the answers!\nUsage: `!8ball [question? <question? <...>>]`",
 		react_on: :channel)
 
 	@@eightball = [

@@ -13,17 +13,63 @@ class BotInfo
     help: "Notices you information about me.\nUsage: !#{$nick}",
     required_options: [:template, :owner, :admins])
 
+    def regexp_process (local_r, bot_r = nil)
+      if !local_r.blank?
+        local_r.is_a?(Regexp) ? local_r.source : local_r.to_s
+      elsif !bot_r.blank?
+        bot_r.is_a?(Regexp) ? bot_r.source : bot_r.to_s
+      else
+        ""
+      end
+    end
+
     match /retrieve plugin classes/, method: :e_rpc
     def e_rpc m
-      require 'ap'
-      puts "\n"
+
+      documentation = []
+      documentation << "Azurebot"
+      documentation << "========"
+      documentation << ""
+      documentation << "A Ruby-powered IRC bot using the [Cinch IRC bot framework](https://github.com/cinchrb/cinch \"Cinch at Github\")"
+      documentation << ""
+      
+      documentation << "Plugins"
+      documentation << "-------"
+      documentation << ""
       @bot.plugins.each {|p| 
-        puts "#{p.class.plugin_name} (#{p.class.name}) ".ljust(80,"-")
-        ap p.class.methods - Object.methods - Kernel.methods
-        #ap p.class.help_message
-        #plugin_list << p.class.plugin_name
+        documentation << "### #{p.class.plugin_name} (`#{p.class.name}`)"
+        documentation << ""
+        documentation << (!p.class.help.blank? ? "#{p.class.help.gsub("\n","\n\n")}" : "(No help available)")
+        documentation << ""
       };
-      puts "\n"
+
+      documentation << "Commands"
+      documentation << "--------"
+      documentation << ""
+      documentation << "As a note, all commands shown here are generated from the plugin's matches, composited with their individual prefices and suffices (if applicable.)"
+      documentation << ""
+      @bot.plugins.each {|p| 
+        documentation << "### #{p.class.plugin_name} (`#{p.class.name}`)"
+        documentation << ""
+
+        p.class.matchers.each {|m|
+          prefix = regexp_process p.class.prefix, @bot.config.plugins.prefix if m.use_prefix
+          suffix = regexp_process p.class.suffix, @bot.config.plugins.suffix if m.use_suffix
+          pattern = regexp_process m.pattern
+
+          documentation << "* `#{prefix}#{pattern}#{suffix}`"
+        }
+        documentation << ""
+      };
+
+      documentation << "Author information"
+      documentation << "------------------"
+      documentation << "* Mark Seymour ('Azure')"
+      documentation << "* Email: <mark.seymour.ns@gmail.com>"
+      documentation << "* WWW: <http://lain.rustedlogic.net/>"
+      documentation << "* IRC: #shakesoda @ irc.freenode.net"
+
+      File.open("#{File.expand_path("~")}/azurebot_documentation.md", 'w') {|f| f.write(documentation.join("\n")) }
     end
 
 

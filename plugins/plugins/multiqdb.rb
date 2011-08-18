@@ -9,7 +9,7 @@ class MultiQDB
 
 	set(
 	plugin_name: "QDB",	
-	help: "Pulls a quote from a QDB.\nUsage: !qdb <selector> <ID|latest>; !qdb for selector list.")
+	help: "Pulls a quote from a QDB.\n`Usage: !qdb <selector> <ID|latest>`; `!qdb` for selector list.")
 
 	match /qdb\s?(\w+)?\s?(.+)?/
 	

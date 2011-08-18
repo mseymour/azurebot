@@ -6,7 +6,7 @@ class Decide
 	include Cinch::Plugin
 	set(
 		plugin_name: "Decider",
-		help: "Helps you decide on things\nUsage: !decide [a list of items separated by \", \", \", or\", or \" or \".\nUsage: !coin]")
+		help: "Helps you decide on things.\nUsage: `!decide [a list of items separated by \", \", \", or\", or \" or \"]`; Usage: `!coin`")
 
 	def decide!(list)
 		list = list.irc_strip_colors

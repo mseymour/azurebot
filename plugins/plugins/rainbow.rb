@@ -7,7 +7,7 @@ class Rainbow
 	
 	set(
 		plugin_name: "Rainbow", 
-		help: "rainbow -- gaaaaaaay.")
+		help: "Rainbowificates your text.\nUsage: `!rainbow [text]`.")
 
 	match /rainbow (.+)$/
 

@@ -7,7 +7,7 @@ class JoinNotice
   
   set(
     plugin_name: "Auto Notice",
-    help: "Notices nicks upon join.\nUsage: !hello to reply entry notice.",
+    help: "Notices nicks upon join.\nUsage: `!hello` to reply entry notice.",
     required_options: [:greetings, :filext])
   
   def get_channel_greeting channel

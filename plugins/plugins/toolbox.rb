@@ -8,7 +8,7 @@ class Toolbox
 
   set(
     plugin_name: "Toolbox", 
-    help: "Bot administrator-only private commands.\nUsage: ~join [channel]; ~part [channel] <reason>; ~quit [reason]; ~nick [newnick]; ~opadmin;", 
+    help: "Bot administrator-only private commands.\nUsage: `~join [channel]`; `~part [channel] <reason>`; `~quit [reason]`; `~nick [newnick]`; `~opadmin`;", 
     prefix: /^~/)
 
   match /join (.+)/, method: :join

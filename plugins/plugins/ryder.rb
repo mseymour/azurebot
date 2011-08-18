@@ -5,7 +5,7 @@ class Ryder
 
 	set(
 		plugin_name: "Ryder",
-		help: "Beat PunchBeef! Black Thickneck! Big McLargehuge!\nUsage: !ryder")
+		help: "Beat PunchBeef! Blast Thickneck! Big McLargehuge!\nUsage: `!ryder`")
 
 	@@ryderdict = [
 		["Beat", "PunchBeef"],

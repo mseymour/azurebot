@@ -8,7 +8,7 @@ class Attack
 	
 	set(
 		plugin_name: "Attacker",
-		help: "Attacks a user with a random attack.\nUsage: !attack <nick or phrase>; <nick or phrase> can be omitted for a random attack on a random nick.",
+		help: "Attacks a user with a random attack.\nUsage: `!attack <nick or phrase>`; `<nick or phrase>` may be omitted for a random attack on a random nick.",
 		required_options: [:attack_dictionary],
 		react_on: :channel)
 	
