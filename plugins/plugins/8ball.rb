@@ -32,7 +32,7 @@ class Eightball
 	]
 	
 	def shake!
-		@@eightball.shuffle!.sample
+		@@eightball.sample
 	end
 	
 	match /8ball (.+)/
