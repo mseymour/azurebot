@@ -6,15 +6,11 @@ A Ruby-powered IRC bot using the [Cinch IRC bot framework](https://github.com/ci
 Plugins
 -------
 
-### authtest (`Authtest`)
-
-Tells you if you are logged into the bot or not. (Admins only)
-
-### admin (`AdminHandler`)
-
-Admin handler -- handles admins, of course.
-
 ### basicctcp (`Cinch::Plugins::BasicCTCP`)
+
+(No help available)
+
+### downforeveryone (`Cinch::Plugins::DownForEveryone`)
 
 (No help available)
 
@@ -22,61 +18,69 @@ Admin handler -- handles admins, of course.
 
 (No help available)
 
-### 8ball (`Eightball`)
+### admin (`Plugins::AdminHandler`)
+
+Admin handler -- handles admins, of course.
+
+### authtest (`Plugins::Authtest`)
+
+Tells you if you are logged into the bot or not. (Admins only)
+
+### 8ball (`Plugins::Eightball`)
 
 The Magic 8ball has all the answers!
 
 Usage: `!8ball [question? <question? <...>>]`
 
-### Attacker (`Attack`)
+### Attacker (`Plugins::Attack`)
 
 Attacks a user with a random attack.
 
 Usage: `!attack <nick or phrase>`; `<nick or phrase>` may be omitted for a random attack on a random nick.
 
-### Auto OP (`AutoOP`)
+### Auto OP (`Plugins::AutoOP`)
 
 Automatically ops nicks upon join.
 
 Usage: `!autoop [on|off]` -- turns autoop on or off. (Admins only)
 
-### Auto Voice (`AutoVoice`)
+### Auto Voice (`Plugins::AutoVoice`)
 
 Automatically voices nicks upon join.
 
 Usage: `!autovoice [on|off]` -- turns autovoice on or off. (Admins only)
 
-### Booru (`Booru`)
+### Booru (`Plugins::Booru`)
 
 Generates a handy link to a *booru search
 
 Usage: `!booru <selector> <comma-separated list of tags>`; use `!booru` to get a list of tags.
 
-### botinfo (`BotInfo`)
+### botinfo (`Plugins::BotInfo`)
 
 Notices you information about me.
 
-Usage: `!Azurebot`
+Usage: `!Aiko`
 
-### Decider (`Decide`)
+### Decider (`Plugins::Decide`)
 
 Helps you decide on things.
 
 Usage: `!decide [a list of items separated by ", ", ", or", or " or "]`; Usage: `!coin`
 
-### Dicebox (`Dice`)
+### Dicebox (`Plugins::Dice`)
 
 Dicebox -- Uses standard dice notation.
 
 Usage: `<X#>YdZ<[+|-]A>` (Examples: `1d6`; `2d6-3`; `2#1d6`; `5#2d6+10`)
 
-### Auto Notice (`JoinNotice`)
+### Auto Notice (`Plugins::JoinNotice`)
 
 Notices nicks upon join.
 
 Usage: `!hello` to reply entry notice.
 
-### Kickban (`Kickban`)
+### Kickban (`Plugins::Kickban`)
 
 Various commands used for kickbanning users.
 
@@ -86,47 +90,47 @@ Usage: `!sun` -- Kickbans the selected user [MLP-themed]
 
 Usage: `!banana` -- Kicks too. Don't ask.
 
-### QDB (`MultiQDB`)
+### QDB (`Plugins::MultiQDB`)
 
 Pulls a quote from a QDB.
 
 `Usage: !qdb <selector> <ID|latest>`; `!qdb` for selector list.
 
-### Private toolbox (`PrivToolbox`)
+### Private toolbox (`Plugins::PrivToolbox`)
 
 Bot administrator-only private commands.
 
 Usage: n/a
 
-### Rainbow (`Rainbow`)
+### Rainbow (`Plugins::Rainbow`)
 
 Rainbowificates your text.
 
 Usage: `!rainbow [text]`.
 
-### Ryder (`Ryder`)
+### Ryder (`Plugins::Ryder`)
 
 Beat PunchBeef! Blast Thickneck! Big McLargehuge!
 
 Usage: `!ryder`
 
-### silly (`Silly`)
+### silly (`Plugins::Silly`)
 
 You know, silly stuff.
 
-### Toolbox (`Toolbox`)
+### Toolbox (`Plugins::Toolbox`)
 
 Bot administrator-only private commands.
 
 Usage: `~join [channel]`; `~part [channel] <reason>`; `~quit [reason]`; `~nick [newnick]`; `~opadmin`;
 
-### Twitter (`Twitter5`)
+### Twitter (`Plugins::Twitter5`)
 
 Gets the current tweet of the user specified. If it is blank, it will return Twitter's official account instead.
 
 Usage: `!tw<itter> [username] <info>`
 
-### Weather (`Weather`)
+### Weather (`Plugins::Weather`)
 
 Grabs the current weather from Google and WeatherUnderground.
 
@@ -137,74 +141,78 @@ Commands
 
 As a note, all commands shown here are generated from the plugin's matches, composited with their individual prefices and suffices (if applicable.)
 
-### authtest (`Authtest`)
-
-* `^Am I (logged in|an admin)\?$`
-
-### admin (`AdminHandler`)
-
-* `^login (.+)`
-* `^logout`
-* `^admins`
-
 ### basicctcp (`Cinch::Plugins::BasicCTCP`)
 
 * `^!basicctcp`
+
+### downforeveryone (`Cinch::Plugins::DownForEveryone`)
+
+* `^!isit(?:down|up)\?? (.+)`
 
 ### identify (`Cinch::Plugins::Identify`)
 
 * `^!identify`
 
-### 8ball (`Eightball`)
+### admin (`Plugins::AdminHandler`)
+
+* `^login (.+)`
+* `^logout`
+* `^admins`
+
+### authtest (`Plugins::Authtest`)
+
+* `^Am I (logged in|an admin)\?$`
+
+### 8ball (`Plugins::Eightball`)
 
 * `^!8ball (.+)`
 
-### Attacker (`Attack`)
+### Attacker (`Plugins::Attack`)
 
 * `^!attack\s?(.+)?`
 
-### Auto OP (`AutoOP`)
+### Auto OP (`Plugins::AutoOP`)
 
 * `^!autoop (on|off)$`
 
-### Auto Voice (`AutoVoice`)
+### Auto Voice (`Plugins::AutoVoice`)
 
 * `^!autovoice (on|off)$`
 
-### Booru (`Booru`)
+### Booru (`Plugins::Booru`)
 
 * `^!booru\s?(\w+)?\s?(.+)?`
 
-### botinfo (`BotInfo`)
+### botinfo (`Plugins::BotInfo`)
 
-* `^!retrieve plugin classes`
-* `^!Azurebot$`
+* `^!generate documentation`
+* `^!Aiko$`
 
-### Decider (`Decide`)
+### Decider (`Plugins::Decide`)
 
 * `^!decide (.+)`
 * `^!choose (.+)`
 * `^!coin$`
 
-### Dicebox (`Dice`)
+### Dicebox (`Plugins::Dice`)
 
 * `^(\d*#)?(\d+)d(\d+)`
 
-### Auto Notice (`JoinNotice`)
+### Auto Notice (`Plugins::JoinNotice`)
 
 * `^!hello$`
 
-### Kickban (`Kickban`)
+### Kickban (`Plugins::Kickban`)
 
 * `^!moon (.+)`
 * `^!sun (.+)`
 * `^!banana (.+)`
 
-### QDB (`MultiQDB`)
+### QDB (`Plugins::MultiQDB`)
 
 * `^!qdb\s?(\w+)?\s?(.+)?`
 
-### Private toolbox (`PrivToolbox`)
+### Private toolbox (`Plugins::PrivToolbox`)
 
 * `^say (#\S+) (.+)`
 * `^act (#\S+) (.+)`
@@ -212,20 +220,20 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^ns (.+)`
 * `^hs (.+)`
 
-### Rainbow (`Rainbow`)
+### Rainbow (`Plugins::Rainbow`)
 
 * `^!rainbow (.+)$`
 
-### Ryder (`Ryder`)
+### Ryder (`Plugins::Ryder`)
 
 * `^!ryder$`
 
-### silly (`Silly`)
+### silly (`Plugins::Silly`)
 
 * `\x01ACTION pokes (.+)\x01`
 * `dumb bot`
 
-### Toolbox (`Toolbox`)
+### Toolbox (`Plugins::Toolbox`)
 
 * `^~join (.+)`
 * `^~part(?: (\S+)\s?(.+)?)?`
@@ -233,14 +241,14 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^~nick (.+)`
 * `^~opadmin$`
 
-### Twitter (`Twitter5`)
+### Twitter (`Plugins::Twitter5`)
 
 * `^!tw$`
 * `^!twitter$`
 * `^!tw (.+)*`
 * `^!twitter (.+)*`
 
-### Weather (`Weather`)
+### Weather (`Plugins::Weather`)
 
 * `^!weather (.+)`
 

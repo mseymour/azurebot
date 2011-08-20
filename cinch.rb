@@ -1,32 +1,33 @@
 require 'cinch'
 $nick = "Azurebot"
 
-class Cinch::User; def hash; super; end; end;
+$LOAD_PATH << File.dirname(__FILE__) + '/lib'
 
-require_relative 'plugins/modules/admin'
+require 'modules/admin'
 
 require 'cinch/plugins/basic_ctcp'
-
-require_relative 'plugins/plugins/8ball'
-require_relative 'plugins/plugins/authtest'
-require_relative 'plugins/plugins/adminhandler'
-require_relative 'plugins/plugins/attack'
-require_relative 'plugins/plugins/autoop'
-require_relative 'plugins/plugins/autovoice'
-require_relative 'plugins/plugins/booru'
-require_relative 'plugins/plugins/botinfo'
-require_relative 'plugins/plugins/decide'
-require_relative 'plugins/plugins/dice'
-require_relative 'plugins/plugins/joinnotice'
-require_relative 'plugins/plugins/kickban'
-require_relative 'plugins/plugins/multiqdb'
-require_relative 'plugins/plugins/privtoolbox'
-require_relative 'plugins/plugins/rainbow'
-require_relative 'plugins/plugins/ryder'
-require_relative 'plugins/plugins/silly'
-require_relative 'plugins/plugins/toolbox'
-require_relative 'plugins/plugins/twitter5'
-require_relative 'plugins/plugins/weather'
+require 'cinch/plugins/downforeveryone'
+require 'cinch/plugins/identify'
+require 'plugins/8ball'
+require 'plugins/adminhandler'
+require 'plugins/authtest'
+require 'plugins/attack'
+require 'plugins/autoop'
+require 'plugins/autovoice'
+require 'plugins/booru'
+require 'plugins/botinfo'
+require 'plugins/decide'
+require 'plugins/dice'
+require 'plugins/joinnotice'
+require 'plugins/kickban'
+require 'plugins/multiqdb'
+require 'plugins/privtoolbox'
+require 'plugins/rainbow'
+require 'plugins/ryder'
+require 'plugins/silly'
+require 'plugins/toolbox'
+require 'plugins/twitter5'
+require 'plugins/weather'
 
 
 bot = Cinch::Bot.new do
@@ -40,22 +41,43 @@ bot = Cinch::Bot.new do
 		c.ssl.use         = true
 
 		c.plugins.plugins = [
-			Authtest, AdminHandler, Cinch::Plugins::BasicCTCP, Eightball, Attack, AutoOP, AutoVoice, Booru, BotInfo, Decide, 
-			Dice, JoinNotice, Kickban, MultiQDB, PrivToolbox, Rainbow, Ryder, Silly, Toolbox, Twitter5, Weather]
+			Cinch::Plugins::BasicCTCP,
+			Cinch::Plugins::DownForEveryone,
+			Cinch::Plugins::Identify,
+			Plugins::AdminHandler,
+			Plugins::Authtest,
+			Plugins::Eightball,
+			Plugins::Attack,
+			Plugins::AutoOP,
+			Plugins::AutoVoice,
+			Plugins::Booru,
+			Plugins::BotInfo,
+			Plugins::Decide,
+			Plugins::Dice,
+			Plugins::JoinNotice,
+			Plugins::Kickban,
+			Plugins::MultiQDB,
+			Plugins::PrivToolbox,
+			Plugins::Rainbow,
+			Plugins::Ryder,
+			Plugins::Silly,
+			Plugins::Toolbox,
+			Plugins::Twitter5,
+			Plugins::Weather ]
 		
 		admins = Admin.instance
 		admins.password = File.open('G:/bot/config/admin-password', &:gets)
 
 		common_config = {admins: admins}
 
-		c.plugins.options[Authtest] = c.plugins.options[AdminHandler] = c.plugins.options[Toolbox] = c.plugins.options[PrivToolbox] = common_config
+		c.plugins.options[Plugins::Authtest] = c.plugins.options[Plugins::AdminHandler] = c.plugins.options[Plugins::Toolbox] = c.plugins.options[Plugins::PrivToolbox] = common_config
 
-		c.plugins.options[Attack] = { attack_dictionary: 'G:/bot/config/attackdict.yaml' }
-		c.plugins.options[AutoOP] = { enabled_channels: [] }.merge common_config
-		c.plugins.options[AutoVoice] = { enabled_channels: [] }.merge common_config
-		c.plugins.options[BotInfo] = { owner: "Azure", template: 'G:/bot/config/info_template.txt'}.merge common_config
-		c.plugins.options[JoinNotice] = { greetings: 'G:/bot/config/greetings/freenode/', filext: '.txt' }
-		c.plugins.options[Twitter5] = { access_keys: 'G:/bot/config/twitter_oauth.yaml' }
+		c.plugins.options[Plugins::Attack] = { attack_dictionary: 'G:/bot/config/attackdict.yaml' }
+		c.plugins.options[Plugins::AutoOP] = { enabled_channels: [] }.merge common_config
+		c.plugins.options[Plugins::AutoVoice] = { enabled_channels: [] }.merge common_config
+		c.plugins.options[Plugins::BotInfo] = { owner: "Azure", template: 'G:/bot/config/info_template.txt'}.merge common_config
+		c.plugins.options[Plugins::JoinNotice] = { greetings: 'G:/bot/config/greetings/freenode/', filext: '.txt' }
+		c.plugins.options[Plugins::Twitter5] = { access_keys: 'G:/bot/config/twitter_oauth.yaml' }
 	end
 
 end
