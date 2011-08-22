@@ -9,7 +9,7 @@ require 'twitter'
 require 'date'
 require 'yaml'
 require 'active_support/core_ext/object/blank'
-require 'ext/string'
+require 'obj_ext/string'
 
 module Plugins
   class Twitter5

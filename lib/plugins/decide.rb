@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-require 'ext/string'
+require 'obj_ext/string'
 
 module Plugins
 	class Decide

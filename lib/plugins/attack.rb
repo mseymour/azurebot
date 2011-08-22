@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-require 'ext/string'
+require 'obj_ext/string'
 require 'yaml'
 
 module Plugins
@@ -56,6 +56,7 @@ module Plugins
 			end
 
 			target = m.user.nick if !target.nil? && target.among_case?(@bot.nick, "herself", "himself", "itself");
+			target.gsub!(/(\bmy\b)/i,m.user.nick);
 			
 			populate_attacks!
 			

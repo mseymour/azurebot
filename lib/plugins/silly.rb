@@ -13,9 +13,7 @@ module Plugins
 		end
 
 		match /dumb bot/i, method: :execute_botinsult, use_prefix: false
-		def execute_botinsult m
-			m.reply "Stupid human!"
-		end
+		def execute_botinsult (m); m.reply "Stupid human!"; end;
 
 	end
 end

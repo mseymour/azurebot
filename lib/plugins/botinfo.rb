@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 require 'active_support/core_ext'
-require 'ext/string'
+require 'obj_ext/string'
 require 'modules/stringhelpers'
 
 module Plugins

@@ -68,6 +68,10 @@ Helps you decide on things.
 
 Usage: `!decide [a list of items separated by ", ", ", or", or " or "]`; Usage: `!coin`
 
+### delayedrejoin (`Plugins::DelayedRejoin`)
+
+If the bot is kicked, it will attempt to rejoin after 10 seconds by default.
+
 ### Dicebox (`Plugins::Dice`)
 
 Dicebox -- Uses standard dice notation.
@@ -86,9 +90,9 @@ Various commands used for kickbanning users.
 
 Usage: `!moon [nick]` -- kicks the selected user with a My Little Pony: Friendship Is Magic-themed kick reason.
 
-Usage: `!sun` -- Kickbans the selected user [MLP-themed]
+Usage: `!sun [nick]` -- Kickbans the selected user [MLP-themed]
 
-Usage: `!banana` -- Kicks too. Don't ask.
+Usage: `!banana [nick]` -- Kicks too. Don't ask.
 
 ### QDB (`Plugins::MultiQDB`)
 
@@ -194,6 +198,10 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^!choose (.+)`
 * `^!coin$`
 
+### delayedrejoin (`Plugins::DelayedRejoin`)
+
+* `^!delayedrejoin`
+
 ### Dicebox (`Plugins::Dice`)
 
 * `^(\d*#)?(\d+)d(\d+)`
@@ -223,6 +231,7 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 ### Rainbow (`Plugins::Rainbow`)
 
 * `^!rainbow (.+)$`
+* `^!eyerape (.+)$`
 
 ### Ryder (`Plugins::Ryder`)
 

@@ -6,9 +6,7 @@ module Plugins
   class Dice
     include Cinch::Plugin
     
-    set(
-      plugin_name: "Dicebox",
-      help: "Dicebox -- Uses standard dice notation.\nUsage: `<X#>YdZ<[+|-]A>` (Examples: `1d6`; `2d6-3`; `2#1d6`; `5#2d6+10`)")
+    set plugin_name: "Dicebox", help: "Dicebox -- Uses standard dice notation.\nUsage: `<X#>YdZ<[+|-]A>` (Examples: `1d6`; `2d6-3`; `2#1d6`; `5#2d6+10`)"
 
     match /^(\d*#)?(\d+)d(\d+)/, use_prefix: false
     def execute(m, multiplier, numdice, faces)
@@ -32,6 +30,5 @@ module Plugins
         
       end
     end 
-
   end
 end

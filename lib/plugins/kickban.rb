@@ -1,13 +1,14 @@
 # -*- coding: UTF-8 -*-
-require_relative '../ext/string'
+
+require 'obj_ext/string'
 
 module Plugins
   class Kickban
     include Cinch::Plugin
-    set(
-      plugin_name: "Kickban", 
-      help: "Various commands used for kickbanning users.\nUsage: `!moon [nick]` -- kicks the selected user with a My Little Pony: Friendship Is Magic-themed kick reason.\nUsage: `!sun` -- Kickbans the selected user [MLP-themed]\nUsage: `!banana` -- Kicks too. Don't ask.",
-      react_on: :channel)
+    set plugin_name: "Kickban", help: %{Various commands used for kickbanning users.
+Usage: `!moon [nick]` -- kicks the selected user with a My Little Pony: Friendship Is Magic-themed kick reason.
+Usage: `!sun [nick]` -- Kickbans the selected user [MLP-themed]
+Usage: `!banana [nick]` -- Kicks too. Don't ask.}, react_on: :channel
 
     def check_user(users, user)
       ["h", "o", "a", "q"].any? {|mode| users[user].include?(mode)}

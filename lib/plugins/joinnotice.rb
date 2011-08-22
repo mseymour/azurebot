@@ -6,10 +6,7 @@ module Plugins
   class JoinNotice
     include Cinch::Plugin
     
-    set(
-      plugin_name: "Auto Notice",
-      help: "Notices nicks upon join.\nUsage: `!hello` to reply entry notice.",
-      required_options: [:greetings, :filext])
+    set plugin_name: "Auto Notice", help: "Notices nicks upon join.\nUsage: `!hello` to reply entry notice.", required_options: [:greetings, :filext]
     
     def get_channel_greeting channel
       open([config[:greetings], channel, config[:filext]].join, &:read) rescue nil

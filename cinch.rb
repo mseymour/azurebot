@@ -17,6 +17,7 @@ require 'plugins/autovoice'
 require 'plugins/booru'
 require 'plugins/botinfo'
 require 'plugins/decide'
+require 'plugins/delayedrejoin'
 require 'plugins/dice'
 require 'plugins/joinnotice'
 require 'plugins/kickban'
@@ -53,6 +54,7 @@ bot = Cinch::Bot.new do
 			Plugins::Booru,
 			Plugins::BotInfo,
 			Plugins::Decide,
+			Plugins::DelayedRejoin,
 			Plugins::Dice,
 			Plugins::JoinNotice,
 			Plugins::Kickban,
