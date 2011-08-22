@@ -7,7 +7,7 @@ module Plugins
 		listen_to :kick
 		def listen m
 			return unless m.params[1] == @bot.nick
-			sleep 10
+			sleep config[:delay] || 10
 			Channel(m.channel.name).join(m.channel.key)
 		end
 	end
