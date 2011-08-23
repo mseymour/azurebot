@@ -78,6 +78,12 @@ Dicebox -- Uses standard dice notation.
 
 Usage: `<X#>YdZ<[+|-]A>` (Examples: `1d6`; `2d6-3`; `2#1d6`; `5#2d6+10`)
 
+### jargonfile (`Plugins::JargonFile`)
+
+Gets the entry from the Jargon File.
+
+Usage: `!jargon <entry>`
+
 ### Auto Notice (`Plugins::JoinNotice`)
 
 Notices nicks upon join.
@@ -134,6 +140,18 @@ Gets the current tweet of the user specified. If it is blank, it will return Twi
 
 Usage: `!tw<itter> [username] <info>`
 
+### uptime (`Plugins::Uptime`)
+
+Gets the uptime of the bot's host. (Uses WMI.)
+
+Usage: `!uptime`
+
+### urbandictionary (`Plugins::UrbanDictionary`)
+
+Gets the first entry for an entry on UrbanDictionary.
+
+Usage: `!urban <entry>`
+
 ### Weather (`Plugins::Weather`)
 
 Grabs the current weather from Google and WeatherUnderground.
@@ -189,7 +207,6 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 
 ### botinfo (`Plugins::BotInfo`)
 
-* `^!generate documentation`
 * `^!Aiko$`
 
 ### Decider (`Plugins::Decide`)
@@ -198,13 +215,13 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^!choose (.+)`
 * `^!coin$`
 
-### delayedrejoin (`Plugins::DelayedRejoin`)
-
-* `^!delayedrejoin`
-
 ### Dicebox (`Plugins::Dice`)
 
 * `^(\d*#)?(\d+)d(\d+)`
+
+### jargonfile (`Plugins::JargonFile`)
+
+* `^!jargon (.+)`
 
 ### Auto Notice (`Plugins::JoinNotice`)
 
@@ -256,6 +273,14 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^!twitter$`
 * `^!tw (.+)*`
 * `^!twitter (.+)*`
+
+### uptime (`Plugins::Uptime`)
+
+* `^!uptime`
+
+### urbandictionary (`Plugins::UrbanDictionary`)
+
+* `^!urban (.+)`
 
 ### Weather (`Plugins::Weather`)
 
