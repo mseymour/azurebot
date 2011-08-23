@@ -1,5 +1,5 @@
 require 'cinch'
-$nick = "Azurebot"
+$nick = "Azurebot|ChangeThis"
 
 $LOAD_PATH << File.dirname(__FILE__) + '/lib'
 
@@ -19,6 +19,7 @@ require 'plugins/botinfo'
 require 'plugins/decide'
 require 'plugins/delayedrejoin'
 require 'plugins/dice'
+require 'plugins/jargonfile'
 require 'plugins/joinnotice'
 require 'plugins/kickban'
 require 'plugins/multiqdb'
@@ -28,6 +29,8 @@ require 'plugins/ryder'
 require 'plugins/silly'
 require 'plugins/toolbox'
 require 'plugins/twitter5'
+require 'plugins/uptime'
+require 'plugins/urbandictionary'
 require 'plugins/weather'
 
 
@@ -56,6 +59,7 @@ bot = Cinch::Bot.new do
 			Plugins::Decide,
 			Plugins::DelayedRejoin,
 			Plugins::Dice,
+			Plugins::JargonFile,
 			Plugins::JoinNotice,
 			Plugins::Kickban,
 			Plugins::MultiQDB,
@@ -65,6 +69,8 @@ bot = Cinch::Bot.new do
 			Plugins::Silly,
 			Plugins::Toolbox,
 			Plugins::Twitter5,
+			Plugins::Uptime,
+			Plugins::UrbanDictionary,
 			Plugins::Weather ]
 		
 		admins = Admin.instance

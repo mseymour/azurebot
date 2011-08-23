@@ -12,7 +12,7 @@ class Admin
 		@password = ""
 	end
 
-	def first_nick; @masks.first.match(/(.+)!(.+)@(.+)/)[1]; end;
+	def first_nick; !@masks.empty? ? @masks.first.match(/(.+)!(.+)@(.+)/)[1] : nil; end;
 
 	def logged_in? (mask); @masks.include?(mask.to_s); end;
 	alias_method :is_admin?, :logged_in?

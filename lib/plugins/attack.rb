@@ -56,7 +56,7 @@ module Plugins
 			end
 
 			target = m.user.nick if !target.nil? && target.among_case?(@bot.nick, "herself", "himself", "itself");
-			target.gsub!(/(\bmy\b)/i,m.user.nick);
+			target.gsub!(/(\bmy\b)/i,m.user.nick+"'s") if !target.nil?;
 			
 			populate_attacks!
 			

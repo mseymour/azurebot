@@ -95,16 +95,16 @@ module Plugins
       template = open(config[:template], &:read).gsub(/<(\w+)>/, "%<#{'\1'.downcase}>s").split("\n").delete_if {|d| d =~ /^#.+/}.reject(&:blank?).join("\n");
 
       template % {
-        :bot_name => $nick,
-        :owner_name => config[:owner],
-        :cinch_version => Cinch::VERSION,
-        :is_admin => config[:admins].is_admin?(user.mask) ? "an admin" : "not an admin",
-        :uptime => time_diff_in_natural_language(@bot.signed_on_at, Time.now),
-        :session_start_date => @bot.signed_on_at.strftime("%A, %B %e, %Y, at %l:%M:%S %P"),
-        :plugins => plugin_list.to_sentence,
-        :ruby_version => RUBY_VERSION,
-        :ruby_platform => RUBY_PLATFORM,
-        :ruby_release_date => RUBY_RELEASE_DATE
+        bot_name: $nick,
+        owner_name: config[:admins].first_nick || config[:owner],
+        cinch_version: Cinch::VERSION,
+        is_admin: config[:admins].is_admin?(user.mask) ? "an admin" : "not an admin",
+        uptime: time_diff_in_natural_language(@bot.signed_on_at, Time.now),
+        session_start_date: @bot.signed_on_at.strftime("%A, %B %e, %Y, at %l:%M:%S %P"),
+        plugins: plugin_list.to_sentence,
+        ruby_version: RUBY_VERSION,
+        ruby_platform: RUBY_PLATFORM,
+        ruby_release_date: RUBY_RELEASE_DATE
       }
     end
 
