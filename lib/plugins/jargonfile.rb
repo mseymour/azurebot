@@ -7,7 +7,7 @@ require 'cgi'
 module Plugins
   class JargonFile
     include Cinch::Plugin
-    set help: "!jargon <entry> -- Gets the entry from the Jargon File."
+    set help: "Gets the entry from the Jargon File.\nUsage: `!jargon <entry>`"
     
     match /jargon (.+)/
     def lookup(word)
