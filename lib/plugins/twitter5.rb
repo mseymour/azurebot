@@ -23,7 +23,7 @@ module Plugins
     include Cinch::Plugin
     set(
       plugin_name: "Twitter", 
-      help: "Gets the current tweet of the user specified. If it is blank, it will return Twitter's official account instead.\nUsage: `!tw<itter> [username] <info>`", 
+      help: "Gets the current tweet of the user specified. If it is blank, it will return Twitter's official account instead.\nUsage: `!tw<itter> [params[:username]] <info>`", 
       required_options: [:access_keys])
     
     # Class variables
@@ -42,20 +42,22 @@ module Plugins
       end
     end
     
-    def twitterproc ( params={} )
-      username = params[:username]||"twitter"
-      modifier = params[:modifier]||:default;
+    def twitterproc params={}
+      params = {
+        username: "twitter",
+        modifier: :default
+      }.merge(params)
       
       begin
-        username = Twitter.user(username).screen_name; # Get the proper case for subsequent displays.
-        raise Error::Protected if Twitter.user(username).protected;
-        raise Error::No_Tweets if Twitter.user_timeline(username).blank?;
+        user_timeline = Twitter.user_timeline(params[:username], :include_rts => true)
+        raise Error::No_Tweets if user_timeline.blank?;
+        raise Error::Protected if user_timeline.first.user.protected;
       
-        case modifier
+        case params[:modifier]
           when :default
             
             # Move to separate def later.
-            the_tweet = Twitter.user_timeline(username, :include_rts => true).first;
+            the_tweet = user_timeline.first;
             
             # Constructing output!
             screen_name = "[#{the_tweet.user.screen_name}]";
@@ -77,7 +79,7 @@ module Plugins
             "![c10]%<screen_name>s![c] %<tweet_text>s ![c14](%<metadata>s)![c] %<urls>s" % {:screen_name => screen_name, :tweet_text => tweet_text, :metadata => metadata, :urls => urls};
             
           when "info"
-            the_user = Twitter.user(username);
+            the_user = Twitter.user(params[:username]);
           
             lines = [];
             lines << "![c10,01]@![b]#{the_user.screen_name}![b]#{the_user.verified == true ? "![c01,10]✔![c]" : ""} - #{the_user.name} ![c14](http://twitter.com/#{the_user.screen_name}#{!the_user.url.blank? ? ", #{the_user.url}" : ""})";
@@ -97,16 +99,16 @@ module Plugins
           when Twitter::BadRequest
             @@error_template % {:message => "Badrequest (rate limit exceeded? Warn Azure when this occurs.)"}
           when Twitter::Unauthorized
-            @@error_template % {:message => "#{username}'s account seems to be protected or suspended."}
+            @@error_template % {:message => "#{params[:username]}'s account seems to be protected or suspended."}
           when Twitter::Forbidden
             # stupid coding (raise in a rescue block) was here — 2011-06-11 1:27am
             if twerr.message =~ /\bsuspended\b/i
-              @@error_template % {:message => "#{username} has been suspended!"}
+              @@error_template % {:message => "#{params[:username]} has been suspended!"}
             else
               @@error_template % {:message => "Forbidden (update limit exceeded? Warn Azure when this occurs."}
             end
           when Twitter::NotFound
-            @@error_template % {:message => "The account \"#{username}\" seems to be not found!"}
+            @@error_template % {:message => "The account \"#{params[:username]}\" seems to be not found!"}
           when Twitter::NotAcceptable
             @@error_template % {:message => "An invalid format is specified in the search request."}
           when Twitter::EnhanceYourCalm
@@ -121,9 +123,9 @@ module Plugins
       rescue Twitter5::Error => twerr
         case twerr
           when Twitter5::Error::Protected
-            @@error_template % {:message => "#{username}'s tweets are protected!"}
+            @@error_template % {:message => "#{params[:username]}'s tweets are protected!"}
           when Twitter5::Error::No_Tweets
-            @@error_template % {:message => "#{username} is lame for creating an account and not tweeting yet!"}
+            @@error_template % {:message => "#{params[:username]} is lame for creating an account and not tweeting yet!"}
         end
       end
     end
@@ -143,7 +145,12 @@ module Plugins
     match %r/twitter (.+)*/
     def execute(m, words = nil)
   		args = words != nil ? words.split(" ") : [nil, nil];
-      m.reply twitterproc(:username => args[0], :modifier => args[1]).irc_colorize, false;
+      
+      twitter_options = {}
+      twitter_options[:username] = args[0] if !args[0].nil?
+      twitter_options[:modifier] = args[1] if !args[1].nil?
+
+      m.reply twitterproc(twitter_options).irc_colorize, false;
     end
 
   end
