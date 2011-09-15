@@ -22,6 +22,10 @@ Plugins
 
 Admin handler -- handles admins, of course.
 
+### antispam (`Plugins::AntiSpam`)
+
+Kicks those who spam prefixed bot commands.
+
 ### authtest (`Plugins::Authtest`)
 
 Tells you if you are logged into the bot or not. (Admins only)
@@ -66,7 +70,7 @@ Usage: `!Aiko`
 
 Helps you decide on things.
 
-Usage: `!decide [a list of items separated by ", ", ", or", or " or "]`; Usage: `!coin`
+Usage: `!decide [a list of items separated by ", ", ", or", or " or "]`; Usage: `!coin`; Usage: `!rand [x] [y]`
 
 ### delayedrejoin (`Plugins::DelayedRejoin`)
 
@@ -112,11 +116,21 @@ Bot administrator-only private commands.
 
 Usage: n/a
 
+### questionperiod (`Plugins::QuestionPeriod`)
+
+The bot knows all.
+
 ### Rainbow (`Plugins::Rainbow`)
 
 Rainbowificates your text.
 
 Usage: `!rainbow [text]`.
+
+### russianroulette (`Plugins::RussianRoulette`)
+
+In Soviet Russia, boolet shoots YOU!
+
+Usage: !rr <nick>
 
 ### Ryder (`Plugins::Ryder`)
 
@@ -138,7 +152,7 @@ Usage: `~join [channel]`; `~part [channel] <reason>`; `~quit [reason]`; `~nick [
 
 Gets the current tweet of the user specified. If it is blank, it will return Twitter's official account instead.
 
-Usage: `!tw<itter> [username] <info>`
+Usage: `!tw<itter> [params[:username]] <info>`
 
 ### uptime (`Plugins::Uptime`)
 
@@ -181,6 +195,10 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^logout`
 * `^admins`
 
+### antispam (`Plugins::AntiSpam`)
+
+* `^!antispam`
+
 ### authtest (`Plugins::Authtest`)
 
 * `^Am I (logged in|an admin)\?$`
@@ -203,10 +221,13 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 
 ### Booru (`Plugins::Booru`)
 
-* `^!booru\s?(\w+)?\s?(.+)?`
+* `^!booru$`
+* `^!booru (\w+)?\s?(.+)?`
+* `^!boorulist`
 
 ### botinfo (`Plugins::BotInfo`)
 
+* `^!generate documentation`
 * `^!Aiko$`
 
 ### Decider (`Plugins::Decide`)
@@ -214,6 +235,12 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^!decide (.+)`
 * `^!choose (.+)`
 * `^!coin$`
+* `^!rand ((?-mix:(?:-|\+)?\d*\.?\d+(?:e)?(?:-|\+)?\d*\.?\d*)) ((?-mix:(?:-|\+)?\d*\.?\d+(?:e)?(?:-|\+)?\d*\.?\d*))`
+* `^!token (\d+)`
+
+### delayedrejoin (`Plugins::DelayedRejoin`)
+
+* `^!delayedrejoin`
 
 ### Dicebox (`Plugins::Dice`)
 
@@ -244,11 +271,20 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^cs (.+)`
 * `^ns (.+)`
 * `^hs (.+)`
+* `^psa (.+)`
+
+### questionperiod (`Plugins::QuestionPeriod`)
+
+* `^What is (?:a )?(?:"|')?(.+)(?:"|')?\?+?$`
 
 ### Rainbow (`Plugins::Rainbow`)
 
 * `^!rainbow (.+)$`
 * `^!eyerape (.+)$`
+
+### russianroulette (`Plugins::RussianRoulette`)
+
+* `^!rr(?:\s(.+))?`
 
 ### Ryder (`Plugins::Ryder`)
 
@@ -256,8 +292,11 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 
 ### silly (`Plugins::Silly`)
 
-* `\x01ACTION pokes (.+)\x01`
+* `\x01ACTION pokes (\S+)\x01`
 * `dumb bot`
+* `\x01ACTION (?:.*)\bdonk\b(?:.*)\x01`
+* `\bbangin(?:'|g) donk on (\S+)\b`
+* `\x01ACTION donks (\S+)\x01`
 
 ### Toolbox (`Plugins::Toolbox`)
 
