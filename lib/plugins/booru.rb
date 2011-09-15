@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+require 'modules/helpers/table_format'
 
 module Plugins
 	class Booru
@@ -35,7 +36,7 @@ module Plugins
 		def generate_url( selector, tags )
 			return nil if (selector.nil? || @@selectors[selector.to_sym].nil?);
 			return get_base_url(@@selectors[selector.to_sym]) if (tags.nil? || tags.empty?);
-			@@selectors[selector.to_sym] % {:tags => CGI::escape(list_to_tags(tags))};
+			@@selectors[selector.to_sym] % {:tags => CGI::escape(tags)};
 		end
 			
 		def generate_selector_list
@@ -44,10 +45,20 @@ module Plugins
 			selectors[0..-2].join(", ") + ", and " + selectors[-1]
 		end
 		
-		match /booru\s?(\w+)?\s?(.+)?/
-		def execute (m, selector, tags)
+    match /booru$/, method: :execute_booru
+		match /booru (\w+)?\s?(.+)?/, method: :execute_booru
+		def execute_booru (m, selector = nil, tags = nil)
 			m.reply(generate_url(selector, tags) || "You have #{!tags ? 'listed no tags' : 'used an invalid selector'}. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}, true);
 		end
+
+    match /boorulist/, method: :execute_boorulist
+    def execute_boorulist m
+      table_array = []
+      @@selectors.each {|k,v|
+        table_array << "#{k}\t#{get_base_url(v)}"
+      }
+      m.user.notice Helpers::table_format(table_array, justify: [:right, :left], headers: ["selector","url"], gutter: 1)
+    end
 
 	end
 end

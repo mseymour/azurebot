@@ -82,9 +82,6 @@ module Plugins
     # All fields in the text file must be surrounded by '<>', and lines can be commented out using '#'.
 
     match /#{$nick}$/i
-    # $nick is a global variable defined in the bot's startup script, above all
-    # other requires. In a later version of Cinch, this global variable may be
-    # removed in favour of internal functionality.
 
     def format_notice! user
       plugin_list = [];

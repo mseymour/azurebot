@@ -1,3 +1,4 @@
+require 'pony'
 require 'singleton'
 require 'digest/sha2'
 

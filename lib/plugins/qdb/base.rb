@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+require 'uri'
+
 module QDB
 	class QuoteDoesNotExistError < StandardError; end
 
@@ -9,19 +11,20 @@ module QDB
 		attr_reader :lines
 		attr_reader :url
 		
-		@base_url = nil
-		
 		def initialize params={}
-			id = params[:id]||nil;
-			lines = params[:lines]||4;
+			params = {
+				id: :latest,
+				lines: 4
+			}.merge(params)
 			
 			raise "@fullname must be set in #{self.class.name}#initialize." if @fullname.nil?
 			raise "@base_url must be set in #{self.class.name}#initialize." if @base_url.nil?
+			raise "@path_template must be set in #{self.class.name}#initialize." if @path_template.nil?
 			@base_url.freeze # This prevents the developer from screwing around with the variable.
 			
-			@id = (:"#{id}" == :latest || id.nil? ? self.retrieve_latest_quote_id : id)
-			@lines = lines
-			@url = "#{@base_url}?#{@id}"
+			@id = (:"#{params[id]}" == :latest || params[:id].nil? ? self.retrieve_latest_quote_id : params[:id])
+			@lines = params[:lines]
+			@url = "#{@base_url}#{ @path_template % { id: URI.escape(@id, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) } }"
 		end
 		
 		def retrieve_latest_quote_id
@@ -37,11 +40,13 @@ module QDB
 		end
 		
 		def to_hsh
+			retrieved_quote = self.retrieve_quote lines: -1
 			{
 				fullname: @fullname,
-				quote: self.retrieve_quote(:id => @id, :lines => @lines),
-				fullquote: self.retrieve_quote(:id => @id),
-				meta: self.retrieve_meta(:id => @id),
+				quote: retrieved_quote[0..@lines-1],
+				quotetail: retrieved_quote[@lines..-1],
+				fullquote: retrieved_quote,
+				meta: self.retrieve_meta,
 				id: @id,
 				lines: @lines,
 				url: @url

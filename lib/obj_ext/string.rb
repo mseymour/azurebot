@@ -8,7 +8,7 @@ class String
 	end
 
 	def valid_nick?
-		sub.match %r{^([^-\d][\w|{}\[\]\\^`-]+)$}
+		!!self.match(%r{^([^-\d][\w|{}\[\]\\^`-]+)$})
 	end
 
 	def irc_colorize
@@ -22,7 +22,7 @@ class String
 	end
 	
 	def irc_strip_colors
-		self.gsub(/\x03[0-9]{2}(,[0-9]{2})?/,"")
+		self.gsub(/\x03([0-9]{2}(,[0-9]{2})?)?/,"")
 	end
 
 	def irc_strip_colors!

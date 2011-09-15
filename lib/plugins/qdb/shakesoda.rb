@@ -12,6 +12,7 @@ module QDB
 		def initialize *args
 			@fullname = "#shakesoda QDB"
 			@base_url = "http://www.shakesoda.org/qdb/"
+			@path_template = "view/%<id>s"
 			super
 		end
 		
@@ -19,29 +20,21 @@ module QDB
 			url = "#{@base_url}"
 			o = Nokogiri::HTML(open(url));
 			id = CGI.unescape_html o.at(".quote .quote-header a").children.to_s.strip.gsub("\r","").gsub("#","")
-			id.to_i
+			id.to_s
 		end
 	
 		def retrieve_quote params={}
-			id = params[:id]||:latest;
-			lines = params[:lines]||0;
-			@id = (:"#{id}" == :latest || id.nil? ? self.retrieve_latest_quote_id : id)
-			
-			@url = "#{@base_url}view/#{id}"
+			params = { lines: @lines }.merge(params)
+
 			o = Nokogiri::HTML(open(@url))
 			raise QDB::QuoteDoesNotExistError, "Quote ##{@id} does not exist." if o.at(".quote").nil?
 			quotes = CGI.unescape_html o.at(".quote-content").children.to_s.gsub("\r","")
 			quotes = quotes.split(/<br *\/?>/i)
-			@lines = quotes.size
 			
-			quotes[0..lines-1]
+			params[:lines] > -1 ? quotes[0..params[:lines]-1] : quotes[0..params[:lines]]
 		end
 	
-		def retrieve_meta params={}
-			id = params[:id]||:latest;
-			@id = (:"#{id}" == :latest || id.nil? ? self.retrieve_latest_quote_id : id)
-			
-			@url = "#{@base_url}view/#{id}"
+		def retrieve_meta
 			o = Nokogiri::HTML(open(@url))
 			raise QDB::QuoteDoesNotExistError, "Quote ##{@id} does not exist." if o.at(".quote").nil?
 			rating = CGI.unescape_html o.at(".quote-header").children.to_s.gsub("\r","").split(".")[0]

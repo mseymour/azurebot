@@ -41,5 +41,13 @@ module Plugins
       User("hostserv").send(text)
     end
 
+    match %r{^psa (.+)}, method: :psa, use_prefix: false
+    def psa(m, text)
+      return unless config[:admins].logged_in?(m.user.mask)
+      @bot.channels.each {|channel|
+        channel.safe_notice "[#{m.user.nick}] #{text}"
+      }
+    end
+
   end
 end

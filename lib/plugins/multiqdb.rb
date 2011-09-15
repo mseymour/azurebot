@@ -21,20 +21,19 @@ module Plugins
 			:ss => QDB::Shakesoda,
 		};
 		
-		def generate_url( selector = nil, id = nil )
-			return nil if (selector.nil? || @@selectors[selector.to_sym].nil?);
+		#def generate_url( selector = nil, id = nil )
+		def generate_quote( qdb_access, tail = false )
+			#return nil if (selector.nil? || @@selectors[selector.to_sym].nil?);
 			#return get_base_url(@@selectors[selector.to_sym]) if (is.nil? || tags.empty?);
 			begin
-				qdb_access = @@selectors[selector.to_sym].new(:id => id, :lines => 5).to_hsh;
-				
 				output = []
-				output << "#{qdb_access[:fullname]} quote ##{qdb_access[:id]} (#{qdb_access[:meta]}):"
-				output << qdb_access[:quote].map {|e| "- #{e}" }
+				output << "#{qdb_access[:fullname]} quote ##{qdb_access[:id]} (#{qdb_access[:meta]}):" unless tail
+				output <<  (!tail ? qdb_access[:quote].map {|e| "- #{e}" } : qdb_access[:quotetail].map {|e| "- #{e}" })
 
 				footer = [] 
-				footer << (qdb_access[:lines] > qdb_access[:quote].size ? "#{qdb_access[:lines] - qdb_access[:quote].size} lines omitted." : nil)
+				footer << (qdb_access[:quote].size < qdb_access[:fullquote].size && !tail ? "#{qdb_access[:fullquote].size - qdb_access[:lines]} lines omitted." : nil)
 				footer << "View"
-				footer << (qdb_access[:lines] > qdb_access[:quote].size ? "more from" : nil)
+				footer << (qdb_access[:quote].size < qdb_access[:fullquote].size && !tail ? "more from" : nil)
 				footer << "this quote at #{qdb_access[:url]}"
 				output << footer.reject(&:nil?).join(" ")
 					
@@ -50,8 +49,21 @@ module Plugins
 			selectors[0..-2].join(", ") + ", and " + selectors[-1]
 		end
 			
-		def execute (m, selector, id)
-			m.reply(generate_url(selector, id) || "You have #{!id ? 'not listed a selector' : 'used an invalid selector'}. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()});
+		def execute (m, selector = nil, id = nil)
+			if (selector.nil? || @@selectors[selector.to_sym].nil?)
+			 	m.reply "You have #{!id ? 'not listed a selector' : 'used an invalid selector'}. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}
+			 else
+				qdb_access = @@selectors[selector.to_sym].new(:id => id, :lines => 5).to_hsh;
+				
+				public_quote = generate_quote(qdb_access)
+				m.reply(public_quote);
+				
+				if qdb_access[:fullquote].size > qdb_access[:quote].size
+					sleep 2
+					private_quote = generate_quote(qdb_access, true)
+					m.user.notice("The rest of the quote:\n" + private_quote);
+				end
+			end
 		end
 
 	end
