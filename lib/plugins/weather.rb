@@ -10,22 +10,22 @@ module Plugins
 	  		plugin_name: "Weather", 
 	  		help: "Grabs the current weather from Google and WeatherUnderground.\nUsage: `!weather [query]`")
 
-		@@unicon = {
-		:clear => "☀☀☀",
-		:cloudy => "☁☁☁",
+		@@unicon = { 
+		:clear => "☾",
+		:cloudy => "☁",
 		:flurries => "☃",
 		:fog => "☁",
 		:hazy => "☁",
 		:mostlycloudy => "☁",
-		:mostlysunny => "☀☀☁",
-		:partlycloudy => "☀☁",
-		:partlysunny => "☁☀",
+		:mostlysunny => "☀",
+		:partlycloudy => "☁☀",
+		:partlysunny => "☀☁",
 		:rain => "☂",
 		:sleet => "☂☃",
-		:snow => "☃☃☃",
-		:sunny => "☀☀",
-		:tstorms => "☁☈",
-		:unknown => "?"
+		:snow => "☃",
+		:sunny => "☀",
+		:tstorms => "☈",
+		:unknown => "☄"
 		}
 		def initialize(*args)
 			super

@@ -11,19 +11,21 @@ module Plugins
 			required_options: [:admins],
 			react_on: :private)
 
-		def login user, password
+		def login m, user, password
 			return "You are already here, #{user.nick}." unless !config[:admins].logged_in? user.mask
 			result = config[:admins].login! user.mask, password
 			if result
-				"Welcome back, #{user.nick}."
+        @bot.handlers.dispatch :admin, m, "#{user.nick} has been successfully logged in.", user
+        "Welcome back, #{user.nick}."
 			else
-				"#{user.nick}, your password is incorrect."
+        @bot.handlers.dispatch :admin, m, "#{user.nick} tried to login with the password `#{password}` but failed.", user
+        "#{user.nick}, your password is incorrect."
 			end
 		end
 
 		match /^login (.+)/, method: :execute_login, use_prefix: false
 		def execute_login m, password
-			m.user.msg login(m.user, password), true
+			m.user.msg login(m, m.user, password), true
 		end
 
 		match /^logout/, method: :execute_logout, use_prefix: false
@@ -31,6 +33,7 @@ module Plugins
 			return unless config[:admins].logged_in? m.user.mask
 			config[:admins].logout! m.user.mask
 			m.user.msg "Sayonara, #{m.user.nick}.", true
+      @bot.handlers.dispatch :admin, m, "#{user.nick} has successfully logged out."
 		end
 
 		match /^admins/, method: :execute_admins, use_prefix: false
@@ -44,6 +47,7 @@ module Plugins
 			return unless config[:admins].logged_in?(m.user.mask("#{m.user.last_nick}!%u@%h"))
 			config[:admins].update m.user.mask("#{m.user.last_nick}!%u@%h"), m.user.mask
 			@bot.debug "Updated hostmask. (`#{m.user.mask("#{m.user.last_nick}!%u@%h")}` -> `#{m.user.mask}`)"
+      @bot.handlers.dispatch :admin, m, "`#{m.user.last_nick}` changed their nick to `#{m.user.nick}`.", m.target
 		end
 
 		listen_to :quit, method: :listen_quit
@@ -52,6 +56,7 @@ module Plugins
 			return unless config[:admins].logged_in?(m.prefix)
 			config[:admins].logout! m.prefix #change back to m.user.mask once fixed in cinch
 			@bot.debug "#{m.prefix} has been automagically logged out."
+      @bot.handlers.dispatch :admin, m, "`#{m.prefix}` has been logged out because they quit the server."
 		end
 
 	end

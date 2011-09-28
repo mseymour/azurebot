@@ -1,4 +1,3 @@
-require 'pony'
 require 'singleton'
 require 'digest/sha2'
 
@@ -32,4 +31,16 @@ class Admin
 	def logout! (mask); @masks.delete mask.to_s; end;
 
 	def update (oldmask, newmask); @masks[@masks.index(oldmask.to_s)] = newmask.to_s; end;
+
+  def each_admin &block
+    @masks.each {|e|
+      elements = e.match(/(.+)!(.+)@(.+)/)
+      case block.arity
+      when 1
+        yield elements[1] # nick
+      when 3
+        yield elements[1], elements[2], elements[3] # nick, username, host
+      end
+    }
+  end
 end

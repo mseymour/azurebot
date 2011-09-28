@@ -9,7 +9,7 @@ module Plugins
     def initialize *args
       super
       @abusers = {}
-      @@abusee = Struct.new :abuse_count, :first_message_time
+      @@abuser = Struct.new :abuse_count, :first_message_time, :last_message_time
       @kicks = 0
     end
 
@@ -25,35 +25,26 @@ module Plugins
 
     listen_to :channel, method: :listen_to_commandspam
     def listen_to_commandspam m
-      return unless m.message.match /^(!|\.|%)/
-      if @abusers.has_key?(m.user.nick)
-        
-        abuser = @abusers[m.user.nick]
-        abuser[:abuse_count] = abuser[:abuse_count].succ
-        @bot.debug "Abuse count: %d; First message time: %s" % [@abusers[m.user.nick][:abuse_count], @abusers[m.user.nick][:first_message_time].to_s]
-        
-        if abuser[:abuse_count] >= config[:limit_commands] && (Time.now - abuser[:first_message_time]) <= config[:limit_seconds]
-          @bot.debug "Abuse count: %d; command limit: %d; limit seconds: %d; time passed: %d" % [abuser[:abuse_count], config[:limit_commands], config[:limit_seconds], (Time.now - abuser[:first_message_time])]
-          @kicks = @kicks.succ
-          m.channel.kick(m.user.nick, "Please do not spam bot commands. (#{@kicks})")
-          delete_abuser! m.user.nick
-          @bot.debug "abUser deleted from kick."
-        elsif abuser[:abuse_count] < config[:limit_commands] && (Time.now - abuser[:first_message_time]) > (config[:limit_seconds])
-          @abusers.delete(m.user.nick)
-          @bot.debug "abUser deleted on good behaviour"
-        else
-          @bot.debug "abUser - other event."
-          if abuser[:abuse_count] >= config[:limit_commands]
-            @kicks = @kicks.succ
-            m.channel.kick(m.user.nick, "Please do not spam bot commands. (#{@kicks})") 
-            delete_abuser! m.user.nick
-            @bot.debug "abUser deleted from kick."
+      trec = Time.now.to_i
+      message = m.message
+      return unless message.match /^[!\.%]/
+      if @abusers.has_key? m.user.nick
+        if (Time.now - @abusers[m.user.nick][:first_message_time]) <= config[:limit_seconds] && (Time.now - @abusers[m.user.nick][:last_message_time]) <= (config[:limit_seconds] / 2)
+            @abusers[m.user.nick][:abuse_count] = @abusers[m.user.nick][:abuse_count].succ
+            @abusers[m.user.nick][:last_message_time] = Time.now
+            @bot.handlers.dispatch :antispam, m, "35 #{m.user.nick}'s command abuse count has been increased to #{@abusers[m.user.nick][:abuse_count]}.", m.target
+          if @abusers[m.user.nick][:abuse_count] >= config[:limit_commands]
+            m.channel.kick(m.user)
+            @abusers.delete m.user.nick
+            @bot.handlers.dispatch :antispam, m, "39 #{m.user.nick} has been kicked and their abuse record deleted.", m.target
           end
+        else
+          @abusers.delete m.user.nick
+          @bot.handlers.dispatch :antispam, m, "43 #{m.user.nick}'s abuse record has been deleted (for good behaviour).", m.target
         end
-
       else
-        @abusers[m.user.nick] = @@abusee.new(0, Time.now)
-        @bot.debug "Abuse count: %d; First message time: %s" % [@abusers[m.user.nick][:abuse_count], @abusers[m.user.nick][:first_message_time].to_s]
+        @abusers[m.user.nick] = @@abuser.new 1, Time.now, Time.now
+        @bot.handlers.dispatch :antispam, m, "47 A new command abuse record has been created for #{m.user.nick}.", m.target
       end
     end
 

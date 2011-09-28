@@ -47,17 +47,19 @@ module Plugins
 
     match %r{token (\d+)}, method: :execute_token
     def execute_token m, length
+      max_length = 256
       def power_of_2?(number)
         (1..32).each { |bit| return true if number == (1 << bit) }
         false
       end
 
-      return m.reply "Your token length can only be 8, 16, 32, 64, 128 ..." unless power_of_2?(length.to_i)
+      return m.reply "Your token length can only be 2, 4, 8, 16, 32, 64, 128, and 256." unless power_of_2?(length.to_i)
       return m.reply "Your token length must be 256 or below." if length.to_i > 256
       srand;
-      key = Random.new.rand(36**length.to_i).to_s(36)
-      key = key.upcase.scan(/.{0,#{key.length / (key.length / 8)}}/).reject(&:empty?).join("-")
+      characters = ('a'..'z').to_a + ('A'..'Z').to_a + (0..9).to_a
+      key = (0..length.to_i-1).map{characters.sample}.join
       m.reply "Your token is: #{key}", true
+      m.user.notice "Alternatively, you may want it in these formats: #{key.scan(/.{0,#{key.length / (key.length / 8)}}/).reject(&:empty?).join("-")}, #{key.upcase.scan(/.{0,#{key.length / (key.length / 8)}}/).reject(&:empty?).join("-")}"
     end
 
 	end

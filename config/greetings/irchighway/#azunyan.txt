@@ -1,0 +1,2 @@
+Github repo: https://github.com/mseymour/azurebot
+Readme: https://raw.github.com/mseymour/azurebot/master/README.md

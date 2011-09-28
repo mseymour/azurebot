@@ -11,8 +11,8 @@ module Plugins
 
     set(
       plugin_name: "botinfo",
-      help: "Notices you information about me.\nUsage: `!#{$nick}`",
-      required_options: [:template, :owner, :admins])
+      help: "Notices you information about me.\nUsage: `![botnick]`",
+      required_options: [:template, :owner, :bot, :admins])
 
       def regexp_process (local_r, bot_r = nil)
         if !local_r.blank?
@@ -79,9 +79,8 @@ module Plugins
     # :admin -- admin class instance
     # :template -- a path to a textual file (such as *.txt) with fields in it.
     # :owner -- What to display for the "owner_name" field.
+    # :bot -- What to display for the "bot_name" field.
     # All fields in the text file must be surrounded by '<>', and lines can be commented out using '#'.
-
-    match /#{$nick}$/i
 
     def format_notice! user
       plugin_list = [];
@@ -92,7 +91,7 @@ module Plugins
       template = open(config[:template], &:read).gsub(/<(\w+)>/, "%<#{'\1'.downcase}>s").split("\n").delete_if {|d| d =~ /^#.+/}.reject(&:blank?).join("\n");
 
       template % {
-        bot_name: $nick,
+        bot_name: config[:bot],
         owner_name: config[:admins].first_nick || config[:owner],
         cinch_version: Cinch::VERSION,
         is_admin: config[:admins].is_admin?(user.mask) ? "an admin" : "not an admin",
@@ -105,10 +104,10 @@ module Plugins
       }
     end
 
-    def execute(m)
-      unless m.user.nick == bot.nick
-        m.user.notice(format_notice!(m.user).irc_colorize)
-      end
+    match /(.+)$/i
+    def execute(m, nick)
+      return unless nick.casecmp(config[:bot]) == 0
+      m.user.notice(format_notice!(m.user).irc_colorize)
     end
 
   end
