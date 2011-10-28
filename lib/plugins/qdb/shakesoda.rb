@@ -27,7 +27,7 @@ module QDB
 			params = { lines: @lines }.merge(params)
 
 			o = Nokogiri::HTML(open(@url))
-			raise QDB::QuoteDoesNotExistError, "Quote ##{@id} does not exist." if o.at(".quote").nil?
+			raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".quote").nil?
 			quotes = CGI.unescape_html o.at(".quote-content").children.to_s.gsub("\r","")
 			quotes = quotes.split(/<br *\/?>/i)
 			
@@ -36,7 +36,7 @@ module QDB
 	
 		def retrieve_meta
 			o = Nokogiri::HTML(open(@url))
-			raise QDB::QuoteDoesNotExistError, "Quote ##{@id} does not exist." if o.at(".quote").nil?
+			raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".quote").nil?
 			rating = CGI.unescape_html o.at(".quote-header").children.to_s.gsub("\r","").split(".")[0]
 			
 			"#{rating}"

@@ -3,7 +3,12 @@
 require 'uri'
 
 module QDB
-	class QuoteDoesNotExistError < StandardError; end
+	class QuoteDoesNotExistError < StandardError
+    attr :id
+    def initialize id
+      @id = id
+    end
+  end
 
 	class Base
 		attr_reader :fullname

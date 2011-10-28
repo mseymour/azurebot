@@ -33,10 +33,21 @@ module Plugins
 			return unless config[:admins].logged_in? m.user.mask
 			config[:admins].logout! m.user.mask
 			m.user.msg "Sayonara, #{m.user.nick}.", true
-      @bot.handlers.dispatch :admin, m, "#{user.nick} has successfully logged out."
+      @bot.handlers.dispatch :admin, m, "#{user.nick} has successfully logged out.", m.target
 		end
 
-		match /^admins/, method: :execute_admins, use_prefix: false
+    match /^flogout/, method: :execute_flogout, use_prefix: false
+    def execute_flogout m
+      return unless config[:admins].logged_in? m.user.mask
+      hosts = []
+      config[:admins].each_admin {|host|
+        config[:admins].logout! host
+        #m.user.msg "Sayonara, #{m.user.nick}.", true
+        @bot.handlers.dispatch :admin, m, "#{host.match(/(.+)!(.+)@(.+)/)[1]} has successfully logged out by #{m.user.nick}.", m.target
+      }
+    end
+
+		match /^list admins/, method: :execute_admins, use_prefix: false
 		def execute_admins m
 			return unless config[:admins].logged_in? m.user.mask
 			m.user.msg Helpers::table_format(config[:admins].masks, regexp: /(?:(.+)!)?(.+)/, gutter: 1, justify: [:right,:left], headers: ["nick","username+host"]), true
@@ -56,7 +67,7 @@ module Plugins
 			return unless config[:admins].logged_in?(m.prefix)
 			config[:admins].logout! m.prefix #change back to m.user.mask once fixed in cinch
 			@bot.debug "#{m.prefix} has been automagically logged out."
-      @bot.handlers.dispatch :admin, m, "`#{m.prefix}` has been logged out because they quit the server."
+      @bot.handlers.dispatch :admin, m, "`#{m.prefix}` has been logged out because they quit the server.", m.target
 		end
 
 	end

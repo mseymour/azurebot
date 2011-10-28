@@ -37,7 +37,7 @@ class Admin
       elements = e.match(/(.+)!(.+)@(.+)/)
       case block.arity
       when 1
-        yield elements[1] # nick
+        yield e # mask
       when 3
         yield elements[1], elements[2], elements[3] # nick, username, host
       end

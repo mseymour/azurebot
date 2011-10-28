@@ -14,7 +14,10 @@ module Helpers
   # @option params [Integer] :gutter (4) Sets the gutter size between columns and optionally the left gutter.
   # @option params [Boolean] :left_gutter (false) Generates a gutter on the left side of the generated table, equal to the same length as column gutters.
   # @option params [Boolean] :display_indices (false) Shows the index #+1 of the row.
-  # @todo Have :justify be set on individual columns.
+  # @option params [Boolean] :display_noitems (true) Displays a notice if there are no items to show.
+  # @option params [String] :noitems_msg ("There is nothing to show.") Sets the message for display_noitems.
+  # @option params [Boolean] :display_eot (true) Displays a notice at the end of the table.
+  # @option params [String] :eot_msg ("End of results.") Sets the message for display_eot.
   # @todo Have the ability to output either an array or string (params[:array]?)
   # @return [String] The formatted string with line endings.
   def Helpers.table_format array, params={}
@@ -25,7 +28,11 @@ module Helpers
       headers: [], # ary (ex: ["a","b","c"])
       gutter: 4,
       left_gutter: false,
-      display_indices: false
+      display_indices: false,
+      display_noitems: true,
+      noitems_msg: "There is nothing to show.",
+      display_eot: true,
+      eot_msg: "End of results."
     }.merge!(params)
     
     source = array.dup # We cannot be altering our original object now, can we?
@@ -75,9 +82,18 @@ module Helpers
       data << line.join(" "*params[:gutter])
     }
 
+    # Adding noitems_msg if there are well... no items.
+    if source.empty? && params[:display_noitems] then data << params[:noitems_msg] end
+    
+    # Adding EOT message
+    if params[:display_eot]
+      data << "-" * params[:eot_msg].length
+      data << params[:eot_msg]
+    end
+
     # Adding a gutter to the left side
     if params[:left_gutter] === true then data.map! {|e| " "*params[:gutter] + e } end
-      
+    
     data.join("\n")
   end
 end

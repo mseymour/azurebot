@@ -64,7 +64,7 @@ module Plugins
       channel = Channel(channel)
       user = User(user)
       channel.kick(user, msg)
-      @bot.handlers.dispatch :admin, m, "Kicked #{user.nick} from #{channel.name}#{" - #{msg}" unless msg.nil?}", m.target
+      @bot.handlers.dispatch :admin, m, "Kicked #{user.nick} from #{channel.name}#{" - \"#{msg}\"" unless msg.nil?}", m.target
     end
 
     match %r{^ban (#\S+) (\S+)}, method: :ban, use_prefix: false
@@ -77,6 +77,14 @@ module Plugins
       @bot.handlers.dispatch :admin, m, "Banned #{user.nick} (#{mask.to_s}) from #{channel.name}", m.target
     end
 
+    match %r{^unban (#\S+) (\S+)}, method: :unban, use_prefix: false
+    def unban(m, channel, mask)
+      return unless config[:admins].logged_in?(m.user.mask)
+      channel = Channel(channel)
+      channel.unban(mask)
+      @bot.handlers.dispatch :admin, m, "Unbanned #{mask} from #{channel.name}", m.target
+    end
+
     match %r{^kb (#\S+) (\S+)\s?(.+)?}, method: :kickban, use_prefix: false
     def kickban(m, channel, user, msg)
       return unless config[:admins].logged_in?(m.user.mask)
@@ -86,7 +94,7 @@ module Plugins
       mask = user.mask("*!*@%h")
       channel.ban(mask)
       channel.kick(user, msg)
-      @bot.handlers.dispatch :admin, m, "Kickbanned #{user} (#{mask.to_s}) from #{channel.name}#{" - #{msg}" unless msg.nil?}", m.target
+      @bot.handlers.dispatch :admin, m, "Kickbanned #{user} (#{mask.to_s}) from #{channel.name}#{" - \"#{msg}\"" unless msg.nil?}", m.target
     end
 
   end

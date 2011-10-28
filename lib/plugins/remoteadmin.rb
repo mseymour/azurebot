@@ -11,7 +11,7 @@ module Plugins
     listen_to :ctcp
     def listen m, message = nil, target = nil
       return if m.ctcp? && m.ctcp_message.split[0].casecmp("action") == 0
-      config[:admins].each_admin {|nick|
+      config[:admins].each_admin {|nick, username, host|
         admin = User(nick)
         next if m.user.nick.casecmp(admin.nick) == 0
         string = if m.ctcp?
@@ -28,7 +28,7 @@ module Plugins
     listen_to :admin, method: :listen_hook
     listen_to :private_admin, method: :listen_hook
     def listen_hook m, message, target
-      config[:admins].each_admin {|nick|
+      config[:admins].each_admin {|nick, username, host|
         admin = User(nick)
         #admin.msg m.events.inspect
         admin.msg fmt_message(nick: target.name, type: (!target.nil? ? target.name : m.command), string: (!message.nil? ? message : m.message))
@@ -37,7 +37,7 @@ module Plugins
 
     listen_to :antispam, method: :listen_hook_antispam
     def listen_hook_antispam m, message, target
-      config[:admins].each_admin {|nick|
+      config[:admins].each_admin {|nick, username, host|
         admin = User(nick)
         admin.msg fmt_message(nick: m.user.nick, type: (!target.nil? ? target.name : m.command), string: (!message.nil? ? message : m.message))
       }
