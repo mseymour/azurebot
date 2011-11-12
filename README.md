@@ -18,6 +18,24 @@ Plugins
 
 (No help available)
 
+### joker (`Cinch::Plugins::Joker`)
+
+(No help available)
+
+### lastseen (`Cinch::Plugins::LastSeen`)
+
+(No help available)
+
+### hangman (`Cinch::Plugins::Hangman`)
+
+`!hang new [channel] [secret]` to start a new game.
+
+`!hang guess [letters]` to guess. Multiple characters are allowed.
+
+### fortune (`Cinch::Plugins::Fortune`)
+
+(No help available)
+
 ### admin (`Plugins::AdminHandler`)
 
 Admin handler -- handles admins, of course.
@@ -193,6 +211,23 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 
 * `^!identify`
 
+### joker (`Cinch::Plugins::Joker`)
+
+* `^!joke`
+
+### lastseen (`Cinch::Plugins::LastSeen`)
+
+* `^!seen (.+)`
+
+### hangman (`Cinch::Plugins::Hangman`)
+
+* `^!hang guess (.*)`
+* `^!hang new (#\S*) (.*)`
+
+### fortune (`Cinch::Plugins::Fortune`)
+
+* `^!fortune`
+
 ### admin (`Plugins::AdminHandler`)
 
 * `^login (.+)`
@@ -319,6 +354,7 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^~quit(?: (.+))?`
 * `^~nick (.+)`
 * `^~opadmin$`
+* `^~isupport$`
 
 ### Twitter (`Plugins::Twitter5`)
 
