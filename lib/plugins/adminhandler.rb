@@ -70,5 +70,10 @@ module Plugins
       @bot.handlers.dispatch :admin, m, "`#{m.prefix}` has been logged out because they quit the server.", m.target
 		end
 
+    listen_to :join, method: :listen_join
+    def listen_join m
+      return unless config[:admins].logged_in? m.user.mask
+    end
+
 	end
 end

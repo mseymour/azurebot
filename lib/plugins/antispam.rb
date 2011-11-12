@@ -20,10 +20,9 @@ module Plugins
         @abusers.delete(nick)
       end
 
-      listen_to :kick, method: :listen_to_kick
-      listen_to :part, method: :listen_to_kick
-      listen_to :quit, method: :listen_to_kick
-      def listen_to_kick m
+      listen_to :kick, method: :listen_to_exit
+      listen_to :quit, method: :listen_to_exit
+      def listen_to_exit m
         return unless @abusers.has_key?(m.user.nick)
         delete_abuser! m.user.nick
       end

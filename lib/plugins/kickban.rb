@@ -8,10 +8,11 @@ module Plugins
     set plugin_name: "Kickban", help: %{Various commands used for kickbanning users.
 Usage: `!moon [nick]` -- kicks the selected user with a My Little Pony: Friendship Is Magic-themed kick reason.
 Usage: `!sun [nick]` -- Kickbans the selected user [MLP-themed]
-Usage: `!banana [nick]` -- Kicks too. Don't ask.}, react_on: :channel
+Usage: `!banana [nick]` -- Kicks too. Don't ask.
+Usage: `!crp [nick]` -- Also kicks too. Don't ask, as well.}, react_on: :channel
 
     def check_user(users, user)
-      ["h", "o", "a", "q"].any? {|mode| users[user].include?(mode)}
+      @bot.irc.isupport["prefix"].keys.any? {|mode| users[user].include?(mode)}
     end
 
     match /moon (.+)/, method: :moonkick
@@ -35,6 +36,14 @@ Usage: `!banana [nick]` -- Kicks too. Don't ask.}, react_on: :channel
       return unless check_user(m.channel.users, m.user)
       baddie = User(nick);
       m.channel.kick(nick, "#{m.user.nick} banishes #{baddie.nick} TO THE MOOOOOOOOOOOOOOOOOOOOONAAAAAAAAAAAAAAA BEEEYATCH!!!");
+    end
+
+
+    match /crp (.+)/, method: :crpkick
+    def crpkick(m, nick)
+      return unless check_user(m.channel.users, m.user)
+      baddie = User(nick);
+      m.channel.kick(nick, "gb2/#crrp/");
     end
 
   end
