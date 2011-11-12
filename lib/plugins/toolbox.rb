@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 #require_relative '../modules/authenticate'
+require 'ap'
 
 module Plugins
   class Toolbox
@@ -52,6 +53,12 @@ module Plugins
   		return unless config[:admins].logged_in?(m.user.mask)
   		m.channel.op(m.user.nick);
       @bot.handlers.dispatch :admin, m, "I have opped #{m.user.nick}.", m.target
+    end
+
+    match /isupport$/, method: :isupport
+    def isupport(m)
+      return unless config[:admins].logged_in?(m.user.mask)
+      m.user.notice ap(@bot.irc.isupport)
     end
 
   end

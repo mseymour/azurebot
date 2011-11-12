@@ -15,8 +15,6 @@ module Plugins
 		
 		def initialize *args
 			@@attackdict = []
-			@@lastattack = []
-			@@cons_attack_count = 0
 			super
 		end
 		
@@ -39,22 +37,6 @@ module Plugins
 		
 		match /attack\s?(.+)?/
 		def execute (m, target)
-			if !@@lastattack.empty? && @@lastattack[0] == m.user.nick
-				puts "#{@@lastattack.inspect} | #{@@cons_attack_count}"
-				@@cons_attack_count = @@cons_attack_count.succ
-				if @@cons_attack_count >= 4 && ((Time.now - @@lastattack[1]) / 60) <= 1
-					puts "DIE MONSTER!"
-					m.channel.kick(m.user.nick, "Enough of ye!!")
-				end
-				@@lastattack = [m.user.nick, Time.now]
-			elsif !@@lastattack.empty? && @@cons_attack_count[0] != m.user.nick
-				puts "#{@@lastattack.inspect} | #{@@cons_attack_count}"
-				@@cons_attack_count = 0
-				@@lastattack = [m.user.nick, Time.now]
-			else
-				@@lastattack = [m.user.nick, Time.now]
-			end
-
 			target = m.user.nick if !target.nil? && target.among_case?(@bot.nick, "herself", "himself", "itself");
 			target.gsub!(/(\bmy\b)/i,m.user.nick+"'s") if !target.nil?;
 			

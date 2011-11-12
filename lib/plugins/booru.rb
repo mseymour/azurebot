@@ -10,19 +10,20 @@ module Plugins
 			help: "Generates a handy link to a *booru search\nUsage: `!booru <selector> <comma-separated list of tags>`; use `!booru` to get a list of tags.")
 
 		@@selectors = {
-			:dan => "http://danbooru.donmai.us/post?tags=%<tags>s",
-			:gel => "http://gelbooru.com/index.php?page=post&s=list&tags=%<tags>s",
-			:safe => "http://safebooru.com/index.php?page=post&s=list&tags=%<tags>s",
-			:kona => "http://konachan.com/post?tags=%<tags>s",
-			:oreno => "http://oreno.imouto.org/post?tags=%<tags>s&searchDefault=Search",
-			:"4walled" => "http://4walled.org/search.php?tags=%<tags>s&board=&width_aspect=&searchstyle=larger&sfw=&search=search",
-			:"3d" => "http://behoimi.org/post?tags=%<tags>s",
-			:e621 => "http://e621.net/post?tags=%<tags>s",
-			:nano => "http://booru.nanochan.org/post/list/%<tags>s/1",
-			:pony => "http://ponibooru.413chan.net/post/list/%<tags>s/1",
-			:rule34 => "http://rule34.paheal.net/post/list/%<tags>s/1",
-			:katawa => "http://shimmie.katawa-shoujo.com/post/list/%<tags>s/1",
-			:monster => "http://monstergirlbooru.com/index.php?q=/post/list/%<tags>s/1"
+			dan: "http://danbooru.donmai.us/post?tags=%<tags>s",
+			gel: "http://gelbooru.com/index.php?page=post&s=list&tags=%<tags>s",
+			safe: "http://safebooru.com/index.php?page=post&s=list&tags=%<tags>s",
+			kona: "http://konachan.com/post?tags=%<tags>s",
+			oreno: "http://oreno.imouto.org/post?tags=%<tags>s&searchDefault=Search",
+			"4walled" => "http://4walled.org/search.php?tags=%<tags>s&board=&width_aspect=&searchstyle=larger&sfw=&search=search",
+			"3d" => "http://behoimi.org/post?tags=%<tags>s",
+			e621: "http://e621.net/post?tags=%<tags>s",
+			nano: "http://booru.nanochan.org/post/list/%<tags>s/1",
+			pony: "http://ponibooru.413chan.net/post/list/%<tags>s/1",
+			rule34: "http://rule34.paheal.net/post/list/%<tags>s/1",
+			katawa: "http://shimmie.katawa-shoujo.com/post/list/%<tags>s/1",
+			monster: "http://monstergirlbooru.com/index.php?q=/post/list/%<tags>s/1",
+      win: "http://winbooru.info/post/list/1/%<tags>s"
 		};
 
 		def get_base_url(src)

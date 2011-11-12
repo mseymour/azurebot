@@ -16,11 +16,11 @@ module Plugins
         next if m.user.nick.casecmp(admin.nick) == 0
         string = if m.ctcp?
           m.ctcp_message
-         elsif !message.nil?
-           message
-          else
-            m.message
-          end
+        elsif !message.nil?
+          message
+        else
+          m.message
+        end
         admin.msg fmt_message(nick: m.user.nick, type: (m.ctcp? ? "CTCP" : m.command), string: string)
       }
     end
@@ -30,8 +30,10 @@ module Plugins
     def listen_hook m, message, target
       config[:admins].each_admin {|nick, username, host|
         admin = User(nick)
+        #next if m.user.nick.casecmp(admin.nick) == 0
         #admin.msg m.events.inspect
-        admin.msg fmt_message(nick: target.name, type: (!target.nil? ? target.name : m.command), string: (!message.nil? ? message : m.message))
+        #admin.msg fmt_message(nick: target.name, type: (!target.nil? ? target.name : m.command), string: (!message.nil? ? message : m.message))
+        admin.msg fmt_message(nick: target.name, type: m.command, string: (!message.nil? ? message : m.message))
       }
     end
 
