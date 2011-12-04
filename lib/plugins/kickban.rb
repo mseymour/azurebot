@@ -9,11 +9,12 @@ module Plugins
 Usage: `!moon [nick]` -- kicks the selected user with a My Little Pony: Friendship Is Magic-themed kick reason.
 Usage: `!sun [nick]` -- Kickbans the selected user [MLP-themed]
 Usage: `!banana [nick]` -- Kicks too. Don't ask.
-Usage: `!crp [nick]` -- Also kicks too. Don't ask, as well.}, react_on: :channel
+Usage: `!crp [nick]` -- Also kicks too. Don't ask, as well.
+Usage: `!fus [nick]` -- I really need to come up with a better solution for this.}, react_on: :channel
 
     def check_user(users, user)
-      require 'ap'
-      @bot.irc.isupport["PREFIX"].keys.any? {|mode| users[user].include?(mode)}
+      @bot.irc.isupport["PREFIX"].keys.delete["v"].any? {|mode| users[user].include?(mode)}
+      # TODO: better way to do disallowed modes for check_user?
     end
 
     match /moon (.+)/, method: :moonkick
