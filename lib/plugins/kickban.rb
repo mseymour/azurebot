@@ -13,7 +13,7 @@ Usage: `!crp [nick]` -- Also kicks too. Don't ask, as well.
 Usage: `!fus [nick]` -- I really need to come up with a better solution for this.}, react_on: :channel
 
     def check_user(users, user)
-      @bot.irc.isupport["PREFIX"].keys.delete["v"].any? {|mode| users[user].include?(mode)}
+      @bot.irc.isupport["PREFIX"].keys.delete("v").any? {|mode| users[user].include?(mode)}
       # TODO: better way to do disallowed modes for check_user?
     end
 
