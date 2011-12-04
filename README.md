@@ -18,13 +18,33 @@ Plugins
 
 (No help available)
 
+### joker (`Cinch::Plugins::Joker`)
+
+(No help available)
+
+### lastseen (`Cinch::Plugins::LastSeen`)
+
+(No help available)
+
+### hangman (`Cinch::Plugins::Hangman`)
+
+(No help available)
+
+### fortune (`Cinch::Plugins::Fortune`)
+
+(No help available)
+
 ### admin (`Plugins::AdminHandler`)
 
 Admin handler -- handles admins, of course.
 
-### antispam (`Plugins::AntiSpam`)
+### kicker (`Plugins::AntiSpam::Kicker`)
 
 Kicks those who spam prefixed bot commands.
+
+### lister (`Plugins::AntiSpam::Lister`)
+
+(No help available)
 
 ### authtest (`Plugins::Authtest`)
 
@@ -64,7 +84,7 @@ Usage: `!booru <selector> <comma-separated list of tags>`; use `!booru` to get a
 
 Notices you information about me.
 
-Usage: `!Aiko`
+Usage: `![botnick]`
 
 ### Decider (`Plugins::Decide`)
 
@@ -92,7 +112,7 @@ Usage: `!jargon <entry>`
 
 Notices nicks upon join.
 
-Usage: `!hello` to reply entry notice.
+Usage: `!hello` to replay entry notice.
 
 ### Kickban (`Plugins::Kickban`)
 
@@ -104,11 +124,17 @@ Usage: `!sun [nick]` -- Kickbans the selected user [MLP-themed]
 
 Usage: `!banana [nick]` -- Kicks too. Don't ask.
 
+Usage: `!crp [nick]` -- Also kicks too. Don't ask, as well.
+
 ### QDB (`Plugins::MultiQDB`)
 
 Pulls a quote from a QDB.
 
 `Usage: !qdb <selector> <ID|latest>`; `!qdb` for selector list.
+
+### ping (`Plugins::Ping`)
+
+(No help available)
 
 ### Private toolbox (`Plugins::PrivToolbox`)
 
@@ -116,15 +142,15 @@ Bot administrator-only private commands.
 
 Usage: n/a
 
-### questionperiod (`Plugins::QuestionPeriod`)
-
-The bot knows all.
-
 ### Rainbow (`Plugins::Rainbow`)
 
 Rainbowificates your text.
 
 Usage: `!rainbow [text]`.
+
+### remoteadmin (`Plugins::RemoteAdmin`)
+
+Relays certain messages to logged-in admins.
 
 ### russianroulette (`Plugins::RussianRoulette`)
 
@@ -153,12 +179,6 @@ Usage: `~join [channel]`; `~part [channel] <reason>`; `~quit [reason]`; `~nick [
 Gets the current tweet of the user specified. If it is blank, it will return Twitter's official account instead.
 
 Usage: `!tw<itter> [params[:username]] <info>`
-
-### uptime (`Plugins::Uptime`)
-
-Gets the uptime of the bot's host. (Uses WMI.)
-
-Usage: `!uptime`
 
 ### urbandictionary (`Plugins::UrbanDictionary`)
 
@@ -189,15 +209,37 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 
 * `^!identify`
 
+### joker (`Cinch::Plugins::Joker`)
+
+* `^!joke`
+
+### lastseen (`Cinch::Plugins::LastSeen`)
+
+* `^!seen (.+)`
+
+### hangman (`Cinch::Plugins::Hangman`)
+
+* `^!hang guess (.*)`
+* `^!hang new (#\S*) ([\sa-zA-Z0-9]*)`
+
+### fortune (`Cinch::Plugins::Fortune`)
+
+* `^!fortune`
+
 ### admin (`Plugins::AdminHandler`)
 
 * `^login (.+)`
 * `^logout`
-* `^admins`
+* `^flogout`
+* `^list admins`
 
-### antispam (`Plugins::AntiSpam`)
+### kicker (`Plugins::AntiSpam::Kicker`)
 
-* `^!antispam`
+* `^!kicker`
+
+### lister (`Plugins::AntiSpam::Lister`)
+
+* `^list abusers`
 
 ### authtest (`Plugins::Authtest`)
 
@@ -228,7 +270,7 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 ### botinfo (`Plugins::BotInfo`)
 
 * `^!generate documentation`
-* `^!Aiko$`
+* `^!(.+)$`
 
 ### Decider (`Plugins::Decide`)
 
@@ -259,10 +301,16 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^!moon (.+)`
 * `^!sun (.+)`
 * `^!banana (.+)`
+* `^!crp (.+)`
+* `^!fus (.+)`
 
 ### QDB (`Plugins::MultiQDB`)
 
 * `^!qdb\s?(\w+)?\s?(.+)?`
+
+### ping (`Plugins::Ping`)
+
+* `^!ping(?:\s(\S+))?`
 
 ### Private toolbox (`Plugins::PrivToolbox`)
 
@@ -272,15 +320,19 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^ns (.+)`
 * `^hs (.+)`
 * `^psa (.+)`
-
-### questionperiod (`Plugins::QuestionPeriod`)
-
-* `^What is (?:a )?(?:"|')?(.+)(?:"|')?\?+?$`
+* `^kick (#\S+) (\S+)\s?(.+)?`
+* `^ban (#\S+) (\S+)`
+* `^unban (#\S+) (\S+)`
+* `^kb (#\S+) (\S+)\s?(.+)?`
 
 ### Rainbow (`Plugins::Rainbow`)
 
 * `^!rainbow (.+)$`
 * `^!eyerape (.+)$`
+
+### remoteadmin (`Plugins::RemoteAdmin`)
+
+* `^!remoteadmin`
 
 ### russianroulette (`Plugins::RussianRoulette`)
 
@@ -292,11 +344,8 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 
 ### silly (`Plugins::Silly`)
 
-* `\x01ACTION pokes (\S+)\x01`
 * `dumb bot`
-* `\x01ACTION (?:.*)\bdonk\b(?:.*)\x01`
-* `\bbangin(?:'|g) donk on (\S+)\b`
-* `\x01ACTION donks (\S+)\x01`
+* `^!xmas`
 
 ### Toolbox (`Plugins::Toolbox`)
 
@@ -305,6 +354,7 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^~quit(?: (.+))?`
 * `^~nick (.+)`
 * `^~opadmin$`
+* `^~isupport$`
 
 ### Twitter (`Plugins::Twitter5`)
 
@@ -312,10 +362,6 @@ As a note, all commands shown here are generated from the plugin's matches, comp
 * `^!twitter$`
 * `^!tw (.+)*`
 * `^!twitter (.+)*`
-
-### uptime (`Plugins::Uptime`)
-
-* `^!uptime`
 
 ### urbandictionary (`Plugins::UrbanDictionary`)
 
