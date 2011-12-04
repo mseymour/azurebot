@@ -45,11 +45,11 @@ module Plugins
         w = m.current;
 
         out = []
-        out << "#{w.condition.nil? ? w.condition : @@unicon[w.icon.to_sym][1].capitalize} #{@@unicon[w.icon.to_sym][0]}, #{w.temperature.c}°C (#{w.temperature.f}°F)"
+        out << "#{!w.condition.nil? ? w.condition : @@unicon[w.icon.to_sym][1].capitalize} #{@@unicon[w.icon.to_sym][0]}, #{w.temperature.c}°C (#{w.temperature.f}°F)"
         out << "Dew point: #{w.dew_point.c}°C (#{w.dew_point.f}°F)" if !w.dew_point.nil?
         out << "Humidity: #{w.humidity}%" if !w.humidity.nil?
         out << "Heat index: #{w.heat_index.c}°C (#{w.heat_index.f}°F)" if !w.heat_index.nil?
-        out << "Pressure: #{w.pressure.mb * 0.1} kPa" if !w.pressure.nil?
+        out << "Pressure: #{(w.pressure.mb * 0.1).round(3)} kPa" if !w.pressure.nil?
         out << "Wind speed: #{w.wind.kph} km/h (#{w.wind.mph} mph), #{w.wind.degrees}° #{w.wind.direction}" if !w.wind.nil?
         out << "Wind chill: #{w.wind_chill.c}°C (#{w.wind_chill.f}°F)" if !w.wind_chill.nil?
         out << "Visibility: #{w.visibility.kilometers || w.visibility.km} km (#{w.visibility.miles || w.visibility.m} mi)" if !w.visibility.nil?

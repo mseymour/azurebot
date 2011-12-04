@@ -35,7 +35,7 @@ module Plugins
 
       def sinplur (num, singular, plural); num != 1 ? plural : singular; end;
 
-      m.reply((today == xmas ? "Merry Christmas, #{m.user.nick}!" : "There #{sinplur(days_until_xmas,"is","are")} #{days_until_xmas} #{sinplur(days_until_xmas,"more day","days")} until Christmas!"))
+      m.reply((today == xmas ? format([:red, :green].sample, :bold, "Merry ")+format([:red, :green].sample, :bold, "Christmas")+", #{m.user.nick}!" : "There #{sinplur(days_until_xmas,"is","are")} #{format([:red, :green].sample, :bold, days_until_xmas)} #{sinplur(days_until_xmas,"more day","days")} until Christmas!"))
     end
 
 	end
