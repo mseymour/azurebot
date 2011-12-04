@@ -5,6 +5,7 @@
 # azTwitter4 - using Grackle
 # Twitter5 - using Twitter (https://github.com/jnunemaker/twitter)
 
+gem 'twitter', '>= 2.0.0'
 require 'twitter'
 require 'date'
 require 'yaml'
@@ -66,12 +67,13 @@ module Plugins
             
             metadata = [];
             metadata << (the_tweet.user.geo_enabled == true && the_tweet.place != nil ? "from #{the_tweet.place.full_name}" : "");
-            metadata << "at #{DateTime.parse(the_tweet.created_at).strftime("%F %R")}";
+            metadata << "at #{the_tweet.created_at.strftime("%F %R")}";
             metadata << "via #{the_tweet.source.gsub(/<\/?[^>]*>/, "")}";
             metadata << "#{the_tweet.user.verified == true ? "![c10]✔![c] " : ""}"
             
             user_uri = "![u]http://twitter.com/#{the_tweet.user.screen_name}![u]";
-            in_reply_to = (the_tweet.in_reply_to_status_id != nil ? "![c14]in reply to![c] ![u]http://twitter.com/#{the_tweet.in_reply_to_screen_name}/status/#{the_tweet.in_reply_to_status_id}![u]" : "");
+            File.open("#{File.expand_path("~")}/tweet.yaml", 'w') {|f| f.write(YAML::dump(the_tweet)) }
+            in_reply_to = (the_tweet.attrs['in_reply_to_status_id'] != nil ? "![c14]in reply to![c] ![u]http://twitter.com/#{the_tweet.attrs['in_reply_to_screen_name']}/status/#{the_tweet.attrs['in_reply_to_status_id']}![u]" : "");
             
             metadata = metadata.reject(&:empty?).join(' ');
             urls = [user_uri, in_reply_to].reject(&:empty?).join(' ');
@@ -96,28 +98,28 @@ module Plugins
       rescue Twitter::Error => twerr
         @bot.debug(twerr.message);
         case twerr
-          when Twitter::BadRequest
+          when Twitter::Error::BadRequest
             @@error_template % {:message => "Badrequest (rate limit exceeded? Warn Azure when this occurs.)"}
-          when Twitter::Unauthorized
+          when Twitter::Error::Unauthorized
             @@error_template % {:message => "#{params[:username]}'s account seems to be protected or suspended."}
-          when Twitter::Forbidden
+          when Twitter::Error::Forbidden
             # stupid coding (raise in a rescue block) was here — 2011-06-11 1:27am
             if twerr.message =~ /\bsuspended\b/i
               @@error_template % {:message => "#{params[:username]} has been suspended!"}
             else
               @@error_template % {:message => "Forbidden (update limit exceeded? Warn Azure when this occurs."}
             end
-          when Twitter::NotFound
+          when Twitter::Error::NotFound
             @@error_template % {:message => "The account \"#{params[:username]}\" seems to be not found!"}
-          when Twitter::NotAcceptable
+          when Twitter::Error::NotAcceptable
             @@error_template % {:message => "An invalid format is specified in the search request."}
-          when Twitter::EnhanceYourCalm
+          when Twitter::Error::EnhanceYourCalm
             @@error_template % {:message => "Enhance your calm. #{@bot.nick} is being rate limited."}
-          when Twitter::InternalServerError
+          when Twitter::Error::InternalServerError
             @@error_template % {:message => "Something seems to be broken! Please try again in a minute."}
-          when Twitter::BadGateway
+          when Twitter::Error::BadGateway
             @@error_template % {:message => "Twitter seems to be down, or is being upgraded. Please try again in a minute."}
-          when Twitter::ServiceUnavailable
+          when Twitter::Error::ServiceUnavailable
             @@error_template % {:message => "Twitter is currently under heavy load. Please try again in a few minutes, and hopefully it'll clear up."}
         end
       rescue Twitter5::Error => twerr

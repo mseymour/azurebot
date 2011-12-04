@@ -12,7 +12,8 @@ Usage: `!banana [nick]` -- Kicks too. Don't ask.
 Usage: `!crp [nick]` -- Also kicks too. Don't ask, as well.}, react_on: :channel
 
     def check_user(users, user)
-      @bot.irc.isupport["prefix"].keys.any? {|mode| users[user].include?(mode)}
+      require 'ap'
+      @bot.irc.isupport["PREFIX"].keys.any? {|mode| users[user].include?(mode)}
     end
 
     match /moon (.+)/, method: :moonkick
@@ -44,6 +45,13 @@ Usage: `!crp [nick]` -- Also kicks too. Don't ask, as well.}, react_on: :channel
       return unless check_user(m.channel.users, m.user)
       baddie = User(nick);
       m.channel.kick(nick, "gb2/#crrp/");
+    end
+
+    match /fus (.+)/, method: :fuskick
+    def fuskick(m, nick)
+      return unless check_user(m.channel.users, m.user)
+      baddie = User(nick);
+      m.channel.kick(nick, "FUS RO DAH!");
     end
 
   end

@@ -1,3 +1,5 @@
+require 'date'
+
 module Plugins
 	class Silly
 		include Cinch::Plugin
@@ -23,6 +25,18 @@ module Plugins
 
     match /dumb bot/i, method: :execute_botinsult, use_prefix: false
     def execute_botinsult (m); m.reply ["Stupid human!","Dumb human!","Stupid meatbag."].sample if m.user.nick != "TempTina"; end
+
+    match /xmas/, method: :xmas
+    def xmas (m)
+      today = Date.today
+      xmas = Date.new(today.year,12,25)
+      xmas = xmas.next_year if (xmas <=> today) == -1
+      days_until_xmas = (xmas - today).to_i
+
+      def sinplur (num, singular, plural); num != 1 ? plural : singular; end;
+
+      m.reply((today == xmas ? "Merry Christmas, #{m.user.nick}!" : "There #{sinplur(days_until_xmas,"is","are")} #{days_until_xmas} #{sinplur(days_until_xmas,"more day","days")} until Christmas!"))
+    end
 
 	end
 end

@@ -4,7 +4,7 @@
 # At some point, I will hopefully have some more to add. We'll see.
 
 I am ![b]<bot_name>![b], and my owner is ![b]<owner_name>![b].
-I am currently running ![b]Cinch <cinch_version>![b], a Ruby-based IRC framework on Ruby <ruby_version>.
+I am currently running ![b]Cinch <cinch_version>![b], a Ruby-based IRC framework on Ruby <ruby_version> <ruby_platform> <ruby_release_date>.
 I have been running for ![b]<uptime>![b].
 I was started around ![b]<session_start_date>![b].
 My loaded plugins are: <plugins>.

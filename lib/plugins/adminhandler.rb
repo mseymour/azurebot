@@ -69,15 +69,5 @@ module Plugins
       @bot.debug "#{m.prefix} has been automagically logged out."
       @bot.handlers.dispatch :admin, m, "`#{m.prefix}` has been logged out because they quit the server.", m.target
     end
-
-<<<<<<< HEAD
-    listen_to :join, method: :listen_join
-    def listen_join m
-      return unless config[:admins].logged_in? m.user.mask
-    end
-
-	end
-=======
   end
->>>>>>> 8bbc98f84842e2da7a3524beb937cf24ddd96793
 end
