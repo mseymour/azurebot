@@ -18,7 +18,7 @@ module Plugins
         @bot.handlers.dispatch :admin, m, "#{user.nick} has been successfully logged in.", user
         "Welcome back, #{user.nick}."
       else
-        @bot.handlers.dispatch :admin, m, "#{user.nick} tried to login with the password `#{password}` but failed.", user
+        @bot.handlers.dispatch :admin, m, "#{user.nick} tried to login but failed.", user
         "#{user.nick}, your password is incorrect."
       end
     end
@@ -42,7 +42,7 @@ module Plugins
       hosts = []
       config[:admins].each_admin {|host|
         config[:admins].logout! host
-        #m.user.msg "Sayonara, #{m.user.nick}.", true
+        m.user.msg "Sayonara, #{m.user.nick}.", true
         @bot.handlers.dispatch :admin, m, "#{host.match(/(.+)!(.+)@(.+)/)[1]} has successfully logged out by #{m.user.nick}.", m.target
       }
     end
@@ -67,7 +67,7 @@ module Plugins
       return unless config[:admins].logged_in?(m.prefix)
       config[:admins].logout! m.prefix #change back to m.user.mask once fixed in cinch
       @bot.debug "#{m.prefix} has been automagically logged out."
-      @bot.handlers.dispatch :admin, m, "`#{m.prefix}` has been logged out because they quit the server.", m.target
+      @bot.handlers.dispatch :admin, m, "`#{m.prefix}` has been logged out because they left the server.", m.target
     end
   end
 end

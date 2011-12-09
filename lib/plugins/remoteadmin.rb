@@ -30,7 +30,8 @@ module Plugins
     def listen_hook m, message, target
       config[:admins].each_admin {|nick, username, host|
         admin = User(nick)
-        #next if m.user.nick.casecmp(admin.nick) == 0
+        next if m.user.nick.casecmp(admin.nick) == 0
+        @bot.debug "Does the originating nick match an admin's nick? (Admin #{admin.nick}): #{m.user.nick.casecmp(admin.nick) == 0}"
         #admin.msg m.events.inspect
         #admin.msg fmt_message(nick: target.name, type: (!target.nil? ? target.name : m.command), string: (!message.nil? ? message : m.message))
         admin.msg fmt_message(nick: target.name, type: m.command, string: (!message.nil? ? message : m.message))

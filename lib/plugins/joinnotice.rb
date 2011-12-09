@@ -21,7 +21,7 @@ module Plugins
       notice = greeting.split("\n")
       notice.delete_if{|e| e.match(/^\/\//)} # Line is commented out.
       m.user.notice(notice.each_with_index.map {|element, index| 
-        index_s = " | #{index+1}/#{notice.length}" if notice.length >= 2
+        index_s = " #{index+1}/#{notice.length}" if notice.length >= 2
         "[#{m.channel.name}#{index_s}] #{element}"
       }.join("\n")) unless notice.blank?
     end

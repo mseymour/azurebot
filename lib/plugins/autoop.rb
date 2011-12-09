@@ -19,6 +19,9 @@ module Plugins
       #@bot.debug("#{self.class.name} → #{config[:enabled_channels].inspect}");
       unless m.user.nick == bot.nick
         if config[:enabled_channels].include?(m.channel.name)
+          sleep 0.5;
+          m.user.refresh;
+          return if ["v", "h", "o", "a", "q"].any? {|mode| m.channel.users[m.user].include?(mode)}
           m.channel.op(m.user)
         end
       end
