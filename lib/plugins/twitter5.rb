@@ -84,11 +84,11 @@ module Plugins
             the_user = Twitter.user(params[:username]);
           
             lines = [];
-            lines << "![c10,01]@![b]#{the_user.screen_name}![b]#{the_user.verified == true ? "![c01,10]✔![c]" : ""} - #{the_user.name} ![c14](http://twitter.com/#{the_user.screen_name}#{!the_user.url.blank? ? ", #{the_user.url}" : ""})";
+            lines << "![c10,01]@![b]#{the_user.screen_name}![b]#{the_user.verified == true ? "![c01,10]✔![c]" : ""} - #{the_user.name} ![c14](http://twitter.com/#{the_user.screen_name}#{!the_user.url.blank? ? " #{the_user.url}" : ""})";
             lines << (!the_user.description.blank? ? "![c10]#{the_user.description}" : "");
             lines << (!the_user.location.blank? ? "Is from ![bc10]#{the_user.location}![bc]." : "");
             lines << "They have ![bc10]#{commas(the_user.statuses_count)}![bc] statuses, ![bc10]#{commas(the_user.followers_count)}![bc] followers, ![bc10]#{commas(the_user.friends_count)}![bc] friends, and is on ![bc10]#{commas(the_user.listed_count)}![bc] lists.";
-            lines << "![b]Their latest tweet:![b] #{format_tweet("@", "10", format_tweet("#", "10", the_user.status.text.irc_strip_colors.gsub(/(\r|\n)/," ")))}";
+            lines << (!the_user.status.text.blank? ? "![b]Their latest tweet:![b] #{format_tweet("@", "10", format_tweet("#", "10", the_user.status.text.irc_strip_colors.gsub(/(\r|\n)/," ")))}" : "(the_user.status.text is blank.)");
             
             lines = lines.reject(&:empty?).join("\n");
             

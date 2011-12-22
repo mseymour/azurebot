@@ -4,6 +4,9 @@ require 'active_support/core_ext/object/blank'
 module Plugins
   class Ping
     include Cinch::Plugin
+    set(
+      plugin_name: "Ping", 
+      help: "Pings you or a target via CTCP, and reports the number of milliseconds on recieving a response.\nUsage: `!ping <nick>`")
 
     attr_accessor :listen_for_ping
 

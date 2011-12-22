@@ -7,7 +7,7 @@ require 'cgi'
 module Plugins
   class UrbanDictionary
     include Cinch::Plugin
-    set help: "Gets the first entry for an entry on UrbanDictionary.\nUsage: `!urban <entry>`"
+    set plugin_name: "Urban Dictionary", help: "Gets the first entry for an entry on UrbanDictionary.\nUsage: `!urban <entry>`"
     
     match /urban (.+)/
     def lookup(word, channel, nick)

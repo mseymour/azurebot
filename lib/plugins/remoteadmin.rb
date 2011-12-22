@@ -4,7 +4,7 @@ module Plugins
   class RemoteAdmin
     include Cinch::Plugin
 
-    set help: "Relays certain messages to logged-in admins.", required_options: [:admins]
+    set plugin_name: "Remote admin", help: "Relays certain messages to logged-in admins.", required_options: [:admins]
 
     listen_to :notice
     listen_to :private

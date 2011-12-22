@@ -5,7 +5,7 @@ module Plugins
     class Kicker
       include Cinch::Plugin
 
-      set help: "Kicks those who spam prefixed bot commands.", required_options: [:limit_seconds, :limit_commands]
+      set plugin_name: "Antispam Kicker", help: "Kicks those who spam prefixed bot commands.", required_options: [:limit_seconds, :limit_commands]
 
       attr_reader :abusers
 
@@ -31,17 +31,17 @@ module Plugins
       def listen_to_commandspam m
         trec = Time.now.to_i
         message = m.message
-        return unless message.match(/^[!\.%\?](?![!\.%\?]+)/) && message.length > 1
+        return unless message.match(/^[-!\.%\?](?![-!\.%\?]+)/) && message.length > 1
         if @abusers.has_key? m.user.nick
           if (Time.now - @abusers[m.user.nick][:first_message_time]) <= config[:limit_seconds] && (Time.now - @abusers[m.user.nick][:last_message_time]) <= (config[:limit_seconds] / 2)
               @abusers[m.user.nick][:abuse_count] = @abusers[m.user.nick][:abuse_count].succ
               @abusers[m.user.nick][:last_message_time] = Time.now
               #@bot.handlers.dispatch :antispam, m, "#{m.user.nick}'s command abuse count has been increased to #{@abusers[m.user.nick][:abuse_count]}.", m.target
             if @abusers[m.user.nick][:abuse_count] >= config[:limit_commands]
-              #m.channel.kick(m.user)
-              m.user.msg "You have used too many bot commands in a short period of time. Cool down and go get a drink, okay?"
+              m.channel.kick(m.user,"You have spammed commands #{@abusers[m.user.nick][:abuse_count]} times in #{(Time.now - @abusers[m.user.nick][:first_message_time])} seconds.")
+              #m.user.msg "You have used too many bot commands in a short period of time. Cool down and go get a drink, okay?"
               @abusers.delete m.user.nick
-              #@bot.handlers.dispatch :antispam, m, "#{m.user.nick} has been kicked and their abuse record deleted.", m.target
+              @bot.handlers.dispatch :antispam, m, "#{m.user.nick} has been kicked and their abuse record deleted.", m.target
               #@bot.handlers.dispatch :antispam, m, "#{m.user.nick} has been notified and their abuse record deleted.", m.target
             end
           else
@@ -62,7 +62,7 @@ module Plugins
 
     class Lister
       include Cinch::Plugin
-      set react_on: :private, required_options: [:admins]
+      set plugin_name: "Antispam Lister", help: "List those who spam prefixed bot commands.", react_on: :private, required_options: [:admins]
       match /^list abusers/, use_prefix: false
       def execute m
         @bot.handlers.dispatch :antispam_list, m

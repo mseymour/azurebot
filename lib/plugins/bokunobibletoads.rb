@@ -2,6 +2,10 @@ module Plugins
   class BokunoBibletoads
     include Cinch::Plugin
 
+    set(
+      plugin_name: "Boku no Bibletoads", 
+      help: "Biblebattle no bokutoads.\nUsage: `!bnbt`")
+
     match /bnbt/
     def execute m
       words = %w{ bible black battle toads boku pico }

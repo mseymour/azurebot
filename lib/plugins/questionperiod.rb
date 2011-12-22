@@ -4,6 +4,7 @@ module Plugins
   class QuestionPeriod
     include Cinch::Plugin
     set(
+      plugin_name: "Question Period",
       help: "The bot knows all.",
       prefix: /^/,
       suffix: /\?+?$/)

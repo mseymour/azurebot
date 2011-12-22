@@ -10,7 +10,7 @@ module Plugins
     include StringHelpers
 
     set(
-      plugin_name: "botinfo",
+      plugin_name: "Botinfo",
       help: "Notices you information about me.\nUsage: `![botnick]`",
       required_options: [:template, :owner, :bot, :admins])
 
@@ -24,7 +24,7 @@ module Plugins
         end
       end
 
-      match /generate documentation/, method: :e_rpc # Yes, I know that the command is a misnomer. 
+      match /generate documentation/, method: :e_rpc # Yes, I know that the command is a misnomer. -e: Not now?
       def e_rpc m
         return unless config[:admins].logged_in?(m.user.mask)
 
@@ -42,18 +42,7 @@ module Plugins
           documentation << "### #{p.class.plugin_name} (`#{p.class.name}`)"
           documentation << ""
           documentation << (!p.class.help.blank? ? "#{p.class.help.gsub("\n","\n\n")}" : "(No help available)")
-          documentation << ""
-        };
-
-        documentation << "Commands"
-        documentation << "--------"
-        documentation << ""
-        documentation << "As a note, all commands shown here are generated from the plugin's matches, composited with their individual prefices and suffices (if applicable.)"
-        documentation << ""
-        @bot.plugins.each {|p| 
-          documentation << "### #{p.class.plugin_name} (`#{p.class.name}`)"
-          documentation << ""
-
+          documentation << "\n#### Matchers\nCommands that the bot reacts to; It will return the plugin name as a matcher if there are none defined."
           p.class.matchers.each {|m|
             prefix = regexp_process p.class.prefix, @bot.config.plugins.prefix if m.use_prefix
             suffix = regexp_process p.class.suffix, @bot.config.plugins.suffix if m.use_suffix
@@ -95,9 +84,11 @@ module Plugins
         owner_name: config[:admins].first_nick || config[:owner],
         cinch_version: Cinch::VERSION,
         is_admin: config[:admins].is_admin?(user.mask) ? "an admin" : "not an admin",
-        uptime: time_diff_in_natural_language(@bot.signed_on_at, Time.now),
+        uptime: time_diff_in_natural_language(@bot.signed_on_at, Time.now, acro: true),
         session_start_date: @bot.signed_on_at.strftime("%A, %B %e, %Y, at %l:%M:%S %P"),
         plugins: plugin_list.to_sentence,
+        plugins_head: plugin_list[0..9].join(", "),
+        plugin_count_remaining: plugin_list.length - 10,
         ruby_version: RUBY_VERSION,
         ruby_platform: RUBY_PLATFORM,
         ruby_release_date: RUBY_RELEASE_DATE
@@ -108,6 +99,13 @@ module Plugins
     def execute(m, nick)
       return unless nick.casecmp(config[:bot]) == 0
       m.user.notice(format_notice!(m.user).irc_colorize)
+    end
+
+    match /plugins$/i, method: :execute_list
+    def execute_list m
+      list = []
+      @bot.plugins.each {|p| list << p.class.plugin_name };
+      m.user.notice("All #{list.size} currently loaded plugins for #{@bot.nick}:\n#{list.to_sentence}.\nTo view help for a plugin, use `!help <plugin name>`.")
     end
 
   end

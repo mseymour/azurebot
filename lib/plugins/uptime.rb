@@ -9,7 +9,7 @@ module Plugins
     include Cinch::Plugin
     include StringHelpers
     
-    set help: "Gets the uptime of the bot's host. (Uses WMI.)\nUsage: `!uptime`"
+    set plugin_name: "Uptime", help: "Gets the uptime of the bot's host. (Uses WMI.)\nUsage: `!uptime`"
 
     def uptime!
       lastBootupTime = WMI::Win32_OperatingSystem.find(:first).LastBootupTime

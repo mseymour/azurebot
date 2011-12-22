@@ -1,12 +1,17 @@
-require 'date'
+require 'active_support/time'
+require 'active_support/core_ext/string'
+require 'modules/stringhelpers'
 
 module Plugins
 	class Silly
 		include Cinch::Plugin
+    include StringHelpers
 		set(
-			plugin_name: "silly",
+			plugin_name: "Silly",
 			help: "You know, silly stuff.")
     
+    _seconds_in_a_day = 86400
+
     def action_match ctcp_args, match, compare = true
       if compare
         !!(ctcp_args.join(" ") =~ match) if ctcp_args.is_a?(Array) && match.is_a?(Regexp)
@@ -23,31 +28,23 @@ module Plugins
       end
     end
 
-    match /dumb bot/i, method: :execute_botinsult, use_prefix: false
-    def execute_botinsult (m); m.reply ["Stupid human!","Dumb human!","Stupid meatbag."].sample if m.user.nick != "TempTina"; end
+    match /\b(dumb|stupid)\b.+\bbot\b/i, method: :execute_botinsult, use_prefix: false
+    def execute_botinsult (m); m.reply ["Stupid human!","Dumb human!","Stupid meatbag.","Silly human, your insults cannot harm me!"].sample if m.user.nick != "TempTina"; end
 
     match /xmas/, method: :xmas
     def xmas (m)
-      today = Date.today
-      xmas = Date.new(today.year,12,25)
-      xmas = xmas.next_year if (xmas <=> today) == -1
-      days_until_xmas = (xmas - today).to_i
+      today = Time.now
+      xmas = Time.new(today.year,12,25)
+      xmas = xmas.next_year if xmas.past?
+      is_xmas = xmas.today?
 
-      def sinplur (num, singular, plural); num != 1 ? plural : singular; end;
-
-      message = if today == xmas 
-        Format([:red, :green].sample, :bold, "Merry ") +
-        Format([:red, :green].sample, :bold, "Christmas") +
-        ", #{m.user.nick}!"
+      message = if is_xmas
+        "Merry Christmas!"
       else
-        "There " + sinplur(days_until_xmas,"is","are") + " " +
-        Format([:red, :green].sample, :bold, days_until_xmas.to_s) + " " +
-        sinplur(days_until_xmas,"more day","days") + 
-        " until Christmas!"
+        "There's #{time_diff_in_natural_language(today,xmas, minutes: false, seconds: false)} until Christmas!"
       end
 
-      m.reply message
-
+      m.reply message, true
     end
 
 	end

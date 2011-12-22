@@ -2,7 +2,7 @@ module Plugins
   class Authtest
     include Cinch::Plugin
     set(
-      plugin_name: "authtest",
+      plugin_name: "Admin auth checker",
       help: "Tells you if you are logged into the bot or not. (Admins only)",
       prefix: /^/,
       suffix: /\?$/,

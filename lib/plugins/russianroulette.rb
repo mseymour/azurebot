@@ -2,7 +2,7 @@ module Plugins
   class RussianRoulette
     include Cinch::Plugin
 
-    set help: "In Soviet Russia, boolet shoots YOU!\nUsage: !rr <nick>", react_on: :channel
+    set plugin_name: "Russian Roulette", help: "In Soviet Russia, boolet shoots YOU!\nUsage: !rr <nick>", react_on: :channel
 
     def initialize *args
       super

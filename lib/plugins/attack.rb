@@ -8,7 +8,7 @@ module Plugins
 		include Cinch::Plugin
 		
 		set(
-			plugin_name: "Attacker",
+			plugin_name: "Random Attacker",
 			help: "Attacks a user with a random attack.\nUsage: `!attack <nick or phrase>`; `<nick or phrase>` may be omitted for a random attack on a random nick.",
 			required_options: [:attack_dictionary],
 			react_on: :channel)

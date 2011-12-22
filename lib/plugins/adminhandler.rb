@@ -6,7 +6,7 @@ module Plugins
     include Cinch::Plugin
 
     set(
-      plugin_name: "admin",
+      plugin_name: "Admin",
       help: "Admin handler -- handles admins, of course.",
       required_options: [:admins],
       react_on: :private)

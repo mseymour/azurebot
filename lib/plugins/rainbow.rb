@@ -6,7 +6,7 @@ module Plugins
 	class Rainbow
 		include Cinch::Plugin
 		
-		set plugin_name: "Rainbow", help: "Rainbowificates your text.\nUsage: `!rainbow [text]`."
+		set plugin_name: "Rainbow", help: "Rainbowificates your text.\nUsage: `!rainbow [text]`.\nUsage: `eyerape [text]`."
 
 		def rainbowification s
 			s.irc_strip_colors! # Because total function abuse.
