@@ -12,6 +12,7 @@ Plugins
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!basicctcp`
 
 ### downforeveryone (`Cinch::Plugins::DownForEveryone`)
@@ -20,6 +21,7 @@ Commands that the bot reacts to; It will return the plugin name as a matcher if 
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!isit(?:down|up)\?? (.+)`
 
 ### identify (`Cinch::Plugins::Identify`)
@@ -28,6 +30,7 @@ Commands that the bot reacts to; It will return the plugin name as a matcher if 
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!identify`
 
 ### joker (`Cinch::Plugins::Joker`)
@@ -36,6 +39,7 @@ Commands that the bot reacts to; It will return the plugin name as a matcher if 
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!joke`
 
 ### hangman (`Cinch::Plugins::Hangman`)
@@ -44,6 +48,7 @@ Commands that the bot reacts to; It will return the plugin name as a matcher if 
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!hang guess (.*)`
 * `^!hang new (#\S*) ([\sa-zA-Z0-9]*)`
 
@@ -53,6 +58,7 @@ Commands that the bot reacts to; It will return the plugin name as a matcher if 
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!fortune`
 
 ### Admin (`Plugins::AdminHandler`)
@@ -61,6 +67,7 @@ Admin handler -- handles admins, of course.
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^login (.+)`
 * `^logout`
 * `^flogout`
@@ -72,6 +79,7 @@ Kicks those who spam prefixed bot commands.
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!Antispam Kicker`
 
 ### Antispam Lister (`Plugins::AntiSpam::Lister`)
@@ -80,6 +88,7 @@ List those who spam prefixed bot commands.
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^list abusers`
 
 ### Admin auth checker (`Plugins::Authtest`)
@@ -88,6 +97,7 @@ Tells you if you are logged into the bot or not. (Admins only)
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^Am I (logged in|an admin)\?$`
 
 ### 8ball (`Plugins::Eightball`)
@@ -98,6 +108,7 @@ Usage: `!8ball [question? <question? <...>>]`
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!8ball (.+)`
 
 ### Random Attacker (`Plugins::Attack`)
@@ -108,6 +119,7 @@ Usage: `!attack <nick or phrase>`; `<nick or phrase>` may be omitted for a rando
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!attack\s?(.+)?`
 
 ### Auto OP (`Plugins::AutoOP`)
@@ -118,6 +130,7 @@ Usage: `!autoop [on|off]` -- turns autoop on or off. (Admins only)
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!autoop (on|off)$`
 
 ### Auto Voice (`Plugins::AutoVoice`)
@@ -128,6 +141,7 @@ Usage: `!autovoice [on|off]` -- turns autovoice on or off. (Admins only)
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!autovoice (on|off)$`
 
 ### Booru (`Plugins::Booru`)
@@ -138,6 +152,7 @@ Usage: `!booru <selector> <comma-separated list of tags>`; use `!booru` to get a
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!booru$`
 * `^!booru (\w+)?\s?(.+)?`
 * `^!boorulist`
@@ -150,6 +165,7 @@ Usage: `![botnick]`
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!generate documentation`
 * `^!(.+)$`
 * `^!plugins$`
@@ -162,6 +178,7 @@ Usage: `!decide [a list of items separated by ", ", ", or", or " or "]`; Usage: 
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!decide (.+)`
 * `^!choose (.+)`
 * `^!coin$`
@@ -174,6 +191,7 @@ If the bot is kicked, it will attempt to rejoin after 10 seconds by default.
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!Delayed Rejoin`
 
 ### Dicebox (`Plugins::Dice`)
@@ -184,6 +202,7 @@ Usage: `<X#>YdZ<[+|-]A>` (Examples: `1d6`; `2d6-3`; `2#1d6`; `5#2d6+10`)
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^(\d*#)?(\d+)d(\d+)`
 
 ### Jargon File (`Plugins::JargonFile`)
@@ -194,6 +213,7 @@ Usage: `!jargon <entry>`
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!jargon (.+)`
 
 ### Auto Notice (`Plugins::JoinNotice`)
@@ -204,6 +224,7 @@ Usage: `!hello` to replay entry notice.
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!hello$`
 
 ### Kickban (`Plugins::Kickban`)
@@ -222,6 +243,7 @@ Usage: `!fus [nick]` -- I really need to come up with a better solution for this
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!moon (.+)`
 * `^!sun (.+)`
 * `^!banana (.+)`
@@ -236,6 +258,7 @@ Pulls a quote from a QDB.
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!qdb\s?(\w+)?\s?(.+)?`
 
 ### Ping (`Plugins::Ping`)
@@ -246,6 +269,7 @@ Usage: `!ping <nick>`
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!ping(?:\s(\S+))?`
 
 ### Private toolbox (`Plugins::PrivToolbox`)
@@ -256,6 +280,7 @@ Usage: n/a
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^say (#\S+) (.+)`
 * `^act (#\S+) (.+)`
 * `^cs (.+)`
@@ -277,6 +302,7 @@ Usage: `eyerape [text]`.
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!rainbow (.+)$`
 * `^!eyerape (.+)$`
 
@@ -286,6 +312,7 @@ Relays certain messages to logged-in admins.
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!Remote admin`
 
 ### Russian Roulette (`Plugins::RussianRoulette`)
@@ -296,6 +323,7 @@ Usage: !rr <nick>
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!rr(?:\s(.+))?`
 
 ### Ryder (`Plugins::Ryder`)
@@ -306,6 +334,7 @@ Usage: `!ryder`
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!ryder$`
 
 ### Silly (`Plugins::Silly`)
@@ -314,6 +343,7 @@ You know, silly stuff.
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `\b(dumb|stupid)\b.+\bbot\b`
 * `^!xmas`
 
@@ -325,6 +355,7 @@ Usage: `~join [channel]`; `~part [channel] <reason>`; `~quit [reason]`; `~nick [
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^~join (.+)`
 * `^~part(?: (\S+)\s?(.+)?)?`
 * `^~quit(?: (.+))?`
@@ -340,6 +371,7 @@ Usage: `!tw<itter> [params[:username]] <info>`
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!tw$`
 * `^!twitter$`
 * `^!tw (.+)*`
@@ -353,6 +385,7 @@ Usage: `!urban <entry>`
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!urban (.+)`
 
 ### Weather (`Plugins::Weather`)
@@ -363,6 +396,7 @@ Usage: `!weather [query]`
 
 #### Matchers
 Commands that the bot reacts to; It will return the plugin name as a matcher if there are none defined.
+
 * `^!weather (.+)`
 
 Author information
