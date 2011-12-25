@@ -4,12 +4,12 @@ require 'active_support/core_ext/object/blank'
 require 'modules/stringhelpers'
 
 module Plugins
-	class Silly
-		include Cinch::Plugin
+  class Silly
+    include Cinch::Plugin
     include StringHelpers
-		set(
-			plugin_name: "Silly",
-			help: "You know, silly stuff.")
+    set(
+      plugin_name: "Silly",
+      help: "You know, silly stuff.")
     
     _seconds_in_a_day = 86400
 
@@ -31,6 +31,7 @@ module Plugins
 
     match /\b(dumb|stupid)\b.+\bbot\b/i, method: :execute_botinsult, use_prefix: false
     def execute_botinsult (m); m.reply ["Stupid human!","Dumb human!","Stupid meatbag.","Silly human, your insults cannot harm me!"].sample if m.user.nick != "TempTina"; end
+
 
     def tzparser tz
       prefix = (tz[0] !~ /(\+|-)/ ? "+" : "")
@@ -64,5 +65,5 @@ module Plugins
       end
     end
 
-	end
+  end
 end
