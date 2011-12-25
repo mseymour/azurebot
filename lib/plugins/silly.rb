@@ -1,5 +1,6 @@
 require 'active_support/time'
 require 'active_support/core_ext/string'
+require 'active_support/core_ext/object/blank'
 require 'modules/stringhelpers'
 
 module Plugins
@@ -31,20 +32,36 @@ module Plugins
     match /\b(dumb|stupid)\b.+\bbot\b/i, method: :execute_botinsult, use_prefix: false
     def execute_botinsult (m); m.reply ["Stupid human!","Dumb human!","Stupid meatbag.","Silly human, your insults cannot harm me!"].sample if m.user.nick != "TempTina"; end
 
-    match /xmas/, method: :xmas
-    def xmas (m)
-      today = Time.now
-      xmas = Time.new(today.year,12,25)
-      xmas = xmas.next_year if xmas.past?
-      is_xmas = xmas.today?
-
-      message = if is_xmas
-        "Merry Christmas!"
+    def tzparser tz
+      prefix = (tz[0] !~ /(\+|-)/ ? "+" : "")
+      suffix = (tz =~ /^(?:\+|-)?(\d{1,2})$/ ? ":00" : "")
+      regexp = /^(\+|-)?(\d{1,2})(?::(\d{1,2}))?$/
+      if tz =~ regexp
+        prefix + tz.gsub(regexp) {|match| (!!$1 ? $1 : "") + $2.rjust(2,"0") + (!!$3 ? ":"+$3.rjust(2,"0") : "") } + suffix
       else
-        "There's #{time_diff_in_natural_language(today,xmas, minutes: false, seconds: false)} until Christmas!"
+        raise ArgumentError, "A valid timezome was not supplied."
       end
+    end
 
-      m.reply message, true
+    match /xmas$/, method: :xmas
+    match /xmas (\S+)/, method: :xmas
+    def xmas (m, tz = nil)
+      tz ||= "-00:00"
+      tz = tzparser(tz)
+      begin
+        today = Time.now.localtime(tz)
+        xmas = Time.new(today.year, 12, 25, 0, 0, 0, tz)
+        xmas = xmas.next_year if xmas.to_date.past?
+        message = if xmas.to_date == today.to_date
+          "Merry Christmas!"
+        else
+          "There's #{time_diff_in_natural_language(today, xmas, seconds: false)} until Christmas!"
+        end
+      rescue ArgumentError => ae
+        message = ae.message
+      ensure
+        m.reply message, true
+      end
     end
 
 	end
