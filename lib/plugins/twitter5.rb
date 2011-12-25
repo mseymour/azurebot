@@ -7,6 +7,7 @@
 
 gem 'twitter', '>= 2.0.0'
 require 'twitter'
+require 'cgi'
 require 'date'
 require 'yaml'
 require 'active_support/core_ext/object/blank'
@@ -63,7 +64,7 @@ module Plugins
             # Constructing output!
             screen_name = "[#{the_tweet.user.screen_name}]";
             
-            tweet_text = format_tweet("@", "10", format_tweet("#", "10", the_tweet.text.irc_strip_colors.gsub(/(\r|\n)/," ")))
+            tweet_text = format_tweet("@", "10", format_tweet("#", "10", CGI.unescapeHTML(the_tweet.text).irc_strip_colors.gsub(/(\r|\n)/," ")))
             
             metadata = [];
             metadata << (the_tweet.user.geo_enabled == true && the_tweet.place != nil ? "from #{the_tweet.place.full_name}" : "");
