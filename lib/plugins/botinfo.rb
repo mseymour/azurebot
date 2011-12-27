@@ -97,7 +97,7 @@ module Plugins
 
     match /(.+)$/i
     def execute(m, nick)
-      return unless nick.casecmp(config[:bot]) == 0
+      return unless (nick.irc_downcase(:rfc1459) <=> config[:bot].irc_downcase(:rfc1459)) == 0
       m.user.notice(format_notice!(m.user).irc_colorize)
     end
 

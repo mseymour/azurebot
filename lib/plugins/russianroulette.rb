@@ -36,22 +36,22 @@ module Plugins
       round = Random.new.rand(1..6)
       phrases = @@phrases.dup
 
-      @bot.debug "turn count: #{turn_count}"
-      @bot.debug "round: #{round}"
-      @bot.debug "turn_count(#{turn_count}) < round(#{round}): #{turn_count < round}"
+      @bot.loggers.debug "turn count: #{turn_count}"
+      @bot.loggers.debug "round: #{round}"
+      @bot.loggers.debug "turn_count(#{turn_count}) < round(#{round}): #{turn_count < round}"
 
       m.channel.action "starts a #{turn_count}-turn game of Russian Roulette with #{nick}."
       sleep 5
 
       turn_count.times do |chamber|
-        @bot.debug "Chamber #{chamber.succ}/#{turn_count}"
+        @bot.loggers.debug "Chamber #{chamber.succ}/#{turn_count}"
         if round != chamber.succ
-          @bot.debug "round(#{round}) != chamber(#{chamber.succ})"
+          @bot.loggers.debug "round(#{round}) != chamber(#{chamber.succ})"
           phrase = phrases.sample
           phrases.delete phrase
           m.reply "*click* #{phrase}"
         else
-          @bot.debug "round(#{round}) == chamber(#{chamber.succ})?"
+          @bot.loggers.debug "round(#{round}) == chamber(#{chamber.succ})?"
           m.reply "*click*"
           m.channel.kick(User(nick), "*BLAM*")
           m.channel.action "watches #{nick}'s brain splatter across the wall."

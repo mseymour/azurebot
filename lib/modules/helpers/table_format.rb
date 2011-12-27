@@ -39,7 +39,30 @@ module Helpers
 
     # We use the str.tr method if our regexp param is nil.
     # Otherwise, we just use regexp.
-    source.map! {|e| params[:regexp].nil? ? e.tr(params[:splitchars], "\t").split("\t") : e.match(params[:regexp])[1..-1].map {|e| e.nil? ? "" : e; } }
+    # That is, unless we have a hash. Then we just make the columns be the keys and values.
+    if source.is_a? Array
+      source.map! {|e| 
+        if e.is_a? String
+          if params[:regexp].nil? 
+            e.tr(params[:splitchars], "\t").split("\t") 
+          else
+            e.match(params[:regexp])[1..-1].map {|e| e.nil? ? "" : e; } 
+          end
+        elsif e.is_a? Array
+          next
+        else
+          e.to_s
+        end
+      }
+#=begin
+    elsif source.is_a? Hash
+      source_new = []
+      source.each {|key,value|
+        source_new << [key.to_s, value.to_s]
+      }
+      source = source_new
+#=end
+    end
 
     # calculating the maximum length of each column
     column_lengths = []
@@ -74,13 +97,15 @@ module Helpers
     end
 
     # Generating formatted table rows
-    source.each {|e|
-      line = []
-      e.each_with_index {|item,index|
-        line << "%#{"-" if params[:justify][index] == :left || params[:justify][index].nil?}#{column_lengths[index]}s" % item.to_s
+    if source.is_a? Array
+      source.each {|e|
+        line = []
+        e.each_with_index {|item,index|
+          line << "%#{"-" if params[:justify][index] == :left || params[:justify][index].nil?}#{column_lengths[index]}s" % item.to_s
+        }
+        data << line.join(" "*params[:gutter])
       }
-      data << line.join(" "*params[:gutter])
-    }
+    end
 
     # Adding noitems_msg if there are well... no items.
     if source.empty? && params[:display_noitems] then data << params[:noitems_msg] end
