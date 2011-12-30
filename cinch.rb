@@ -37,7 +37,7 @@ require 'plugins/russianroulette'
 require 'plugins/ryder'
 require 'plugins/silly'
 require 'plugins/toolbox'
-require 'plugins/twitter5'
+require 'plugins/twitter'
 require 'plugins/urbandictionary'
 require 'plugins/weather'
 
@@ -85,7 +85,7 @@ bot = Cinch::Bot.new do
       Plugins::Ryder,
       Plugins::Silly,
       Plugins::Toolbox,
-      Plugins::Twitter5,
+      Plugins::Twitter::Client,
       Plugins::UrbanDictionary,
       Plugins::Weather ]
     
@@ -102,7 +102,7 @@ bot = Cinch::Bot.new do
     c.plugins.options[Plugins::AutoVoice] = { enabled_channels: [] }.merge common_config
     c.plugins.options[Plugins::BotInfo] = { owner: "Azure", bot: c.nick, template: File.dirname(__FILE__) + '/config/info_template.txt'}.merge common_config
     c.plugins.options[Plugins::JoinNotice] = { greetings: File.dirname(__FILE__) + '/config/greetings/freenode/', filext: '.txt' }
-    c.plugins.options[Plugins::Twitter5] = { access_keys: File.dirname(__FILE__) + '/config/twitter_oauth.yaml' }
+    c.plugins.options[Plugins::Twitter::Client] = { access_keys: File.dirname(__FILE__) + '/config/twitter_oauth.yaml' }
   end
 
 end

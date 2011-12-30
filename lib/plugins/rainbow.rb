@@ -25,10 +25,10 @@ module Plugins
 			sd.irc_strip_colors! # Because total function abuse.
 			colour = %w{04 07 08 09 10 06 13}
 			offset = Random.new.rand(0..colour.size-1);
-			sd = "![b]" + sd.upcase.split(/\b/).map {|c| 
+			sd = "![b]" + sd.upcase.split(" ").map {|c| 
 				offset = (offset < colour.size-1 ? offset.next : 0);
 				"![c#{colour[offset]},#{colour[offset-4]}]#{c.each_char.each_with_index.map {|char,index| index % 2 == 0 ? char : char.downcase}.join}"
-			}.join
+			}.join(" ")
 			#sd
 		end
 

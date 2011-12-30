@@ -17,7 +17,13 @@ module Plugins
       }
       name.map {|e| e.capitalize }
 
-      m.reply ("%s%s no %s%s" % name)
+      part_no = [true,false].sample
+      two_parts_a = [true,false].sample
+      two_parts_b = [true,false].sample
+
+      format = "#{two_parts_a ? "%s%s" : "%s"}#{part_no ? " no " : ""}#{two_parts_b ? "%s%s" : "%s"}"
+
+      m.reply (format % name)
     end
   end
 end
