@@ -47,6 +47,7 @@ bot_rizon.rb
 bot_irch.rb
 bot_vortexirc.rb
 testnet_bot.rb
+bot_base2.rb
 
 config/admin-password
 config/twitter_oauth.yaml

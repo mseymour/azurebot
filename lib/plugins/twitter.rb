@@ -3,6 +3,7 @@
 gem 'twitter', '~>2.0.2'
 require 'twitter'
 require 'yaml'
+YAML::ENGINE.yamler = 'psych'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/array/conversions'
 require_relative 'twitter/tweet_handler'
@@ -29,6 +30,11 @@ module Plugins
         end
       end
 
+      def is_notice? m
+        m.type == :notice ? true : false
+      end
+
+
       match /tw$/, method: :execute_tweet
       match /tw (\w+)(?:\+(\d+))?$/, method: :execute_tweet
       match /^@(\w+)(?:\+(\d+))?$/, method: :execute_tweet, use_prefix: false
@@ -36,23 +42,43 @@ module Plugins
         options = {}
         options[:username] = username unless username.nil?
         options[:nth_tweet] = nth_tweet unless nth_tweet.nil?
-        m.reply tweet_by_username(options)
+        result = tweet_by_username(options)
+        if is_notice?(result)
+          m.user.notice result.message
+        else
+          m.reply result.message
+        end
       end
 
       match /tw #(\d+)$/, method: :execute_id
       match /^@#(\d+)$/, method: :execute_id, use_prefix: false
       def execute_id m, id
-        m.reply tweet_by_id(id: id)
+        result = tweet_by_id(id: id)
+        if is_notice?(result)
+          m.user.notice result.message
+        else
+          m.reply result.message
+        end
       end
 
       match /\?tw (\w+)$/, method: :execute_info, use_prefix: false
       def execute_info m, username
-        m.reply tweep_info(username: username)
+        result = tweep_info(username: username)
+        if is_notice?(result)
+          m.user.notice result.message
+        else
+          m.reply result.message
+        end
       end
 
       match /\?ts (.+)$/, method: :execute_search, use_prefix: false
       def execute_search m, term
-        m.reply search_by_term(term: term)
+        result = search_by_term(term: term)
+        if is_notice?(result)
+          m.user.notice result.message
+        else
+          m.reply result.message
+        end
       end
 
       listen_to :channel, method: :listen_channel
@@ -63,9 +89,19 @@ module Plugins
         urls.each {|url|
           username, id = url[1..2]
           if id.nil?
-            m.reply tweet_by_username(username: username)
+            result = tweet_by_username(username: username)
+            if is_notice?(result)
+              m.user.notice result.message
+            else
+              m.reply result.message
+            end
           else
-            m.reply tweet_by_id(id: id)
+            result = tweet_by_id(id: id)
+            if is_notice?(result)
+              m.user.notice result.message
+            else
+              m.reply result.message
+            end
           end
         }
       end

@@ -32,8 +32,10 @@ module Plugins
 
       def format_tweep_info tweep
         head =  "#{Format(:aqua,tweep.name)}" + Format(:silver," (#{tweep.screen_name})") + Format(:grey," - #{tweep.url} https://twitter.com/#!/#{tweep.screen_name}")
-        bio = Format(:aqua,"\"#{tweep.description.strip}\"")
-        location = "They are from #{Format(:aqua,tweep.location.strip)}"
+        bio = ""
+        bio = Format(:aqua,"\"#{tweep.description.strip}\"") if !tweep.description.blank?
+        location = ""
+        location = "They are from #{Format(:aqua,tweep.location.strip)}" if !tweep.location.blank?
         desc = [] << "has made #{tweep.statuses_count} tweets since #{tweep.created_at.strftime("%B %-d, %Y")}"
         desc << "has #{tweep.friends_count} friends" if tweep.friends_count > 0
         desc << "has #{tweep.followers_count} tweeps#{" (of which #{tweep.friends_count} are friends)" if tweep.friends_count > 0} who follow them" if tweep.followers_count > 0

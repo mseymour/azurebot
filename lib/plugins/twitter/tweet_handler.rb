@@ -10,6 +10,7 @@ module Plugins
       include ErrorHandler
 
       EXCEPTIONS = [::Twitter::Error, ErrorHandler::Warnings]
+      AMessage = Struct.new(:message,:type)
 
       # Handler methods
 
@@ -20,15 +21,15 @@ module Plugins
           timeline = ::Twitter.user_timeline params[:username], include_rts: true, count: params[:nth_tweet].to_i.succ
           raise Warnings::NoTweets if timeline.blank?
           tweet = timeline.last
-          params[:username] = tweet.user.screen_name # For proper case.
+          params[:username] = tweet.user.screen_name if !tweet.user.nil? # For proper case.
           
           return "No tweets!" if timeline.blank?
           return "Protected!" if tweet.user.protected?
           
-          format_tweet tweet # The fun starts here. If there is ever a problem, it'll bubble up here and be caught.
+          AMessage.new format_tweet(tweet) # The fun starts here. If there is ever a problem, it'll bubble up here and be caught.
 
         rescue *EXCEPTIONS => ex
-          handle_error ex, params[:username], @bot.nick
+          AMessage.new handle_error(ex, params[:username], @bot.nick), :notice
         end
       end
 
@@ -36,10 +37,10 @@ module Plugins
         params = {id: 0 }.merge(params)
         begin
           tweet = ::Twitter.status params[:id]
-          params[:username] = tweet.user.screen_name # For easy access.
-          format_tweet tweet # If there is ever a problem, it'll bubble up here and be caught.
+          params[:username] = tweet.user.screen_name if !tweet.user.nil? # For easy access.
+          AMessage.new format_tweet(tweet) # If there is ever a problem, it'll bubble up here and be caught.
         rescue *EXCEPTIONS => ex
-          handle_error ex, params[:username], @bot.nick
+          AMessage.new handle_error(ex, params[:username], @bot.nick), :notice
         end
       end
 
@@ -47,9 +48,9 @@ module Plugins
         params = {username: "Twitter"}.merge(params)
         begin
           tweep = ::Twitter.user params[:username]
-          format_tweep_info tweep
+          AMessage.new format_tweep_info(tweep)
         rescue *EXCEPTIONS => ex
-          handle_error ex, params[:username], @bot.nick
+          AMessage.new handle_error(ex, params[:username], @bot.nick), :notice
         end
       end
 
@@ -62,9 +63,9 @@ module Plugins
             results << format_search(status)
           }
           results << "There are no results for \"#{params[:term]}\"." if results.empty?
-          results.join("\n")
+          AMessage.new results.join("\n")
         rescue *EXCEPTIONS => ex
-          handle_error ex, params[:username], @bot.nick
+          AMessage.new handle_error(ex, params[:username], @bot.nick), :notice
         end
       end
 
