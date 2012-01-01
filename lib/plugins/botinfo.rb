@@ -39,17 +39,10 @@ module Plugins
         documentation << "-------"
         documentation << ""
         @bot.plugins.each {|p| 
+          next if p.class.help.blank?
           documentation << "### #{p.class.plugin_name} (`#{p.class.name}`)"
           documentation << ""
-          documentation << (!p.class.help.blank? ? "#{p.class.help.gsub("\n","\n\n")}" : "(No help available)")
-          documentation << "\n#### Matchers\nCommands that the bot reacts to; It will return the plugin name as a matcher if there are none defined."
-          p.class.matchers.each {|m|
-            prefix = regexp_process p.class.prefix, @bot.config.plugins.prefix if m.use_prefix
-            suffix = regexp_process p.class.suffix, @bot.config.plugins.suffix if m.use_suffix
-            pattern = regexp_process m.pattern
-
-            documentation << "* `#{prefix}#{pattern}#{suffix}`"
-          }
+          documentation << "#{p.class.help.gsub("\n","\n\n")}"
           documentation << ""
         };
 
