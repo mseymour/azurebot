@@ -51,12 +51,33 @@ module Plugins
       tz = tzparser(tz)
       begin
         today = Time.now.localtime(tz)
-        xmas = Time.new(today.year, 12, 25, 0, 0, 0, tz)
+        xmas = Time.new(today.year.next, 12, 25, 0, 0, 0, tz)
         xmas = xmas.next_year if xmas.to_date.past?
         message = if xmas.to_date == today.to_date
           "Merry Christmas!"
         else
           "There's #{time_diff_in_natural_language(today, xmas, seconds: false)} until Christmas!"
+        end
+      rescue ArgumentError => ae
+        message = ae.message
+      ensure
+        m.reply message, true
+      end
+    end
+
+    match /newyear$/, method: :newyear
+    match /newyear (\S+)/, method: :newyear
+    def newyear (m, tz = nil)
+      tz ||= "-00:00"
+      tz = tzparser(tz)
+      begin
+        today = Time.now.localtime(tz)
+        nyear = Time.new(today.year.succ, 1, 1, 0, 0, 0, tz)
+        nyear = nyear.next_year if nyear.to_date.past?
+        message = if nyear.to_date == today.to_date
+          "Happy New Year #{today.year}!"
+        else
+          "There's #{time_diff_in_natural_language(today, nyear)} until #{nyear.year}!"
         end
       rescue ArgumentError => ae
         message = ae.message
