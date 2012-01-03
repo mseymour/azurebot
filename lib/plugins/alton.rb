@@ -2,7 +2,7 @@
 
 require 'nokogiri'
 require 'open-uri'
-require 'obj_ext/string'
+require_relative '../obj_ext/string'
 
 module Plugins
   class Alton

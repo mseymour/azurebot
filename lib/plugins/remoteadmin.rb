@@ -1,4 +1,4 @@
-require 'obj_ext/string'
+require_relative '../obj_ext/string'
 
 module Plugins
   class RemoteAdmin
@@ -10,6 +10,7 @@ module Plugins
     listen_to :private
     listen_to :ctcp
     def listen m, message = nil, target = nil
+      return if m.command.casecmp("notice") && m.ctcp?
       return if m.ctcp? && m.ctcp_message.split[0].casecmp("action") == 0
       config[:admins].each_admin {|nick, username, host|
         admin = User(nick)

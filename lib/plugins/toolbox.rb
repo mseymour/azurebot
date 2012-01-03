@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 
 #require_relative '../modules/authenticate'
-require 'ap'
 
 module Plugins
   class Toolbox

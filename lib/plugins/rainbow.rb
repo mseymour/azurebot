@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-require 'obj_ext/string'
+require_relative '../obj_ext/string'
 
 module Plugins
 	class Rainbow

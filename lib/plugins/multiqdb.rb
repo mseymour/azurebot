@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 
-require 'plugins/qdb/bash'
-require 'plugins/qdb/qdbus'
-require 'plugins/qdb/shakesoda'
+require_relative 'qdb/bash'
+require_relative 'qdb/qdbus'
+require_relative 'qdb/shakesoda'
 
 module Plugins
 

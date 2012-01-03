@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-require 'modules/helpers/table_format'
+require_relative '../modules/helpers/table_format'
 
 module Plugins
 	class Booru

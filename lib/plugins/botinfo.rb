@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-require 'active_support/core_ext'
-require 'obj_ext/string'
-require 'modules/stringhelpers'
+require 'active_support/core_ext/object/blank'
+require 'active_support/core_ext/array/conversions'
+require_relative '../obj_ext/string'
+require_relative '../modules/stringhelpers'
 
 module Plugins
   class BotInfo

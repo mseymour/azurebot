@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-require 'plugins/dice/dicebox'
+require_relative 'dice/dicebox'
 
 module Plugins
   class Dice

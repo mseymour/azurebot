@@ -1,7 +1,7 @@
 require 'active_support/time'
 require 'active_support/core_ext/string'
 require 'active_support/core_ext/object/blank'
-require 'modules/stringhelpers'
+require_relative '../modules/stringhelpers'
 
 module Plugins
   class Silly

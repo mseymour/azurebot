@@ -1,6 +1,6 @@
 # coding: utf-8
 
-gem 'twitter', '~>2.0.2'
+#gem 'twitter', '~>2.0.2'
 require 'twitter'
 require 'yaml'
 YAML::ENGINE.yamler = 'psych'

@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-require 'modules/stringhelpers'
+require_relative '../modules/stringhelpers'
 require 'ruby-wmi'
 require 'socket'
 
