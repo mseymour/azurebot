@@ -16,7 +16,7 @@ module Plugins
 
     set(
       plugin_name: "Twitter", 
-      help: "Access Twitter from the comfort of your IRC client!\nUsage: `!tw <username><+D> - Gets the latest tweet of the specified user, or the tweet 'D' tweets back, between 1 and 20.\n       `!tw #[id]` - Gets the tweet at the specified ID\n       `?tw [username]` - Gets the specified user's Twitter profile\n       `?ts [term]` - Searches for three of the most recent tweets regarding the specified query\n       Shorthand: `@[username]<+D>`, @#[id]", 
+      help: "Access Twitter from the comfort of your IRC client! Usage:\n* `!tw <username><+D>` - Gets the latest tweet of the specified user, or the tweet 'D' tweets back, between 1 and 20.\n* `!tw #[id]` - Gets the tweet at the specified ID\n* `?tw [username]` - Gets the specified user's Twitter profile\n* `?ts [term]` - Searches for three of the most recent tweets regarding the specified query\n\nShorthand: `@[username]<+D>`, @#[id]", 
       required_options: [:access_keys])
 
       def initialize (*args)
