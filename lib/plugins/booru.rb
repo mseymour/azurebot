@@ -19,7 +19,7 @@ module Plugins
 			"3d" => "http://behoimi.org/post?tags=%<tags>s",
 			e621: "http://e621.net/post?tags=%<tags>s",
 			nano: "http://booru.nanochan.org/post/list/%<tags>s/1",
-			pony: "http://ponibooru.413chan.net/post/list/%<tags>s/1",
+			pony: "http://ponibooru.org/post/list/%<tags>s/1",
 			rule34: "http://rule34.paheal.net/post/list/%<tags>s/1",
 			katawa: "http://shimmie.katawa-shoujo.com/post/list/%<tags>s/1",
 			monster: "http://monstergirlbooru.com/index.php?q=/post/list/%<tags>s/1",
