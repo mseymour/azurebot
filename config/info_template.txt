@@ -1,13 +1,9 @@
-# Currently, there are seven fields available:
-# bot_name, owner_name, isadmin, cinch_version, uptime, session_start_date, plugins, plugins_head, plugin_count_remaining, ruby_version, ruby_platform, and ruby_release_date.
-# All fields must be surrounded by '<>'.
-# At some point, I will hopefully have some more to add. We'll see.
-
-I am ![b]<bot_name>![b], and my owner is ![b]<owner_name>![b].
-I am currently running ![b]Cinch <cinch_version>![b], a Ruby-based IRC framework.
-I have been running for ![b]<uptime>![b].
-#I was started around ![b]<session_start_date>![b].
-My loaded plugins are: <plugins_head>, and <plugin_count_remaining> more. (Use !plugins to view.)
-You are ![b]<is_admin>![b].
-#If there's anything interesting that you would like to see me have, why not tell <owner_name>?
-#You know, there are times that I wish I had a digi-mommy...
+/* Currently, there are 13 fields available:
+ * bot_name, owner_name, is_admin, cinch_version, uptime, total_channels, total_users, session_start_date, plugins_head, plugins_body_remaining, ruby_version, ruby_platform, and ruby_release_date.
+ * All fields are to be surrounded by {}'s. */
+I am {bot_name} and I am run by {owner_name}.
+I am based on Cinch {cinch_version} running on Ruby-{ruby_version} {ruby_platform} {ruby_release_date}.
+I am in {total_channels} channels and see {total_users} users.
+I was started on {session_start_date} and have been running for {uptime}.
+My currently loaded plugins are {plugins_head}, and {plugins_body_remaining} more. (Use `/msg {bot_name} list plugins' to view.)
+Visit my github repo @ https://github.com/mseymour/azurebot/
