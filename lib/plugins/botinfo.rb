@@ -13,7 +13,7 @@ module Plugins
     set(
       plugin_name: "Botinfo",
       help: "Notices you information about me.\nUsage: `/msg <nick> info`\nUsage: `/msg <nick> list plugins`",
-      required_options: [:template, :owner, :bot, :admins],
+      required_options: [:template_path, :owner, :bot, :admins],
       react_on: :private)
 
     # How to config:
@@ -28,10 +28,10 @@ module Plugins
       tags = {
         bot_name: @bot.nick,
         cinch_version: Cinch::VERSION,
-        is_admin: config[:admins].is_admin?(user.mask) ? "an admin" : "not an admin",
+        is_admin: config[:admins].is_admin?(m.user.mask) ? "an admin" : "not an admin",
         owner_name: config[:admins].first_nick || config[:owner],
         plugins_count_remaining: @bot.plugins.length - 9,
-        plugins_head: @bot.plugins[0..9].each {|p| p.class.plugin_name }.join(", "),
+        plugins_head: @bot.plugins[0..9].map {|p| p.class.plugin_name }.join(", "),
         ruby_platform: RUBY_PLATFORM,
         ruby_release_date: RUBY_RELEASE_DATE,
         ruby_version: RUBY_VERSION,
