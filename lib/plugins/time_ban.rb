@@ -120,6 +120,7 @@ module Plugins
       is_in_channel = @bot.channels.include?(chan.name)
       fields = @redis.hgetall "timeban:#{chan.name.downcase}:#{nick.downcase}"
       chan.join if !is_in_channel # To do the unbanning if not in the channel
+      sleep 5 if !is_in_channel # possible race condition where the bot is not opped immediately on join
       chan.unban(fields["ban.host"])
       #chan.part if !is_in_channel  # Part if was not in the channel
       @redis.del "timeban:#{chan.name.downcase}:#{nick.downcase}"
