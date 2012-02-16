@@ -14,7 +14,7 @@ module Plugins
 
       # Handler methods
 
-      def tweet_by_username params={}
+      def tweet_by_username(params={})
         params = { username: "Twitter", nth_tweet: 0 }.merge(params)
         begin
           raise Warnings::TooManyTweets if params[:nth_tweet].to_i > 20
@@ -33,7 +33,7 @@ module Plugins
         end
       end
 
-      def tweet_by_id params={}
+      def tweet_by_id(params={})
         params = {id: 0 }.merge(params)
         begin
           tweet = ::Twitter.status params[:id]
@@ -44,7 +44,7 @@ module Plugins
         end
       end
 
-      def tweep_info params={}
+      def tweep_info(params={})
         params = {username: "Twitter"}.merge(params)
         begin
           tweep = ::Twitter.user params[:username]
@@ -54,7 +54,7 @@ module Plugins
         end
       end
 
-      def search_by_term params={}
+      def search_by_term(params={})
         params = {term: "cat"}.merge(params)
         begin
           results = []

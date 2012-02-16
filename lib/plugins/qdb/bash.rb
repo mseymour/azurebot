@@ -9,7 +9,7 @@ require_relative 'base'
 module QDB
 
   class Bash < Base
-    def initialize *args
+    def initialize(*args)
       @fullname = "Bash.org"
       @base_url = "http://bash.org/"
       @path_template = "?%<id>s"
@@ -23,7 +23,7 @@ module QDB
       id.to_s
     end
 
-    def retrieve_quote params={}
+    def retrieve_quote(params={})
       params = { lines: @lines }.merge(params)
 
       o = Nokogiri::HTML(open(@url))

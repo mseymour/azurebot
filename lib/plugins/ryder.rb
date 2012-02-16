@@ -56,7 +56,7 @@ module Plugins
     end
 
     match "ryder"
-    def execute (m)
+    def execute(m)
       m.reply(ryder!);
     end
 

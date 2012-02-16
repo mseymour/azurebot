@@ -35,7 +35,7 @@ module Plugins
 
     valid_number = /(?:-|\+)?\d*\.?\d+(?:e)?(?:-|\+)?\d*\.?\d*/
     match /rand (#{valid_number}) (#{valid_number})/, method: :execute_random
-    def execute_random m, x, y
+    def execute_random(m, x, y)
       x = x.to_f.prettify
       y = y.to_f.prettify
       xy = "(x=#{x}, y=#{y})"
@@ -46,7 +46,7 @@ module Plugins
     end
 
     match /token (\d+)/, method: :execute_token
-    def execute_token m, length
+    def execute_token(m, length)
       max_length = 256
       def power_of_2?(number)
         (1..32).each { |bit| return true if number == (1 << bit) }

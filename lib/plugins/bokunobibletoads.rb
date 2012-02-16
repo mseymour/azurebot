@@ -7,7 +7,7 @@ module Plugins
       help: "Biblebattle no bokutoads.\nUsage: `!bnbt`")
 
     match "bnbt"
-    def execute m
+    def execute(m)
       words = %w{ bible black battle toads boku pico }
       name = []
       4.times {

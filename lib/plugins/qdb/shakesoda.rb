@@ -9,7 +9,7 @@ require_relative 'base'
 module QDB
 
   class Shakesoda < Base
-    def initialize *args
+    def initialize(*args)
       @fullname = "#shakesoda QDB"
       @base_url = "http://www.shakesoda.org/qdb/"
       @path_template = "view/%<id>s"
@@ -23,7 +23,7 @@ module QDB
       id.to_s
     end
 
-    def retrieve_quote params={}
+    def retrieve_quote(params={})
       params = { lines: @lines }.merge(params)
 
       o = Nokogiri::HTML(open(@url))

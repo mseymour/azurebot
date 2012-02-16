@@ -30,11 +30,11 @@ module Plugins
       src.match(%r{^(http://.+?/)})[0];
     end
 
-    def list_to_tags( list )
+    def list_to_tags(list)
       list.split(", ").uniq.map {|e| e.gsub %r{\s}, "_"}.join(" ");
     end
 
-    def generate_url( selector, tags )
+    def generate_url(selector, tags)
       return nil if (selector.nil? || @@selectors[selector.to_sym].nil?);
       return get_base_url(@@selectors[selector.to_sym]) if (tags.nil? || tags.empty?);
       @@selectors[selector.to_sym] % {:tags => CGI::escape(tags)};
@@ -48,12 +48,12 @@ module Plugins
 
     match "booru", method: :execute_booru
     match /booru (\w+)?\s?(.+)?/, method: :execute_booru
-    def execute_booru (m, selector = nil, tags = nil)
+    def execute_booru(m, selector = nil, tags = nil)
       m.reply(generate_url(selector, tags) || "You have #{!tags ? 'listed no tags' : 'used an invalid selector'}. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}, true);
     end
 
     match /boorulist/, method: :execute_boorulist
-    def execute_boorulist m
+    def execute_boorulist(m)
       table_array = []
       @@selectors.each {|k,v|
         table_array << "#{k}\t#{get_base_url(v)}"

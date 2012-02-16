@@ -4,7 +4,7 @@ module Plugins
 
     set plugin_name: "Russian Roulette", help: "In Soviet Russia, boolet shoots YOU!\nUsage: !rr <nick>", react_on: :channel
 
-    def initialize *args
+    def initialize(*args)
       super
       @@phrases = [
         "\"BANG\" You're dead! ... Just kidding comrade... for now.",
@@ -27,7 +27,7 @@ module Plugins
     end
 
     match /rr(?:\s(.+))?/
-    def execute m, nick
+    def execute(m, nick)
       #return if disabled?
       return m.reply("I am sorry comrade, but I do not have pistol on me.") unless check_user(m.channel.users, User(@bot.nick))
       nick = (check_user(m.channel.users, m.user) && !!nick && nick.valid_nick? && !User(nick).unknown? && nick.casecmp(@bot.nick) != 0 ? nick : m.user.nick);

@@ -22,7 +22,7 @@ module Plugins
     };
 
     #def generate_url( selector = nil, id = nil )
-    def generate_quote( qdb_access, tail = false )
+    def generate_quote(qdb_access, tail = false)
         output = []
         output << "#{qdb_access[:fullname]} quote ##{qdb_access[:id]} (#{qdb_access[:meta]}):" unless tail
         output <<  (!tail ? qdb_access[:quote].map {|e| "- #{e}" } : qdb_access[:quotetail].map {|e| "- #{e}" })
@@ -43,7 +43,7 @@ module Plugins
       selectors[0..-2].join(", ") + ", and " + selectors[-1]
     end
 
-    def execute (m, selector = nil, id = nil)
+    def execute(m, selector = nil, id = nil)
       retries = 3
       begin
         if (selector.nil? || @@selectors[selector.to_sym].nil?)

@@ -5,7 +5,7 @@ require 'uri'
 module QDB
   class QuoteDoesNotExistError < StandardError
     attr :id
-    def initialize id
+    def initialize(id)
       @id = id
     end
   end
@@ -16,7 +16,7 @@ module QDB
     attr_reader :lines
     attr_reader :url
 
-    def initialize params={}
+    def initialize(params={})
       params = {
         id: :latest,
         lines: 4
@@ -36,11 +36,11 @@ module QDB
       raise "retrieve_latest_quote_id must be overridden."
     end
 
-    def retrieve_quote params={}
+    def retrieve_quote(params={})
       raise "retrieve_quote must be overridden."
     end
 
-    def retrieve_meta params={}
+    def retrieve_meta(params={})
       raise "retrieve_meta must be overridden."
     end
 

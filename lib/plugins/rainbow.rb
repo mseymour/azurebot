@@ -8,7 +8,7 @@ module Plugins
 
     set plugin_name: "Rainbow", help: "Rainbowificates your text.\nUsage: `!rainbow [text]`.\nUsage: `eyerape [text]`.", suffix: /$/
 
-    def rainbowification s
+    def rainbowification(s)
       s.irc_strip_colors! # Because total function abuse.
       colour = %w{04 07 08 09 10 06 13}
       i = Random.new.rand(0..colour.size-1);
@@ -20,7 +20,7 @@ module Plugins
       new_string
     end
 
-    def eyerapeification s
+    def eyerapeification(s)
       sd = s.dup
       sd.irc_strip_colors! # Because total function abuse.
       colour = %w{04 07 08 09 10 06 13}
@@ -33,10 +33,10 @@ module Plugins
     end
 
     match /rainbow (.+)/, method: :execute_rainbow
-    def execute_rainbow (m, string); m.reply(rainbowification(string).irc_colorize,false); end;
+    def execute_rainbow(m, string); m.reply(rainbowification(string).irc_colorize,false); end;
 
     match /eyerape (.+)/, method: :execute_eyerape
-    def execute_eyerape (m, string); m.reply(eyerapeification(string).irc_colorize,false); end;
+    def execute_eyerape(m, string); m.reply(eyerapeification(string).irc_colorize,false); end;
 
   end
 end

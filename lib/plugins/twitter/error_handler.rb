@@ -9,7 +9,7 @@ module Plugins
         class NoTweets < Warnings; end;
       end
 
-      def handle_error ex, username, bot_nick
+      def handle_error(ex, username, bot_nick)
         params = {
           username: username,
           bot_nick: bot_nick

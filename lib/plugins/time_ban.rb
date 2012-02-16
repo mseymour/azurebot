@@ -5,13 +5,13 @@ module Plugins
   class TimeBan
     include Cinch::Plugin
 
-    def initialize *args
+    def initialize(*args)
       super
       @redis = Redis.new
     end
 
     listen_to :join, method: :on_join
-    def on_join m
+    def on_join(m)
       return unless m.user == @bot
       # Get all timeban keys for #channel:
       timebans = @redis.keys "timeban:#{m.channel.name}:*"
@@ -47,7 +47,7 @@ module Plugins
     end
 
     match /timeban (\S*) ((?:\d+[yMwdhms])+) (.+)/
-    def execute m, nick, range, reason
+    def execute(m, nick, range, reason)
       @bot.loggers.debug "TIMEBAN: nick: #{nick}; range: #{range}; reason: #{reason}"
       return unless check_user(m.channel.users, m.user)
       @bot.loggers.debug "Passed user privs check"
@@ -102,7 +102,7 @@ module Plugins
       modes.any? {|mode| users[user].include?(mode)}
     end
 
-    def unban channel, nick, v
+    def unban(channel, nick, v)
       chan = Channel(channel)
       is_in_channel = @bot.channels.include?(chan.name)
       chan.join if !is_in_channel # To do the unbanning if not in the channel

@@ -47,7 +47,7 @@ module Plugins
     end
 
     match /list plugins$/i, method: :execute_list, use_prefix: false
-    def execute_list m
+    def execute_list(m)
       list = []
       @bot.plugins.each {|p| list << p.class.plugin_name };
       m.user.notice("All #{list.size} currently loaded plugins for #{@bot.nick}:\n#{list.to_sentence}.\nTo view help for a plugin, use `!help <plugin name>`.")

@@ -9,13 +9,13 @@ module Plugins
 
     attr_accessor :listen_for_ping
 
-    def initialize *args
+    def initialize(*args)
       super
       @listen_for_ping = {}
     end
 
     match /ping(?:\s(\S+))?/i
-    def execute m, nick
+    def execute(m, nick)
       nick = m.user.nick if nick.blank?
       return m.reply "You cannot make me ping myself!" if nick.casecmp(@bot.nick) == 0
       user = User((nick if !User(nick).unknown?) || m.user.nick)

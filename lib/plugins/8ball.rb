@@ -37,7 +37,7 @@ module Plugins
     end
 
     match /8ball (.+)/
-    def execute (m, s)
+    def execute(m, s)
       questions = s.split("? ")
       answers = [];
       questions.each {|question|

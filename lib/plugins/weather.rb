@@ -34,7 +34,7 @@ module Plugins
       Barometer.config = { 1 => [:wunderground] }
     end
 
-    def current_weather! ( params={} )
+    def current_weather!(params={})
       query = params[:query]||"Halifax, Nova Scotia"
       modifier = params[:modifier]||:default;
       begin
@@ -68,7 +68,7 @@ module Plugins
     end
 
     match /weather (.+)/
-    def execute (m, query = nil)
+    def execute(m, query = nil)
       args = query != nil ? query.split(" ") : [nil, nil];
       if args[-1] =~ /-\w/
         m.reply current_weather!(:query => args[0..-2].join(" "), :modifier => args[-1]);

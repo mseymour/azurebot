@@ -8,13 +8,13 @@ module Plugins
 
     set plugin_name: "Auto Notice", help: "Notices nicks upon join.\nUsage: `!hello` to replay entry notice.", required_options: [:greetings, :filext]
 
-    def get_channel_greeting channel
+    def get_channel_greeting(channel)
       open([config[:greetings], channel, config[:filext]].join, &:read) rescue nil
     end
 
     listen_to :join
     match "hello", method: :listen
-    def listen m
+    def listen(m)
       return if m.user.nick == @bot.nick
       greeting = get_channel_greeting(m.channel.name)
       return if greeting.blank?

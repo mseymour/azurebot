@@ -13,7 +13,7 @@ module Plugins
 
     _seconds_in_a_day = 86400
 
-    def action_match ctcp_args, match, compare = true
+    def action_match(ctcp_args, match, compare = true)
       if compare
         !!(ctcp_args.join(" ") =~ match) if ctcp_args.is_a?(Array) && match.is_a?(Regexp)
       else
@@ -22,7 +22,7 @@ module Plugins
     end
 
     listen_to :action, method: :listen_poke
-    def listen_poke m
+    def listen_poke(m)
       return unless action_match(m.ctcp_args, %r{^pokes (\S+)})
       if User(action_match(m.ctcp_args, %r{^pokes (\S+)}, false)[1]) == @bot
         m.reply "Do NOT poke the bot!"
@@ -30,10 +30,10 @@ module Plugins
     end
 
     match /\b(dumb|stupid)\b.+\bbot\b/i, method: :execute_botinsult, use_prefix: false
-    def execute_botinsult (m); m.reply ["Stupid human!","Dumb human!","Stupid meatbag.","Silly human, your insults cannot harm me!"].sample if m.user.nick != "TempTina"; end
+    def execute_botinsult(m); m.reply ["Stupid human!","Dumb human!","Stupid meatbag.","Silly human, your insults cannot harm me!"].sample if m.user.nick != "TempTina"; end
 
 
-    def tzparser tz
+    def tzparser(tz)
       prefix = (tz[0] !~ /(\+|-)/ ? "+" : "")
       suffix = (tz =~ /^(?:\+|-)?(\d{1,2})$/ ? ":00" : "")
       regexp = /^(\+|-)?(\d{1,2})(?::(\d{1,2}))?$/
@@ -46,7 +46,7 @@ module Plugins
 
     match "xmas", method: :xmas
     match /xmas (\S+)/, method: :xmas
-    def xmas (m, tz = nil)
+    def xmas(m, tz = nil)
       tz ||= "-00:00"
       tz = tzparser(tz)
       begin
@@ -67,7 +67,7 @@ module Plugins
 
     match "sw", method: :sw
     match /sw (\S+)/, method: :sw
-    def sw (m, tz = nil)
+    def sw(m, tz = nil)
       tz ||= "-00:00"
       tz = tzparser(tz)
       begin
@@ -88,7 +88,7 @@ module Plugins
 
     match "newyear", method: :newyear
     match /newyear (\S+)/, method: :newyear
-    def newyear (m, tz = nil)
+    def newyear(m, tz = nil)
       tz ||= "-00:00"
       tz = tzparser(tz)
       begin

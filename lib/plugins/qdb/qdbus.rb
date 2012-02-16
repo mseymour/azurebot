@@ -9,7 +9,7 @@ require_relative 'base'
 module QDB
 
   class Qdbus < Base
-    def initialize *args
+    def initialize(*args)
       @fullname = "Qdb.us"
       @base_url = "http://qdb.us/"
       @path_template = "?%<id>s"
@@ -23,7 +23,7 @@ module QDB
       id.to_s
     end
 
-    def retrieve_quote params={}
+    def retrieve_quote(params={})
       params = { lines: @lines }.merge(params)
 
       o = Nokogiri::HTML(open(@url))

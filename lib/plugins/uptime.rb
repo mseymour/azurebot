@@ -19,7 +19,7 @@ module Plugins
     end
 
     match "uptime"
-    def execute (m)
+    def execute(m)
       m.reply(uptime!);
     end
   end
