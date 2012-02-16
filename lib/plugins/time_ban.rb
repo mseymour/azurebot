@@ -53,6 +53,7 @@ module Plugins
       @bot.loggers.debug "Passed user privs check"
       return m.user.notice "I cannot kickban #{nick} because I do not have the correct privileges." unless check_user(m.channel.users, User(@bot.nick))
       @bot.loggers.debug "Passed bot privs check"
+      return if User(nick) == @bot # refuse to kickban the bot
 
       units = {
         'y' => :years,
