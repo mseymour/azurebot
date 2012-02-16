@@ -5,6 +5,8 @@ module Plugins
   class TimeBan
     include Cinch::Plugin
 
+    set plugin_name: "Timeban", react_on: :channel
+
     def initialize(*args)
       super
       @redis = Redis.new
@@ -22,10 +24,10 @@ module Plugins
         if Time.now < Time.parse(v["when.unbanned"])
           @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.parse(v["when.unbanned"]) - Time.now}"
           timer(Time.parse(v["when.unbanned"]) - Time.now, shots: 1) {
-            unban(channel, nick, v)
+            unban(channel, nick)
           }
         else # If the timeban already expired, unban on connect.
-          unban(channel, nick, v)
+          unban(channel, nick)
         end
       }
     end
@@ -46,14 +48,16 @@ module Plugins
       (params[:weeks] * 604800) + (day_delta * 86400) + (params[:hours] * 3600) + (params[:minutes] * 60) + params[:seconds]
     end
 
-    match /timeban (\S*) ((?:\d+[yMwdhms])+) (.+)/
+    match /timeban (\S*) ((?:\d+[yMwdhms])+)\s?(.+)?/
     def execute(m, nick, range, reason)
-      @bot.loggers.debug "TIMEBAN: nick: #{nick}; range: #{range}; reason: #{reason}"
       return unless check_user(m.channel.users, m.user)
-      @bot.loggers.debug "Passed user privs check"
       return m.user.notice "I cannot kickban #{nick} because I do not have the correct privileges." unless check_user(m.channel.users, User(@bot.nick))
-      @bot.loggers.debug "Passed bot privs check"
       return if User(nick) == @bot # refuse to kickban the bot
+      return if User(nick).unknown? # refuse to ban a user that does not exist
+
+      @bot.loggers.debug "TIMEBAN: nick: #{nick}; range: #{range}; reason: #{reason}"
+
+      reason ||= "fuck you!"
 
       units = {
         'y' => :years,
@@ -81,18 +85,26 @@ module Plugins
 
       @bot.loggers.debug "TIMEBAN: HMSET \"timeban:#{m.channel.name}:#{nick}\": #{fields.inspect}"
       # schema: timeban:channel:nick (ex: timeban:#shakesoda:kp_centi)
-      @redis.hmset "timeban:#{m.channel.name}:#{nick}", *fields.flatten
+      @redis.hmset "timeban:#{m.channel.name.downcase}:#{nick.downcase}", *fields.flatten
 
       # KICKBAN HIM!
       m.channel.ban(fields["ban.host"]);
-      m.channel.kick(nick, "#{fields["banned.by"]} has banned you until #{Time.at(fields["when.unbanned"]).strftime("%A, %B %-d, %Y at %-l:%M %P")}, because \"#{fields["ban.reason"]}\".");
+      m.channel.kick(nick, "Banned for #{range} by #{m.user.nick} (#{fields["ban.reason"]})");
       @bot.loggers.debug "TIMEBAN: Kickbanned #{nick} from #{m.channel.name}: #{fields.inspect}"
 
       @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.at(fields["when.unbanned"]) - Time.now}"
       timer(Time.at(fields["when.unbanned"]) - Time.now, shots: 1) {
-        unban(m.channel.name, nick, fields)
+        unban(m.channel.name, nick)
       }
 
+    end
+
+    match /unban (\S*)/, method: :execute_unban
+    def execute_unban(m, nick)
+      return unless check_user(m.channel.users, m.user)
+      return m.user.notice "I cannot unban #{nick} because I do not have the correct privileges." unless check_user(m.channel.users, User(@bot.nick))
+      return m.user.notice "I cannot find the timeban entry \"timeban:#{m.channel.name.downcase}:#{nick.downcase}\"." if @redis.hgetall("timeban:#{m.channel.name.downcase}:#{nick.downcase}").empty? # Refuse to unban if entry does not exist
+      unban(m.channel.name, nick)
     end
 
     private
@@ -103,14 +115,15 @@ module Plugins
       modes.any? {|mode| users[user].include?(mode)}
     end
 
-    def unban(channel, nick, v)
+    def unban(channel, nick)
       chan = Channel(channel)
       is_in_channel = @bot.channels.include?(chan.name)
+      fields = @redis.hgetall "timeban:#{chan.name.downcase}:#{nick.downcase}"
       chan.join if !is_in_channel # To do the unbanning if not in the channel
-      chan.unban(v["ban.host"])
+      chan.unban(fields["ban.host"])
       #chan.part if !is_in_channel  # Part if was not in the channel
-      @redis.del "timeban:#{chan.name}:#{nick}"
-      @bot.loggers.debug "TIMEBAN: #{nick} has been unbanned from #{channel}. Banned by: #{v["banned.by"]}; Ban reason: #{v["ban.reason"]}"
+      @redis.del "timeban:#{chan.name.downcase}:#{nick.downcase}"
+      @bot.loggers.debug "TIMEBAN: #{nick} has been unbanned from #{channel}. Banned by: #{fields["banned.by"]}; Ban reason: #{fields["ban.reason"]}"
     end
 
   end
