@@ -15,11 +15,11 @@ module Plugins
       include TweetHandler
 
     set(
-      plugin_name: "Twitter", 
-      help: "Access Twitter from the comfort of your IRC client! Usage:\n* `!tw <username><+D>` - Gets the latest tweet of the specified user, or the tweet 'D' tweets back, between 1 and 20.\n* `!tw #[id]` - Gets the tweet at the specified ID\n* `?tw [username]` - Gets the specified user's Twitter profile\n* `?ts [term]` - Searches for three of the most recent tweets regarding the specified query\n\nShorthand: `@[username]<+D>`, @#[id]", 
+      plugin_name: "Twitter",
+      help: "Access Twitter from the comfort of your IRC client! Usage:\n* `!tw <username><+D>` - Gets the latest tweet of the specified user, or the tweet 'D' tweets back, between 1 and 20.\n* `!tw #[id]` - Gets the tweet at the specified ID\n* `?tw [username]` - Gets the specified user's Twitter profile\n* `?ts [term]` - Searches for three of the most recent tweets regarding the specified query\n\nShorthand: `@[username]<+D>`, @#[id]",
       required_options: [:access_keys])
 
-      def initialize (*args)
+      def initialize(*args)
         super
         keys = YAML::load_file(config[:access_keys])
         ::Twitter.configure do |c|
@@ -30,7 +30,7 @@ module Plugins
         end
       end
 
-      def is_notice? m
+      def is_notice?(m)
         m.type == :notice ? true : false
       end
 
@@ -38,7 +38,7 @@ module Plugins
       match /tw$/, method: :execute_tweet
       match /tw (\w+)(?:\+(\d+))?$/, method: :execute_tweet
       match /^@(\w+)(?:\+(\d+))?$/, method: :execute_tweet, use_prefix: false
-      def execute_tweet m, username = nil, nth_tweet = nil
+      def execute_tweet(m, username = nil, nth_tweet = nil)
         options = {}
         options[:username] = username unless username.nil?
         options[:nth_tweet] = nth_tweet unless nth_tweet.nil?
@@ -52,7 +52,7 @@ module Plugins
 
       match /tw #(\d+)$/, method: :execute_id
       match /^@#(\d+)$/, method: :execute_id, use_prefix: false
-      def execute_id m, id
+      def execute_id(m, id)
         result = tweet_by_id(id: id)
         if is_notice?(result)
           m.user.notice result.message
@@ -62,7 +62,7 @@ module Plugins
       end
 
       match /\?tw (\w+)$/, method: :execute_info, use_prefix: false
-      def execute_info m, username
+      def execute_info(m, username)
         result = tweep_info(username: username)
         if is_notice?(result)
           m.user.notice result.message
@@ -72,7 +72,7 @@ module Plugins
       end
 
       match /\?ts (.+)$/, method: :execute_search, use_prefix: false
-      def execute_search m, term
+      def execute_search(m, term)
         result = search_by_term(term: term)
         if is_notice?(result)
           m.user.notice result.message
@@ -82,7 +82,7 @@ module Plugins
       end
 
       listen_to :channel, method: :listen_channel
-      def listen_channel m
+      def listen_channel(m)
         urlregexp = /(https?:\/\/twitter.com\/(?:#!\/)?(\w+)(?:\/status\/(\d+))?)/i
         return unless m.message =~ urlregexp
         urls = m.message.scan(urlregexp)

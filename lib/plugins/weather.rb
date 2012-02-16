@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 Encoding.default_internal = "UTF-8"
 Encoding.default_external = "UTF-8"
 
@@ -8,11 +8,11 @@ require 'active_support/core_ext/object/blank'
 module Plugins
   class Weather
     include Cinch::Plugin
-      set( 
-        plugin_name: "Weather", 
+      set(
+        plugin_name: "Weather",
         help: "Grabs the current weather from WeatherUnderground.\nUsage: `!weather [query]`")
 
-    @@unicon = { 
+    @@unicon = {
     :clear => ["☾","clear"],
     :cloudy => ["☁","cloudy"],
     :flurries => ["☃","flurries"],
@@ -33,8 +33,8 @@ module Plugins
       super
       Barometer.config = { 1 => [:wunderground] }
     end
-    
-    def current_weather! ( params={} )
+
+    def current_weather!(params={})
       query = params[:query]||"Halifax, Nova Scotia"
       modifier = params[:modifier]||:default;
       begin
@@ -58,18 +58,17 @@ module Plugins
         "Current weather for #{m.location.name || m.query} as of #{m.measured_at}: #{out.reject(&:blank?).join("; ")}."
 
       rescue
-        "script:#{$0} | errloc:#{$@[0]} | PID:#{$$}"
         @bot.debug "Script: #{$0} (PID #{$$})"
         $@.each_with_index {|err, index|
-          @bot.debug("#{index > 0 ? "#{" " * index}`-" : ""}#{err}")
+          @bot.debug("%s%s" % [index > 0 && " " * index + "`-", err])
         }
         "Uhoh! Something went wrong! :("
       end
 
     end
 
-    match %r{weather (.+)}
-    def execute (m, query = nil)
+    match /weather (.+)/
+    def execute(m, query = nil)
       args = query != nil ? query.split(" ") : [nil, nil];
       if args[-1] =~ /-\w/
         m.reply current_weather!(:query => args[0..-2].join(" "), :modifier => args[-1]);

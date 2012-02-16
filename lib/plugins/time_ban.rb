@@ -5,13 +5,13 @@ module Plugins
   class TimeBan
     include Cinch::Plugin
 
-    def initialize *args
+    def initialize(*args)
       super
       @redis = Redis.new
     end
 
     listen_to :join, method: :on_join
-    def on_join m
+    def on_join(m)
       return unless m.user == @bot
       # Get all timeban keys for #channel:
       timebans = @redis.keys "timeban:#{m.channel.name}:*"
@@ -21,7 +21,7 @@ module Plugins
         channel, nick = *k.match(/(.+):(.+):(.+)/)[2..3]
         if Time.now < Time.parse(v["when.unbanned"])
           @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.parse(v["when.unbanned"]) - Time.now}"
-          timer(Time.parse(v["when.unbanned"]) - Time.now, shots: 1) { 
+          timer(Time.parse(v["when.unbanned"]) - Time.now, shots: 1) {
             unban(channel, nick, v)
           }
         else # If the timeban already expired, unban on connect.
@@ -47,7 +47,7 @@ module Plugins
     end
 
     match /timeban (\S*) ((?:\d+[yMwdhms])+) (.+)/
-    def execute m, nick, range, reason
+    def execute(m, nick, range, reason)
       @bot.loggers.debug "TIMEBAN: nick: #{nick}; range: #{range}; reason: #{reason}"
       return unless check_user(m.channel.users, m.user)
       @bot.loggers.debug "Passed user privs check"
@@ -71,13 +71,13 @@ module Plugins
       unbantime = Time.now + delta
 
       fields = {
-        "when.banned" => Time.now, 
-        "when.unbanned" => unbantime, 
-        "banned.by" => m.user.nick, 
+        "when.banned" => Time.now,
+        "when.unbanned" => unbantime,
+        "banned.by" => m.user.nick,
         "ban.reason" => reason,
         "ban.host" => User(nick).mask("*!*@%h") }
-    
-      
+
+
       @bot.loggers.debug "TIMEBAN: HMSET \"timeban:#{m.channel.name}:#{nick}\": #{fields.inspect}"
       # schema: timeban:channel:nick (ex: timeban:#shakesoda:kp_centi)
       @redis.hmset "timeban:#{m.channel.name}:#{nick}", *fields.flatten
@@ -88,7 +88,7 @@ module Plugins
       @bot.loggers.debug "TIMEBAN: Kickbanned #{nick} from #{m.channel.name}: #{fields.inspect}"
 
       @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.at(fields["when.unbanned"]) - Time.now}"
-      timer(Time.at(fields["when.unbanned"]) - Time.now, shots: 1) { 
+      timer(Time.at(fields["when.unbanned"]) - Time.now, shots: 1) {
         unban(m.channel.name, nick, fields)
       }
 
@@ -102,7 +102,7 @@ module Plugins
       modes.any? {|mode| users[user].include?(mode)}
     end
 
-    def unban channel, nick, v
+    def unban(channel, nick, v)
       chan = Channel(channel)
       is_in_channel = @bot.channels.include?(chan.name)
       chan.join if !is_in_channel # To do the unbanning if not in the channel

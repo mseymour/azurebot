@@ -7,7 +7,7 @@ module Plugins
     set plugin_name: "DJ Info", help: "Spams the channel with DJ contact information.\nUsage: `!dj <dj_name>`", required_options: [:dj_info]
 
     match /dj\s?(.+)?/
-    def execute (m, target)
+    def execute(m, target)
       info = YAML::load_file(config[:dj_info])
 
       if !target.nil? && info.has_key?(target.downcase)

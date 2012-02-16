@@ -7,9 +7,9 @@ module Plugins
       prefix: /^/,
       suffix: /\?$/,
       required_options: [:admins])
-      
+
     match /Am I (logged in|an admin)/i
-    def execute m, question_context
+    def execute(m, question_context)
       test = config[:admins].logged_in? m.user.mask
       if test
         m.channel.action "hugs #{m.user.nick}" if m.channel?

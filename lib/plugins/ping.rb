@@ -4,25 +4,26 @@ module Plugins
   class Ping
     include Cinch::Plugin
     set(
-      plugin_name: "Ping", 
+      plugin_name: "Ping",
       help: "Pings you or a target via CTCP, and reports the number of milliseconds on recieving a response.\nUsage: `!ping <nick>`")
 
     attr_accessor :listen_for_ping
 
-    def initialize *args
+    def initialize(*args)
       super
       @listen_for_ping = {}
     end
 
     match /ping(?:\s(\S+))?/i
-    def execute m, nick
+    def execute(m, nick)
       nick = m.user.nick if nick.blank?
-      return m.reply "You cannot make me ping myself!" if nick.casecmp(@bot.nick) == 0
-      user = User((nick if !User(nick).unknown?) || m.user.nick)
+      return m.reply "You cannot make me ping myself!" if m.user == @bot
+      user = User(nick)
+      user = m.user if user.unknown?
       t = Time.now
       user.ctcp("PING #{t.to_i}")
       @listen_for_ping[user.nick] = {target: (m.channel? ? m.channel : m.user), ts: t}
-      timer(5, shots: 1) { 
+      timer(5, shots: 1) {
         if @listen_for_ping.has_key?(user.nick)
           m.channel.msg "I could not determine #{user.nick}#{user.nick[-1].casecmp("s") == 0 ? "'" : "'s"} ping to me after 5 seconds."
           @listen_for_ping.delete(user.nick)

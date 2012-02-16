@@ -9,26 +9,26 @@ module Plugins
 
       attr_reader :abusers
 
-      def initialize *args
+      def initialize(*args)
         super
         @abusers = {}
         @@abuser = Struct.new :abuse_count, :first_message_time, :last_message_time
         @kicks = 0
       end
 
-      def delete_abuser! nick
+      def delete_abuser!(nick)
         @abusers.delete(nick)
       end
 
       listen_to :kick, method: :listen_to_exit
       listen_to :quit, method: :listen_to_exit
-      def listen_to_exit m
+      def listen_to_exit(m)
         return unless @abusers.has_key?(m.user.nick)
         delete_abuser! m.user.nick
       end
 
       listen_to :channel, method: :listen_to_commandspam
-      def listen_to_commandspam m
+      def listen_to_commandspam(m)
         trec = Time.now.to_i
         message = m.message
         return unless message.match(/^[-!\.%\?](?![-!\.%\?]+)/) && message.length > 1
@@ -55,7 +55,7 @@ module Plugins
       end
 
       listen_to :antispam_list, method: :listen_to_listabusers
-      def listen_to_listabusers m
+      def listen_to_listabusers(m)
         @bot.handlers.dispatch :antispam_list_response, m, @abusers
       end
     end
@@ -64,11 +64,11 @@ module Plugins
       include Cinch::Plugin
       set plugin_name: "Antispam Lister", help: "List those who spam prefixed bot commands.", react_on: :private, required_options: [:admins]
       match /^list abusers/, use_prefix: false
-      def execute m
+      def execute(m)
         @bot.handlers.dispatch :antispam_list, m
       end
       listen_to :antispam_list_response
-      def listen m, abusers
+      def listen(m, abusers)
         return unless config[:admins].logged_in? m.user.mask
         abusers = abusers.to_a.map {|e| "%s\t%d\t%s\t%s" % [e[0], e[1][:abuse_count], e[1][:first_message_time], e[1][:last_message_time]] }
         m.user.msg Helpers::table_format(abusers, gutter: 4, justify: [:left,:right,:left,:left], headers: ["Nick","Abuse count","First Message","Last Message"]), true

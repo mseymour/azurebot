@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 require 'open-uri'
 require 'nokogiri'
@@ -8,12 +8,12 @@ module Plugins
   class JargonFile
     include Cinch::Plugin
     set plugin_name: "Jargon File", help: "Gets the entry from the Jargon File.\nUsage: `!jargon <entry>`"
-    
+
     match /jargon (.+)/
     def lookup(word)
       begin
         x = word[0].gsub(/([\(\/124@])/,'0').upcase;
-        
+
         term = word;
         #special cases for when the filename is different than the title
         case term
@@ -37,9 +37,9 @@ module Plugins
           when /([\*])/
             term.gsub!(/([\*])/,'-asterisk-');
         end
-        
+
         term.gsub!(/([\s\W])/,'-');
-        
+
         #url = "http://www.urbandictionary.com/define.php?term=#{CGI.escape(word)}"
         url = "http://www.catb.org/jargon/html/#{x}/#{term}.html"
         page = Nokogiri::HTML(open(url));

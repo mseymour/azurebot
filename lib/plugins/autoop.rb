@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 # Give this bot ops in a channel and it'll auto op visitors
 #
@@ -8,12 +8,12 @@
 module Plugins
   class AutoOP
     include Cinch::Plugin
-    
+
     set(
       plugin_name: "Auto OP",
       help: "Automatically ops nicks upon join.\nUsage: `!autoop [on|off]` -- turns autoop on or off. (Admins only)",
       react_on: :channel)
-    
+
     listen_to :join
     def listen(m)
       #@bot.debug("#{self.class.name} → #{config[:enabled_channels].inspect}");
@@ -31,20 +31,20 @@ module Plugins
     def execute(m, option)
       begin
         return unless config[:admins].logged_in?(m.user.mask)
-        
+
         @autoop = option == "on"
-        
+
         case option
           when "on"
             config[:enabled_channels] << m.channel.name
           else
             config[:enabled_channels].delete(m.channel.name)
         end
-        
+
         m.reply "AutoOP for #{m.channel} is now #{@autoop ? 'enabled' : 'disabled'}!"
-        
+
         @bot.debug("#{self.class.name} → #{config[:enabled_channels].inspect}");
-        
+
       rescue
         m.reply "Error: #{$!}"
       end
