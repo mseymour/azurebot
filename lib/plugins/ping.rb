@@ -17,8 +17,9 @@ module Plugins
     match /ping(?:\s(\S+))?/i
     def execute(m, nick)
       nick = m.user.nick if nick.blank?
-      return m.reply "You cannot make me ping myself!" if nick.casecmp(@bot.nick) == 0
-      user = User((nick if !User(nick).unknown?) || m.user.nick)
+      return m.reply "You cannot make me ping myself!" if m.user == @bot
+      user = User(nick)
+      user = m.user if user.unknown?
       t = Time.now
       user.ctcp("PING #{t.to_i}")
       @listen_for_ping[user.nick] = {target: (m.channel? ? m.channel : m.user), ts: t}

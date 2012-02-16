@@ -30,7 +30,7 @@ module Plugins
     def execute(m, nick)
       #return if disabled?
       return m.reply("I am sorry comrade, but I do not have pistol on me.") unless check_user(m.channel.users, User(@bot.nick))
-      nick = (check_user(m.channel.users, m.user) && !!nick && nick.valid_nick? && !User(nick).unknown? && nick.casecmp(@bot.nick) != 0 ? nick : m.user.nick);
+      nick = (check_user(m.channel.users, m.user) && !!nick && nick.valid_nick? && !User(nick).unknown? && User(nick) != @bot ? nick : m.user.nick);
 
       turn_count = Random.new.rand(1..6)
       round = Random.new.rand(1..6)

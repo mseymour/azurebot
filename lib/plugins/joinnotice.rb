@@ -15,7 +15,7 @@ module Plugins
     listen_to :join
     match "hello", method: :listen
     def listen(m)
-      return if m.user.nick == @bot.nick
+      return if m.user == @bot
       greeting = get_channel_greeting(m.channel.name)
       return if greeting.blank?
       m.user.notice greeting.split($/).delete_if{|e| e.match(/^\/\//)}.map {|e| "[#{m.channel.name}] #{e.to_s}"}.join($/)
