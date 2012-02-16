@@ -3,6 +3,8 @@ require 'redis'
 
 module Plugins
   class TimeBan
+    include Cinch::Plugin
+
     def initialize
       super
       @redis = Redis.new
