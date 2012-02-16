@@ -43,6 +43,9 @@ module Plugins
 
     match /timeban (\W) (\W) (.+)/
     def execute m, nick, range, reason
+      return unless check_user(m.channel.users, m.user)
+      return m.user.notice "I cannot kickban #{nick} because I do not have the correct privileges." unless check_user(m.channel.users, User(@bot.nick))
+
       units = {
         'y' => :years,
         'M' => :months,
@@ -79,17 +82,15 @@ module Plugins
         unban(channel, nick, v)
       }
 
-
-      #@redis.hgetall "timeban:#{m.channel.name}:#{nick}"
-      #@redis.del "timeban:#{m.channel.name}:#{nick}"
-
-      #For restoring:
-      #<milk_> KEYS timeban*
-      #<milk_> then HGETALL timeban:#channel:nick
-
     end
 
     private
+
+    def check_user(users, user)
+      modes = @bot.irc.isupport["PREFIX"].keys
+      modes.delete("v")
+      modes.any? {|mode| users[user].include?(mode)}
+    end
 
     def unban channel, nick, v
       chan = Channel(channel)
