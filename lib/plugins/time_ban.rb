@@ -10,7 +10,8 @@ module Plugins
       @redis = Redis.new
     end
 
-    on :connect do
+    listen_to :connect, method: :on_connect
+    def on_connect m
       # Get all timeban keys:
       timebans = @redis.keys "timeban:*"
       timebans.each {|k|
