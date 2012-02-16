@@ -19,6 +19,7 @@ module Plugins
         @bot.loggers.debug "TIMEBAN: Loading timed ban from Redis: #{v.inspect}"
         channel, nick = *k.match(/(.+):(.+):(.+)/)[2..3]
         if Time.now < v["when.unbanned"]
+          @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.now - v["when.unbanned"]}"
           timer(Time.now - v["when.unbanned"], shots: 1) { 
             unban(channel, nick, v)
           }
@@ -44,10 +45,13 @@ module Plugins
       (params[:weeks] * 604800) + (day_delta * 86400) + (params[:hours] * 3600) + (params[:minutes] * 60) + params[:seconds]
     end
 
-    match /timeban (\W) (\W) (.+)/
+    match /timeban (\S*) ((?:\d+[yMwdhms])+) (.+)/
     def execute m, nick, range, reason
+      @bot.loggers.debug "TIMEBAN: nick: #{nick}; range: #{range}; reason: #{reason}"
       return unless check_user(m.channel.users, m.user)
+      @bot.loggers.debug "Passed user privs check"
       return m.user.notice "I cannot kickban #{nick} because I do not have the correct privileges." unless check_user(m.channel.users, User(@bot.nick))
+      @bot.loggers.debug "Passed bot privs check"
 
       units = {
         'y' => :years,
@@ -73,6 +77,7 @@ module Plugins
         "ban.host" => User(nick).mask("*!*@%h") }
     
       
+      @bot.loggers.debug "TIMEBAN: HMSET \"timeban:#{m.channel.name}:#{nick}\": #{fields.inspect}"
       # schema: timeban:channel:nick (ex: timeban:#shakesoda:kp_centi)
       @redis.hmset "timeban:#{m.channel.name}:#{nick}", *fields.flatten
 
@@ -81,13 +86,14 @@ module Plugins
       m.channel.kick(nick, "#{fields["banned.by"]} has banned you until #{Time.at(fields["when.unbanned"]).strftime("%A, %B %-d, %Y at %-l:%M %P")}, because \"#{fields["ban.reason"]}\".");
       @bot.loggers.debug "TIMEBAN: Kickbanned #{nick} from #{m.channel.name}: #{fields.inspect}"
 
+      @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.now - fields["when.unbanned"]}"
       timer(Time.now - fields["when.unbanned"], shots: 1) { 
-        unban(channel, nick, v)
+        unban(channel, nick, fields)
       }
 
     end
 
-    private
+    #private
 
     def check_user(users, user)
       modes = @bot.irc.isupport["PREFIX"].keys
