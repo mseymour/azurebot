@@ -55,7 +55,7 @@ module Plugins
       [@@ryderdict.sample[0], @@ryderdict.sample[1]].reject(&:empty?).join(" ")
     end
 
-    match /ryder$/
+    match "ryder"
     def execute (m)
       m.reply(ryder!);
     end

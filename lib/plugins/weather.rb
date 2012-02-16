@@ -68,7 +68,7 @@ module Plugins
 
     end
 
-    match %r{weather (.+)}
+    match /weather (.+)/
     def execute (m, query = nil)
       args = query != nil ? query.split(" ") : [nil, nil];
       if args[-1] =~ /-\w/

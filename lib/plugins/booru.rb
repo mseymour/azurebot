@@ -46,7 +46,7 @@ module Plugins
       selectors[0..-2].join(", ") + ", and " + selectors[-1]
     end
 
-    match /booru$/, method: :execute_booru
+    match "booru", method: :execute_booru
     match /booru (\w+)?\s?(.+)?/, method: :execute_booru
     def execute_booru (m, selector = nil, tags = nil)
       m.reply(generate_url(selector, tags) || "You have #{!tags ? 'listed no tags' : 'used an invalid selector'}. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}, true);

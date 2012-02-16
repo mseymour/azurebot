@@ -18,7 +18,7 @@ module Plugins
       "My host computer, \"#{Socket.gethostname}\", has been running for #{time_diff_in_natural_language(boot, Time.now)}."
     end
 
-    match %r/uptime/
+    match "uptime"
     def execute (m)
       m.reply(uptime!);
     end

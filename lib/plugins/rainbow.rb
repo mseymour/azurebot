@@ -6,7 +6,7 @@ module Plugins
   class Rainbow
     include Cinch::Plugin
 
-    set plugin_name: "Rainbow", help: "Rainbowificates your text.\nUsage: `!rainbow [text]`.\nUsage: `eyerape [text]`."
+    set plugin_name: "Rainbow", help: "Rainbowificates your text.\nUsage: `!rainbow [text]`.\nUsage: `eyerape [text]`.", suffix: /$/
 
     def rainbowification s
       s.irc_strip_colors! # Because total function abuse.
@@ -32,10 +32,10 @@ module Plugins
       #sd
     end
 
-    match /rainbow (.+)$/, method: :execute_rainbow
+    match /rainbow (.+)/, method: :execute_rainbow
     def execute_rainbow (m, string); m.reply(rainbowification(string).irc_colorize,false); end;
 
-    match /eyerape (.+)$/, method: :execute_eyerape
+    match /eyerape (.+)/, method: :execute_eyerape
     def execute_eyerape (m, string); m.reply(eyerapeification(string).irc_colorize,false); end;
 
   end

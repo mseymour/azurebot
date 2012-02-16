@@ -44,7 +44,7 @@ module Plugins
       end
     end
 
-    match /xmas$/, method: :xmas
+    match "xmas", method: :xmas
     match /xmas (\S+)/, method: :xmas
     def xmas (m, tz = nil)
       tz ||= "-00:00"
@@ -65,7 +65,7 @@ module Plugins
       end
     end
 
-    match /sw$/, method: :sw
+    match "sw", method: :sw
     match /sw (\S+)/, method: :sw
     def sw (m, tz = nil)
       tz ||= "-00:00"
@@ -86,7 +86,7 @@ module Plugins
       end
     end
 
-    match /newyear$/, method: :newyear
+    match "newyear", method: :newyear
     match /newyear (\S+)/, method: :newyear
     def newyear (m, tz = nil)
       tz ||= "-00:00"

@@ -21,20 +21,20 @@ module Plugins
       options[Random.new.rand(1..options.length)-1]
     end
 
-    match %r{decide (.+)}, method: :execute_decision
-    match %r{choose (.+)}, method: :execute_decision
+    match /decide (.+)/, method: :execute_decision
+    match /choose (.+)/, method: :execute_decision
     def execute_decision(m, list)
       m.safe_reply("I choose \"#{decide! list}\"!",true);
     end
 
-    match %r{coin$}, method: :execute_coinflip
+    match "coin", method: :execute_coinflip
     def execute_coinflip(m)
       face = Random.new.rand(1..2) == 1 ? "heads" : "tails";
       m.safe_reply("I choose \"#{face}\"!",true);
     end
 
     valid_number = /(?:-|\+)?\d*\.?\d+(?:e)?(?:-|\+)?\d*\.?\d*/
-    match %r{rand (#{valid_number}) (#{valid_number})}, method: :execute_random
+    match /rand (#{valid_number}) (#{valid_number})/, method: :execute_random
     def execute_random m, x, y
       x = x.to_f.prettify
       y = y.to_f.prettify
@@ -45,7 +45,7 @@ module Plugins
       m.reply "Your number is: #{Random.new.rand(x..y)}.", true
     end
 
-    match %r{token (\d+)}, method: :execute_token
+    match /token (\d+)/, method: :execute_token
     def execute_token m, length
       max_length = 256
       def power_of_2?(number)

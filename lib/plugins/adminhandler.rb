@@ -9,7 +9,8 @@ module Plugins
       plugin_name: "Admin",
       help: "Admin handler -- handles admins, of course.",
       required_options: [:admins],
-      react_on: :private)
+      react_on: :private,
+      prefix: /^/)
 
     def login m, user, password
       return "You are already here, #{user.nick}." unless !config[:admins].logged_in? user.mask
@@ -23,12 +24,12 @@ module Plugins
       end
     end
 
-    match /^login (.+)/, method: :execute_login, use_prefix: false
+    match /login (.+)/, method: :execute_login
     def execute_login m, password
       m.user.msg login(m, m.user, password), true
     end
 
-    match /^logout/, method: :execute_logout, use_prefix: false
+    match "logout", method: :execute_logout
     def execute_logout m
       return unless config[:admins].logged_in? m.user.mask
       config[:admins].logout! m.user.mask
@@ -36,7 +37,7 @@ module Plugins
       @bot.handlers.dispatch :admin, m, "#{user.nick} has successfully logged out.", m.target
     end
 
-    match /^flogout/, method: :execute_flogout, use_prefix: false
+    match "flogout", method: :execute_flogout
     def execute_flogout m
       return unless config[:admins].logged_in? m.user.mask
       hosts = []
@@ -47,7 +48,7 @@ module Plugins
       }
     end
 
-    match /^list admins/, method: :execute_admins, use_prefix: false
+    match "list admins", method: :execute_admins
     def execute_admins m
       return unless config[:admins].logged_in? m.user.mask
       m.user.msg Helpers::table_format(config[:admins].masks, regexp: /(?:(.+)!)?(.+)/, gutter: 1, justify: [:right,:left], headers: ["nick","username+host"]), true

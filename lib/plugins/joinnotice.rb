@@ -13,7 +13,7 @@ module Plugins
     end
 
     listen_to :join
-    match /hello$/, method: :listen
+    match "hello", method: :listen
     def listen m
       return if m.user.nick == @bot.nick
       greeting = get_channel_greeting(m.channel.name)
