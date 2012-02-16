@@ -42,7 +42,7 @@ module Plugins
       return m.reply("X must not be equal to Y. #{xy}", true) if x == y
       return m.reply("X must be lesser than Y. #{xy}") if x > y
 
-      m.reply "Your number is: #{srand; Random.new.rand(x..y)}.", true
+      m.reply "Your number is: #{Random.new.rand(x..y)}.", true
     end
 
     match %r{token (\d+)}, method: :execute_token
@@ -55,7 +55,6 @@ module Plugins
 
       return m.reply "Your token length can only be 2, 4, 8, 16, 32, 64, 128, and 256." unless power_of_2?(length.to_i)
       return m.reply "Your token length must be 256 or below." if length.to_i > 256
-      srand;
       characters = ('a'..'z').to_a + ('A'..'Z').to_a + (0..9).to_a
       key = (0..length.to_i-1).map{characters.sample}.join
       m.reply "Your token is: #{key}", true
