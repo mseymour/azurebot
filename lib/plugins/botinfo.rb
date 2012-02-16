@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 require 'tag_formatter'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/array/conversions'

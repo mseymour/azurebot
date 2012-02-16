@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 Encoding.default_internal = "UTF-8"
 Encoding.default_external = "UTF-8"
 
