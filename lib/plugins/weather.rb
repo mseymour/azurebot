@@ -58,10 +58,9 @@ module Plugins
         "Current weather for #{m.location.name || m.query} as of #{m.measured_at}: #{out.reject(&:blank?).join("; ")}."
 
       rescue
-        "script:#{$0} | errloc:#{$@[0]} | PID:#{$$}"
         @bot.debug "Script: #{$0} (PID #{$$})"
         $@.each_with_index {|err, index|
-          @bot.debug("#{index > 0 ? "#{" " * index}`-" : ""}#{err}")
+          @bot.debug("%s%s" % [index > 0 && " " * index + "`-", err])
         }
         "Uhoh! Something went wrong! :("
       end

@@ -24,7 +24,7 @@ module Plugins
     listen_to :action, method: :listen_poke
     def listen_poke m
       return unless action_match(m.ctcp_args, %r{^pokes (\S+)})
-      if action_match(m.ctcp_args, %r{^pokes (\S+)}, false)[1].casecmp(@bot.nick) == 0
+      if User(action_match(m.ctcp_args, %r{^pokes (\S+)}, false)[1]) == @bot
         m.reply "Do NOT poke the bot!"
       end
     end
