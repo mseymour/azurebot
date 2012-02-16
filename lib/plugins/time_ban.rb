@@ -8,6 +8,23 @@ module Plugins
       @redis = Redis.new
     end
 
+    on :connect do
+      # Get all timeban keys:
+      timebans = @redis.keys "timeban:*"
+      timebans.each {|k|
+        v = @redis.hgetall k
+        @bot.loggers.debug "TIMEBAN: Loading timed ban from Redis: #{v.inspect}"
+        channel, nick = *k.match(/(.+):(.+):(.+)/)[2..3]
+        if Time.now < v["when.unbanned"]
+          timer(Time.now - v["when.unbanned"], shots: 1) { 
+            unban(channel, nick, v)
+          }
+        else # If the timeban already expired, unban on connect.
+          unban(channel, nick, v)
+        end
+      }
+    end
+
     def calculate_delta(params={})
       params = {
         years: 0, months: 0, weeks: 0, days: 0, hours: 0, minutes: 0, seconds: 0
@@ -46,13 +63,42 @@ module Plugins
         "when.banned": Time.now, 
         "when.unbanned": unbantime, 
         "banned.by": m.user.nick, 
-        "ban.reason": reason }
+        "ban.reason": reason,
+        "ban.host": User(nick).mask("*!*@%h") }
+    
       
       # schema: timeban:channel:nick (ex: timeban:#shakesoda:kp_centi)
       @redis.hmset "timeban:#{m.channel.name}:#{nick}", *fields.flatten
+
+      # KICKBAN HIM!
+      m.channel.ban(fields["ban.host"]);
+      m.channel.kick(nick, "#{fields["banned.by"]} has banned you until #{Time.at(fields["when.unbanned"]).strftime("%A, %B %-d, %Y at %-l:%M %P")}, because \"#{fields["ban.reason"]}\".");
+      @bot.loggers.debug "TIMEBAN: Kickbanned #{nick} from #{m.channel.name}: #{fields.inspect}"
+
+      timer(Time.now - fields["when.unbanned"], shots: 1) { 
+        unban(channel, nick, v)
+      }
+
+
       #@redis.hgetall "timeban:#{m.channel.name}:#{nick}"
       #@redis.del "timeban:#{m.channel.name}:#{nick}"
 
+      #For restoring:
+      #<milk_> KEYS timeban*
+      #<milk_> then HGETALL timeban:#channel:nick
+
+    end
+
+    private
+
+    def unban channel, nick, v
+      chan = Channel(channel)
+      is_in_channel = @bot.channels.include?(Channel.name)
+      chan.join if !is_in_channel # To do the unbanning if not in the channel
+      chan.unban(v["ban.host"])
+      #chan.part if !is_in_channel  # Part if was not in the channel
+      @redis.del "timeban:#{ch.name}:#{nick}"
+      @bot.loggers.debug "TIMEBAN: #{nick} has been unbanned from #{channel}. Banned by: #{v["banned.by"]}; Ban reason: #{v["ban.reason"]}"
     end
 
   end
