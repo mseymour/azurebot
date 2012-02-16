@@ -63,11 +63,11 @@ module Plugins
       unbantime = Time.now + delta
 
       fields = {
-        "when.banned": Time.now, 
-        "when.unbanned": unbantime, 
-        "banned.by": m.user.nick, 
-        "ban.reason": reason,
-        "ban.host": User(nick).mask("*!*@%h") }
+        "when.banned" => Time.now, 
+        "when.unbanned" => unbantime, 
+        "banned.by" => m.user.nick, 
+        "ban.reason" => reason,
+        "ban.host" => User(nick).mask("*!*@%h") }
     
       
       # schema: timeban:channel:nick (ex: timeban:#shakesoda:kp_centi)
