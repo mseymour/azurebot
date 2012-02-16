@@ -5,7 +5,7 @@ module Plugins
   class TimeBan
     include Cinch::Plugin
 
-    def initialize
+    def initialize *args
       super
       @redis = Redis.new
     end
