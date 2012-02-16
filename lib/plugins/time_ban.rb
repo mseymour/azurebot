@@ -93,7 +93,7 @@ module Plugins
 
     end
 
-    #private
+    private
 
     def check_user(users, user)
       modes = @bot.irc.isupport["PREFIX"].keys
@@ -103,7 +103,7 @@ module Plugins
 
     def unban channel, nick, v
       chan = Channel(channel)
-      is_in_channel = @bot.channels.include?(Channel.name)
+      is_in_channel = @bot.channels.include?(chan.name)
       chan.join if !is_in_channel # To do the unbanning if not in the channel
       chan.unban(v["ban.host"])
       #chan.part if !is_in_channel  # Part if was not in the channel
