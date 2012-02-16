@@ -5,7 +5,7 @@ module Dicebox # dice functions by JD. http://d20.jonnydigital.com/
       @line = line.to_s
       @dice_regex = /((\+|-)?(\d+)(d\d+)?)/
     end
-    
+
     def roll()
       return roll_line(@line)
     end
@@ -23,7 +23,7 @@ module Dicebox # dice functions by JD. http://d20.jonnydigital.com/
       line = line.map {|attack_roll| roll_attack attack_roll.strip}
       return line.join("; ").delete("\001")
     end
-    
+
     def roll_attack(attack)
       attack = attack.split(" ", 2)
       if attack[1] == "" || attack[1] == nil
@@ -31,20 +31,20 @@ module Dicebox # dice functions by JD. http://d20.jonnydigital.com/
       else
         comment = attack[1]
       end
-    
+
       attack[0] =~ /^(\d+)#(.*)/
       if $1
         times = $1.to_i
       else
         times = 1
       end
-      
+
       if times == 1
         sets = [attack[0]]
       else
         sets = [$2.to_s] * times
       end
-      
+
       sets = sets.map{|roll| roll_roll roll}
       return comment + ": " + sets.join(", ")
     end
@@ -56,10 +56,10 @@ module Dicebox # dice functions by JD. http://d20.jonnydigital.com/
       # return elements in a coherent roll
       # turn 1d20+2d6-1d6+4-1
       # into 22 [1d20=4; 2d6=1,6; 1d6=-3]
-      
+
       total = 0
       results.flatten.each{|r| total += r}
-      
+
       indiv_results = []
       originals.each_index do |i|
         if originals[i] =~ /d/
@@ -67,24 +67,24 @@ module Dicebox # dice functions by JD. http://d20.jonnydigital.com/
           indiv_results << f
         end
       end
-      
+
       return total.to_s + " [" + indiv_results.join("; ").delete("-").delete("+") + "]"
     end
-    
+
     def roll_element(element)
       # sample ["1d6", nil, "1", "d6"]
       # sample ["+1d6", "+", "1", "d6"]
       # sample ["+1", "+", "1", nil]
       original, sign, numerator, denominator = element[0], element[1], element[2], element[3]
       sign = "+" unless sign
-      
+
       # fix for "d20"
       if (not denominator) and original =~ /^(\+|-)?d(\d+)/
         sign = $1
         numerator = 1
         denominator = $2
       end
-      
+
       if denominator
         result = []
         numerator.to_i.times do
@@ -98,7 +98,7 @@ module Dicebox # dice functions by JD. http://d20.jonnydigital.com/
       if sign == "-"
         result = result.map{ |r| 0 - r}
       end
-      
+
       return result
     end
 

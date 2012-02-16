@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 require 'tag_formatter'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/array/conversions'
@@ -40,14 +40,14 @@ module Plugins
         total_users: "(SOON)",
         uptime: time_diff_in_natural_language(@bot.signed_on_at, Time.now, acro: true)
       }
-      
+
       tf = TagFormatter.new open(config[:template_path],&:read), tags: tags
 
       m.user.notice tf.parse!
     end
 
     match /list plugins$/i, method: :execute_list, use_prefix: false
-    def execute_list m
+    def execute_list(m)
       list = []
       @bot.plugins.each {|p| list << p.class.plugin_name };
       m.user.notice("All #{list.size} currently loaded plugins for #{@bot.nick}:\n#{list.to_sentence}.\nTo view help for a plugin, use `!help <plugin name>`.")

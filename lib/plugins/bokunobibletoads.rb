@@ -3,11 +3,11 @@ module Plugins
     include Cinch::Plugin
 
     set(
-      plugin_name: "Boku no Bibletoads", 
+      plugin_name: "Boku no Bibletoads",
       help: "Biblebattle no bokutoads.\nUsage: `!bnbt`")
 
-    match /bnbt/
-    def execute m
+    match "bnbt"
+    def execute(m)
       words = %w{ bible black battle toads boku pico }
       name = []
       4.times {
@@ -23,7 +23,7 @@ module Plugins
 
       format = "#{two_parts_a ? "%s%s" : "%s"}#{part_no ? " no " : ""}#{two_parts_b ? "%s%s" : "%s"}"
 
-      m.reply (format % name)
+      m.reply(format % name)
     end
   end
 end

@@ -1,14 +1,14 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 module Plugins
-	class Ryder
-		include Cinch::Plugin
+  class Ryder
+    include Cinch::Plugin
 
-		set(
-			plugin_name: "Ryder",
-			help: "Beat PunchBeef! Blast Thickneck! Big McLargehuge!\nUsage: `!ryder`")
+    set(
+      plugin_name: "Ryder",
+      help: "Beat PunchBeef! Blast Thickneck! Big McLargehuge!\nUsage: `!ryder`")
 
-		@@ryderdict = [
+    @@ryderdict = [
       ["Slab", "Bulkhead"],
       ["Bridge", "Largemeat"],
       ["Punt", "Speedchunk"],
@@ -49,16 +49,16 @@ module Plugins
       ["Beat", "Punchmeat"],
       ["Hack", "Blowfist"],
       ["Roll", "Fizzlebeef"]
-		]
+    ]
 
-		def ryder!
-			[@@ryderdict.sample[0], @@ryderdict.sample[1]].reject(&:empty?).join(" ")
-		end
-			
-		match /ryder$/
-		def execute (m)
-			m.reply(ryder!);
-		end
+    def ryder!
+      [@@ryderdict.sample[0], @@ryderdict.sample[1]].reject(&:empty?).join(" ")
+    end
 
-	end
+    match "ryder"
+    def execute(m)
+      m.reply(ryder!);
+    end
+
+  end
 end

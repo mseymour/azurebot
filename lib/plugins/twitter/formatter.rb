@@ -4,7 +4,7 @@ module Plugins
   module Twitter
     module Formatter
 
-      def format_tweet tweet
+      def format_tweet(tweet)
         parts, head, body, tail, urls = [], [], [], [], []
         head = Format(:aqua,"#{tweet.user.screen_name} »")
         body << tweet.text
@@ -19,7 +19,7 @@ module Plugins
         parts.join(" ")
       end
 
-      def format_search tweet
+      def format_search(tweet)
         parts, head, body, tail, urls = [], [], [], [], []
         head = Format(:aqua,"#{tweet.from_user} »")
         body << tweet.text
@@ -30,7 +30,7 @@ module Plugins
         parts.join(" ")
       end
 
-      def format_tweep_info tweep
+      def format_tweep_info(tweep)
         head =  "#{Format(:aqua,tweep.name)}" + Format(:silver," (#{tweep.screen_name})") + Format(:grey," - #{tweep.url} https://twitter.com/#!/#{tweep.screen_name}")
         bio = ""
         bio = Format(:aqua,"\"#{tweep.description.strip}\"") if !tweep.description.blank?
@@ -48,7 +48,7 @@ module Plugins
         flags << "would rather keep their life secret" if tweep.protected?
         tweet = [] << Format(:aqua,"Their latest tweet:")
         tweet << tweep.status.text
-        tweet_tail = [] 
+        tweet_tail = []
         tweet_tail << "from #{tweep.status.place.full_name}" if !tweep.status.place.blank?
         tweet_tail << "at #{tweep.status.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
 

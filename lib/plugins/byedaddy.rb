@@ -11,7 +11,7 @@ module Plugins
     set plugin_name: "ByeDaddy", help: "Check if a website is registered with GoDaddy via ByeDaddy's API.\nUsage: `!byedaddy [uri]` - Does this site use GoDaddy?\nUsage: `!byedaddy top` - Lists the top 10 websites still using GoDaddy."
 
     match /byedaddy (.+)/, method: :execute
-    def execute m, a_uri
+    def execute(m, a_uri)
       api_uri = "http://byedaddy.org/api" + (a_uri.casecmp("top") == 0 ? "/top" : "/url/#{CGI::escape(a_uri.match(/.+\..+/) ? a_uri : a_uri+".com")}")
       response = JSON.parse(open(api_uri,&:read))
       if a_uri.casecmp("top") == 0

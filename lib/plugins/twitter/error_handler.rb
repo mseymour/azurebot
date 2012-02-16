@@ -9,13 +9,13 @@ module Plugins
         class NoTweets < Warnings; end;
       end
 
-      def handle_error ex, username, bot_nick
+      def handle_error(ex, username, bot_nick)
         params = {
           username: username,
           bot_nick: bot_nick
         }
-        
-      exceptions = { 
+
+      exceptions = {
         ::Twitter::Error::BadRequest => "Bad request!",
         ::Twitter::Error::Unauthorized => "%<username>s's account seems to be protected.",
         ::Twitter::Error::Forbidden => "Suspended!",
@@ -24,7 +24,7 @@ module Plugins
         ::Twitter::Error::EnhanceYourCalm => "Enhance your calm. %<bot_nick>s is being rate limited.",
         ::Twitter::Error::InternalServerError => "Something seems to be broken! Please try again in a minute.",
         ::Twitter::Error::BadGateway => "Twitter seems to be down, or is being upgraded. Please try again in a minute.",
-        ::Twitter::Error::ServiceUnavailable => "Twitter is currently under heavy load. Please try again in a few minutes, and hopefully it'll clear up.", 
+        ::Twitter::Error::ServiceUnavailable => "Twitter is currently under heavy load. Please try again in a few minutes, and hopefully it'll clear up.",
         Warnings::TooManyTweets => "You cannot backtrack past 20 tweets.",
         Warnings::NoTweets => "%<username>s is lame for creating an account and not tweeting yet!"}
 

@@ -14,7 +14,7 @@ module Plugins
 
       # Handler methods
 
-      def tweet_by_username params={}
+      def tweet_by_username(params={})
         params = { username: "Twitter", nth_tweet: 0 }.merge(params)
         begin
           raise Warnings::TooManyTweets if params[:nth_tweet].to_i > 20
@@ -22,10 +22,10 @@ module Plugins
           raise Warnings::NoTweets if timeline.blank?
           tweet = timeline.last
           params[:username] = tweet.user.screen_name if !tweet.user.nil? # For proper case.
-          
+
           return "No tweets!" if timeline.blank?
           return "Protected!" if tweet.user.protected?
-          
+
           AMessage.new format_tweet(tweet) # The fun starts here. If there is ever a problem, it'll bubble up here and be caught.
 
         rescue *EXCEPTIONS => ex
@@ -33,7 +33,7 @@ module Plugins
         end
       end
 
-      def tweet_by_id params={}
+      def tweet_by_id(params={})
         params = {id: 0 }.merge(params)
         begin
           tweet = ::Twitter.status params[:id]
@@ -44,7 +44,7 @@ module Plugins
         end
       end
 
-      def tweep_info params={}
+      def tweep_info(params={})
         params = {username: "Twitter"}.merge(params)
         begin
           tweep = ::Twitter.user params[:username]
@@ -54,7 +54,7 @@ module Plugins
         end
       end
 
-      def search_by_term params={}
+      def search_by_term(params={})
         params = {term: "cat"}.merge(params)
         begin
           results = []
