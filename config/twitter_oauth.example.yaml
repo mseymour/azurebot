@@ -1,0 +1,5 @@
+---
+!ruby/sym consumer_key: KEY
+!ruby/sym consumer_secret: KEY
+!ruby/sym oauth_token: KEY
+!ruby/sym oauth_token_secret: KEY
