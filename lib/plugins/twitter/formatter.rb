@@ -48,7 +48,7 @@ module Plugins
         flags << "would rather keep their life secret" if tweep.protected?
         tweet = [] << Format(:aqua,"Their latest tweet:")
         tweet << tweep.status.text
-        tweet_tail = [] 
+        tweet_tail = []
         tweet_tail << "from #{tweep.status.place.full_name}" if !tweep.status.place.blank?
         tweet_tail << "at #{tweep.status.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
 

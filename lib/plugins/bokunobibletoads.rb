@@ -3,7 +3,7 @@ module Plugins
     include Cinch::Plugin
 
     set(
-      plugin_name: "Boku no Bibletoads", 
+      plugin_name: "Boku no Bibletoads",
       help: "Biblebattle no bokutoads.\nUsage: `!bnbt`")
 
     match /bnbt/
@@ -23,7 +23,7 @@ module Plugins
 
       format = "#{two_parts_a ? "%s%s" : "%s"}#{part_no ? " no " : ""}#{two_parts_b ? "%s%s" : "%s"}"
 
-      m.reply (format % name)
+      m.reply(format % name)
     end
   end
 end

@@ -22,10 +22,10 @@ module Plugins
           raise Warnings::NoTweets if timeline.blank?
           tweet = timeline.last
           params[:username] = tweet.user.screen_name if !tweet.user.nil? # For proper case.
-          
+
           return "No tweets!" if timeline.blank?
           return "Protected!" if tweet.user.protected?
-          
+
           AMessage.new format_tweet(tweet) # The fun starts here. If there is ever a problem, it'll bubble up here and be caught.
 
         rescue *EXCEPTIONS => ex

@@ -8,11 +8,11 @@ require 'active_support/core_ext/object/blank'
 module Plugins
   class Weather
     include Cinch::Plugin
-      set( 
-        plugin_name: "Weather", 
+      set(
+        plugin_name: "Weather",
         help: "Grabs the current weather from WeatherUnderground.\nUsage: `!weather [query]`")
 
-    @@unicon = { 
+    @@unicon = {
     :clear => ["☾","clear"],
     :cloudy => ["☁","cloudy"],
     :flurries => ["☃","flurries"],
@@ -33,7 +33,7 @@ module Plugins
       super
       Barometer.config = { 1 => [:wunderground] }
     end
-    
+
     def current_weather! ( params={} )
       query = params[:query]||"Halifax, Nova Scotia"
       modifier = params[:modifier]||:default;

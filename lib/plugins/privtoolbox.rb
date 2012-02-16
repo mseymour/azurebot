@@ -6,11 +6,11 @@ module Plugins
     #include Authenticate
 
     set(
-      plugin_name: "Private toolbox", 
-      help: "Bot administrator-only private commands.\nUsage: n/a", 
-      required_options: [:admins], 
+      plugin_name: "Private toolbox",
+      help: "Bot administrator-only private commands.\nUsage: n/a",
+      required_options: [:admins],
       react_on: :private)
-    
+
     match %r{^say (#\S+) (.+)}, method: :say, use_prefix: false
     def say(m, channel, text)
       return unless config[:admins].logged_in?(m.user.mask)

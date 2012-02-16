@@ -10,13 +10,13 @@ module Plugins
     set(
       plugin_name: "Silly",
       help: "You know, silly stuff.")
-    
+
     _seconds_in_a_day = 86400
 
     def action_match ctcp_args, match, compare = true
       if compare
         !!(ctcp_args.join(" ") =~ match) if ctcp_args.is_a?(Array) && match.is_a?(Regexp)
-      else 
+      else
         ctcp_args.join(" ").match(match) if ctcp_args.is_a?(Array) && match.is_a?(Regexp)
       end
     end

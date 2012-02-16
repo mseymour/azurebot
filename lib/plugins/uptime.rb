@@ -8,7 +8,7 @@ module Plugins
   class Uptime
     include Cinch::Plugin
     include StringHelpers
-    
+
     set plugin_name: "Uptime", help: "Gets the uptime of the bot's host. (Uses WMI.)\nUsage: `!uptime`"
 
     def uptime!
@@ -17,7 +17,7 @@ module Plugins
 
       "My host computer, \"#{Socket.gethostname}\", has been running for #{time_diff_in_natural_language(boot, Time.now)}."
     end
-    
+
     match %r/uptime/
     def execute (m)
       m.reply(uptime!);

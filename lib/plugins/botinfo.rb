@@ -40,7 +40,7 @@ module Plugins
         total_users: "(SOON)",
         uptime: time_diff_in_natural_language(@bot.signed_on_at, Time.now, acro: true)
       }
-      
+
       tf = TagFormatter.new open(config[:template_path],&:read), tags: tags
 
       m.user.notice tf.parse!

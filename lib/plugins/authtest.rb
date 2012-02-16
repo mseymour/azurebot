@@ -7,7 +7,7 @@ module Plugins
       prefix: /^/,
       suffix: /\?$/,
       required_options: [:admins])
-      
+
     match /Am I (logged in|an admin)/i
     def execute m, question_context
       test = config[:admins].logged_in? m.user.mask

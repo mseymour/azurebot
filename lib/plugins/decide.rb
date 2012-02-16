@@ -9,29 +9,29 @@ class Float
 end
 
 module Plugins
-	class Decide
-		include Cinch::Plugin
-		set(
-			plugin_name: "Decider",
-			help: "Helps you decide on things.\nUsage: `!decide [a list of items separated by \", \", \", or\", or \" or \"]`; Usage: `!coin`; Usage: `!rand [x] [y]`")
+  class Decide
+    include Cinch::Plugin
+    set(
+      plugin_name: "Decider",
+      help: "Helps you decide on things.\nUsage: `!decide [a list of items separated by \", \", \", or\", or \" or \"]`; Usage: `!coin`; Usage: `!rand [x] [y]`")
 
-		def decide!(list)
-			list = list.irc_strip_colors
-			options = list.gsub(/ or /i, ",").split(",").map(&:strip).reject(&:empty?)
-			options[Random.new.rand(1..options.length)-1]
-		end
+    def decide!(list)
+      list = list.irc_strip_colors
+      options = list.gsub(/ or /i, ",").split(",").map(&:strip).reject(&:empty?)
+      options[Random.new.rand(1..options.length)-1]
+    end
 
-		match %r{decide (.+)}, method: :execute_decision
-		match %r{choose (.+)}, method: :execute_decision
-		def execute_decision(m, list)
-			m.safe_reply("I choose \"#{decide! list}\"!",true);
-		end
-		
-		match %r{coin$}, method: :execute_coinflip
-		def execute_coinflip(m)
-			face = Random.new.rand(1..2) == 1 ? "heads" : "tails";
-			m.safe_reply("I choose \"#{face}\"!",true);
-		end
+    match %r{decide (.+)}, method: :execute_decision
+    match %r{choose (.+)}, method: :execute_decision
+    def execute_decision(m, list)
+      m.safe_reply("I choose \"#{decide! list}\"!",true);
+    end
+
+    match %r{coin$}, method: :execute_coinflip
+    def execute_coinflip(m)
+      face = Random.new.rand(1..2) == 1 ? "heads" : "tails";
+      m.safe_reply("I choose \"#{face}\"!",true);
+    end
 
     valid_number = /(?:-|\+)?\d*\.?\d+(?:e)?(?:-|\+)?\d*\.?\d*/
     match %r{rand (#{valid_number}) (#{valid_number})}, method: :execute_random
@@ -62,5 +62,5 @@ module Plugins
       m.user.notice "Alternatively, you may want it in these formats: #{key.scan(/.{0,#{key.length / (key.length / 8)}}/).reject(&:empty?).join("-")}, #{key.upcase.scan(/.{0,#{key.length / (key.length / 8)}}/).reject(&:empty?).join("-")}"
     end
 
-	end
+  end
 end

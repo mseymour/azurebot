@@ -8,7 +8,7 @@ module Plugins
   class UrbanDictionary
     include Cinch::Plugin
     set plugin_name: "Urban Dictionary", help: "Gets the first entry for an entry on UrbanDictionary.\nUsage: `!urban <entry>`"
-    
+
     match /urban (.+)/
     def lookup(word, channel, nick)
       begin
@@ -17,12 +17,12 @@ module Plugins
         defword = CGI.unescape_html o.at("td.word").text.gsub(/\s+/, ' ');
         definition = CGI.unescape_html o.at("div.definition").text.gsub(/\s+/, ' ');
         #output = "#{defword.strip} -- #{definition.gsub(/^(.{#{510 - (": PRIVMSG :").bytesize - defword.strip.bytesize - url.bytesize - 16}}[^\s]*)(.*)/m) {$2.empty? ? $1 : $1 + '...'}} (#{url})";
-        
+
         #Determining truncation length:
-        tlen = 510 - (": PRIVMSG :").bytesize 
+        tlen = 510 - (": PRIVMSG :").bytesize
         tlen = tlen - bot.mask.to_s.length - (channel || nick).length
         tlen = tlen - defword.strip.bytesize - url.bytesize - 10
-        
+
         output = "#{defword.strip} -- #{awesome_truncate(definition, tlen)} (#{url})";
         definition != nil ? output : nil;
       rescue
