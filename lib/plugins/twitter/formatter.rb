@@ -1,4 +1,5 @@
 # coding: utf-8
+require 'cgi'
 
 module Plugins
   module Twitter
@@ -7,14 +8,14 @@ module Plugins
       def format_tweet(tweet)
         parts, head, body, tail, urls = [], [], [], [], []
         head = Format(:aqua,"#{tweet.user.screen_name} »")
-        body << tweet.text
+        body << CGI::unescapeHTML(tweet.text.gsub("\n", " ").squeeze(" "))
         body << Format(:aqua,"*twoosh*") if tweet.text.length == 140
         tail << "From #{tweet.place.full_name}" if !tweet.place.blank?
         tail << "at #{tweet.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
         tail << "via #{tweet.source.gsub( %r{</?[^>]+?>}, '' )}"
-        urls << "https://twitter.com/#!/#{tweet.user.screen_name}"
+        urls << "https://twitter.com/#{tweet.user.screen_name}"
         urls << Format(:grey,"in reply to") if !tweet.in_reply_to_screen_name.blank?
-        urls << "http://twitter.com/#{tweet.in_reply_to_screen_name}/status/#{tweet.in_reply_to_status_id}" if !tweet.in_reply_to_screen_name.blank?
+        urls << "http://twitter.com/#{tweet.in_reply_to_screen_name}#{"/status/" + tweet.in_reply_to_status_id.to_s if !tweet.in_reply_to_status_id.blank?}" if !tweet.in_reply_to_screen_name.blank?
         parts = [head, body, Format(:grey,["(", tail.join(" "), ")"].join), urls].flatten
         parts.join(" ")
       end
@@ -22,10 +23,10 @@ module Plugins
       def format_search(tweet)
         parts, head, body, tail, urls = [], [], [], [], []
         head = Format(:aqua,"#{tweet.from_user} »")
-        body << tweet.text
+        body << CGI::unescapeHTML(tweet.text.gsub("\n", " ").squeeze(" "))
         body << Format(:aqua,"*twoosh*") if tweet.text.length == 140
         tail << "at #{tweet.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
-        urls << "https://twitter.com/#!/#{tweet.from_user}"
+        urls << "https://twitter.com/#{tweet.from_user}"
         parts = [head, body, Format(:grey,["(", tail.join(" "), ")"].join), urls].flatten
         parts.join(" ")
       end
@@ -53,7 +54,7 @@ module Plugins
         tweet_tail << "at #{tweep.status.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
 
         parts = [head, bio, location, desc, flags].reject(&:blank?).map {|e| e.is_a?(Array) ? "#{tweep.name} " + e.to_sentence + "." : e }
-        parts << [tweet, Format(:silver,["(", tweet_tail.join(" "), ")"].join)].join(" ")
+        parts << [CGI::unescapeHTML(tweet.text.gsub("\n", " ").squeeze(" ")), Format(:silver,["(", tweet_tail.join(" "), ")"].join)].join(" ")
         parts.join("\n")
       end
 
