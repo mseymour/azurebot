@@ -1,5 +1,6 @@
 require 'date'
 require 'redis'
+require_relative '../modules/helpers/table_format'
 
 module Plugins
   class TimeBan
@@ -107,6 +108,25 @@ module Plugins
       unban(m.channel.name, nick)
     end
 
+    match "listbans",  method: :execute_listbans
+    def execute_listbans(m)
+      return unless check_user(m.channel.users, m.user)
+      list = []
+      
+      timebans = @redis.keys "timeban:#{m.channel.name}:*"
+      timebans.each {|k|
+        v = @redis.hgetall k
+        list << [k.split(":")[-1], v["when.banned"], v["banned.by"], v["ban.reason"], v["ban.host"], v["when.unbanned"]]
+      }
+
+      ban_table = Helpers::table_format(list,
+        headers: ["nick","banned", "by", "reason", "host", "unbanned"],
+        gutter: 2,
+        display_eot: false,)
+
+      m.user.notice "List of all bans in place for #{m.channel.name}:\n#{ban_table}"
+    end
+
     private
 
     def check_user(users, user)
@@ -126,6 +146,5 @@ module Plugins
       @redis.del "timeban:#{chan.name.downcase}:#{nick.downcase}"
       @bot.loggers.debug "TIMEBAN: #{nick} has been unbanned from #{channel}. Banned by: #{fields["banned.by"]}; Ban reason: #{fields["ban.reason"]}"
     end
-
   end
 end
