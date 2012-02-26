@@ -4,6 +4,8 @@ module Plugins
 
     set plugin_name: "Russian Roulette", help: "In Soviet Russia, boolet shoots YOU!\nUsage: !rr <nick>", react_on: :channel
 
+    attr_reader :games
+
     def initialize(*args)
       super
       @@phrases = [
@@ -20,6 +22,7 @@ module Plugins
         "... Looks like you get to live another day... or 5 second.",
         "... Bad primer."
       ]
+      @games = []
     end
 
     def check_user(users, user)
@@ -30,6 +33,8 @@ module Plugins
     def execute(m, nick)
       #return if disabled?
       return m.reply("I am sorry comrade, but I do not have pistol on me.") unless check_user(m.channel.users, User(@bot.nick))
+      return m.user.notice "Sorry, but there is already a game going on." if @games.include?(m.channel.name)
+      @games << m.channel.name
       nick = (check_user(m.channel.users, m.user) && !!nick && nick.valid_nick? && !User(nick).unknown? && User(nick) != @bot ? nick : m.user.nick);
 
       turn_count = Random.new.rand(1..6)
@@ -63,6 +68,7 @@ module Plugins
       m.reply "Looks like you get to live another day." if turn_count < round
       sleep 1 if turn_count < round
       m.channel.action "holsters the pistol."
+      @games.delete(m.channel.name) #game done
 
     end
 
