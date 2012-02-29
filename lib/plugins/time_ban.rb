@@ -1,10 +1,12 @@
 require 'date'
 require 'redis'
 require_relative '../modules/helpers/table_format'
+require_relative '../modules/stringhelpers'
 
 module Plugins
   class TimeBan
     include Cinch::Plugin
+    include StringHelpers
 
     set plugin_name: "Timeban", react_on: :channel
 
@@ -20,7 +22,7 @@ module Plugins
       timebans = @redis.keys "timeban:#{m.channel.name}:*"
       timebans.each {|k|
         v = @redis.hgetall k
-        @bot.loggers.debug "TIMEBAN: Loading timed ban from Redis: #{v.inspect}"
+        @bot.loggers.debug "TIMEBAN: Loading timed ban for #{k.split(":")[-1]} from Redis: #{v.inspect}"
         channel, nick = *k.match(/(.+):(.+):(.+)/)[2..3]
         if Time.now < Time.parse(v["when.unbanned"])
           @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.parse(v["when.unbanned"]) - Time.now}"
@@ -74,10 +76,11 @@ module Plugins
 
       values = Hash[range.scan(pattern).map{|v,k| [units[k],Integer(v)] }]
       delta = calculate_delta(values)
+      bantime = Time.now
       unbantime = Time.now + delta
 
       fields = {
-        "when.banned" => Time.now,
+        "when.banned" => bantime,
         "when.unbanned" => unbantime,
         "banned.by" => m.user.nick,
         "ban.reason" => reason,
@@ -90,7 +93,7 @@ module Plugins
 
       # KICKBAN HIM!
       m.channel.ban(fields["ban.host"]);
-      m.channel.kick(nick, "Banned for #{range} by #{m.user.nick} (#{fields["ban.reason"]})");
+      m.channel.kick(nick, "Banned for #{time_diff_in_natural_language(Time.now, fields["when.unbanned"], acro: false)} by #{m.user.nick} (#{fields["ban.reason"]})");
       @bot.loggers.debug "TIMEBAN: Kickbanned #{nick} from #{m.channel.name}: #{fields.inspect}"
 
       @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.at(fields["when.unbanned"]) - Time.now}"
@@ -116,7 +119,7 @@ module Plugins
       timebans = @redis.keys "timeban:#{m.channel.name}:*"
       timebans.each {|k|
         v = @redis.hgetall k
-        list << [k.split(":")[-1], v["when.banned"], v["banned.by"], v["ban.reason"], v["ban.host"], v["when.unbanned"]]
+        list << [k.split(":")[-1], Time.parse(v["when.banned"]).strftime("%Y-%m-%d %I:%M:%S %p %Z"), v["banned.by"], v["ban.reason"], v["ban.host"], time_diff_in_natural_language(Time.now, v["when.unbanned"], acro: true)]
       }
 
       ban_table = Helpers::table_format(list,
