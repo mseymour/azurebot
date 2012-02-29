@@ -16,6 +16,11 @@ module Plugins
       required_options: [:template_path, :owner, :bot, :admins],
       react_on: :private)
 
+    def initialize *args
+      super
+      @started_at = Time.now
+    end
+
     # How to config:
     # :admin -- admin class instance
     # :template -- a path to a textual file (such as *.txt) with fields in it.
@@ -35,10 +40,17 @@ module Plugins
         ruby_platform: RUBY_PLATFORM,
         ruby_release_date: RUBY_RELEASE_DATE,
         ruby_version: RUBY_VERSION,
-        session_start_date: @bot.signed_on_at.strftime("%A, %B %e, %Y, at %l:%M:%S %P"),
-        total_channels: "(SOON)",
-        total_users: "(SOON)",
-        uptime: time_diff_in_natural_language(@bot.signed_on_at, Time.now, acro: true)
+        session_start_date: @started_at.strftime("%A, %B %e, %Y, at %l:%M:%S %P"),
+        total_channels: @bot.channels.length,
+        total_users: proc { 
+          users = []; 
+          @bot.channels.each {|c| 
+              c.users.each {|u| users << u[0].nick 
+            }
+          }; 
+          users.uniq.size
+        }.call,
+        uptime: time_diff_in_natural_language(@started_at, Time.now, acro: true)
       }
 
       tf = TagFormatter.new open(config[:template_path],&:read), tags: tags
