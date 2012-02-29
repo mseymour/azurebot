@@ -30,6 +30,8 @@ module Plugins
 
       selection = @macros[macro]
 
+      arguments.gsub!(/^\W+/,'') # preventing the bot from potentially running op-only commands.
+
       replace = lambda {|string|
         output = string.dup
         output.gsub!(/<(.*?)>/) {|t| 
