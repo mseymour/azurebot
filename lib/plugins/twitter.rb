@@ -88,7 +88,7 @@ module Plugins
         urls = m.message.scan(urlregexp)
         urls.each {|url|
           username, id = url[1..2]
-          if id.nil?
+          if id.blank?
             result = tweet_by_username(username: username)
             if is_notice?(result)
               m.user.notice result.message
