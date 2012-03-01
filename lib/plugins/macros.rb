@@ -41,7 +41,7 @@ module Plugins
             if !arguments.nil?
               arguments
             else
-              v[1].nil? ? m.user.nick : v[1]
+              v[1].nil? ? m.channel.users.to_a.sample[0].nick : v[1]
             end
           else
             v.join(",")
