@@ -13,6 +13,13 @@ module Plugins
 
     _seconds_in_a_day = 86400
 
+    attr_reader :pokers
+
+    def initialize *args
+      super
+      @pokers = {}
+    end
+
     def action_match(ctcp_args, match, compare = true)
       if compare
         !!(ctcp_args.join(" ") =~ match) if ctcp_args.is_a?(Array) && match.is_a?(Regexp)
@@ -25,7 +32,17 @@ module Plugins
     def listen_poke(m)
       return unless action_match(m.ctcp_args, %r{^pokes (\S+)})
       if User(action_match(m.ctcp_args, %r{^pokes (\S+)}, false)[1]) == @bot
-        m.reply "Do NOT poke the bot!"
+        @pokers[m.user.nick.downcase] = 0 if !@pokers.include?(m.user.nick.downcase)
+        @pokers[m.user.nick.downcase] = @pokers[m.user.nick.downcase].succ
+        case @pokers[m.user.nick.downcase]
+        when 1..3
+          m.reply "Do NOT poke the bot!"
+        when 4
+          m.reply "I said, do NOT poke the bot!"
+        when 5
+          m.channel.kick m.user.nick, "WHAT ARE YOU, AN IDIOT? I SAID DO NOT POKE ME!!"
+          @pokers.delete(m.user.nick.downcase)
+        end
       end
     end
 
