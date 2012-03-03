@@ -32,17 +32,16 @@ module Plugins
     def listen_poke(m)
       return unless action_match(m.ctcp_args, %r{^pokes (\S+)})
       if User(action_match(m.ctcp_args, %r{^pokes (\S+)}, false)[1]) == @bot
-        pokee = m.user.nick.irc_downcase
-        @pokers[pokee] = 0 if !@pokers.include?(pokee)
-        @pokers[pokee] += 1
-        case @pokers[pokee]
+        @pokers[m.user] = 0 if !@pokers.include?(m.user)
+        @pokers[m.user] += 1
+        case @pokers[m.user]
         when 1..3
           m.reply "Do NOT poke the bot!"
         when 4
           m.reply "I said, do NOT poke the bot!"
         when 5
-          m.channel.kick m.user.nick, "WHAT ARE YOU, AN IDIOT? I SAID DO NOT POKE ME!!"
-          @pokers.delete(pokee)
+          m.channel.kick m.user, "WHAT ARE YOU, AN IDIOT? I SAID DO NOT POKE ME!!"
+          @pokers.delete(m.user)
         end
       end
     end
