@@ -32,7 +32,7 @@ module Plugins
     def listen_poke(m)
       return unless action_match(m.ctcp_args, %r{^pokes (\S+)})
       if User(action_match(m.ctcp_args, %r{^pokes (\S+)}, false)[1]) == @bot
-        pokee = pokee
+        pokee = m.user.nick.irc_downcase
         @pokers[pokee] = 0 if !@pokers.include?(pokee)
         @pokers[pokee] += 1
         case @pokers[pokee]
