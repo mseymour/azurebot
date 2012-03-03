@@ -164,13 +164,13 @@ Access Twitter from the comfort of your IRC client!
 
 Usage: `!tw <username><+D> - Gets the latest tweet of the specified user, or the tweet 'D' tweets back, between 1 and 20.
 
-       `!tw #[id]` - Gets the tweet at the specified ID
+`!tw #[id]` - Gets the tweet at the specified ID
 
-       `?tw [username]` - Gets the specified user's Twitter profile
+`?tw [username]` - Gets the specified user's Twitter profile
 
-       `?ts [term]` - Searches for three of the most recent tweets regarding the specified query
+`?ts [term]` - Searches for three of the most recent tweets regarding the specified query
 
-       Shorthand: `@[username]<+D>`, @#[id]
+Shorthand: `@[username]<+D>`, @#[id]
 
 ### Urban Dictionary (`Plugins::UrbanDictionary`)
 
