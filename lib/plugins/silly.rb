@@ -20,18 +20,9 @@ module Plugins
       @pokers = {}
     end
 
-    def action_match(ctcp_args, match, compare = true)
-      if compare
-        !!(ctcp_args.join(" ") =~ match) if ctcp_args.is_a?(Array) && match.is_a?(Regexp)
-      else
-        ctcp_args.join(" ").match(match) if ctcp_args.is_a?(Array) && match.is_a?(Regexp)
-      end
-    end
-
-    listen_to :action, method: :listen_poke
-    def listen_poke(m)
-      return unless action_match(m.ctcp_args, %r{^pokes (\S+)})
-      if User(action_match(m.ctcp_args, %r{^pokes (\S+)}, false)[1]) == @bot
+    match /pokes (\S+)/, reacting_on: :action, method: :listen_poke
+    def listen_poke(m, thebot)
+      if User(thebot) == @bot
         @pokers[m.user] = 0 if !@pokers.include?(m.user)
         @pokers[m.user] += 1
         case @pokers[m.user]

@@ -7,7 +7,7 @@ module Plugins
 
     attr_reader :macros
 
-    set plugin_name: "Macros", help: "Enables the classic #shakesoda macros to be used (including new ones.)", required_options: [:macro_yaml_path], react_on: :channel
+    set plugin_name: "Macros", help: "Enables the classic #shakesoda macros to be used (including new ones.)", required_options: [:macro_yaml_path], reacting_on: :channel
 
     def initialize *args
       super

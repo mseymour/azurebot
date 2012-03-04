@@ -9,7 +9,7 @@ module Plugins
       plugin_name: "Admin",
       help: "Admin handler -- handles admins, of course.",
       required_options: [:admins],
-      react_on: :private,
+      reacting_on: :private,
       prefix: /^/)
 
     def login(m, user, password)

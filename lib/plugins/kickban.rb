@@ -10,7 +10,7 @@ Usage: `!moon [nick]` -- kicks the selected user with a My Little Pony: Friendsh
 Usage: `!sun [nick]` -- Kickbans the selected user [MLP-themed]
 Usage: `!banana [nick]` -- Kicks too. Don't ask.
 Usage: `!crp [nick]` -- Also kicks too. Don't ask, as well.
-Usage: `!fus [nick]` -- I really need to come up with a better solution for this.}, react_on: :channel
+Usage: `!fus [nick]` -- I really need to come up with a better solution for this.}, reacting_on: :channel
 
     def check_user(users, user)
       modes = @bot.irc.isupport["PREFIX"].keys

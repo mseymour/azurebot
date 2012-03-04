@@ -9,7 +9,7 @@ module Plugins
       plugin_name: "Private toolbox",
       help: "Bot administrator-only private commands.\nUsage: n/a",
       required_options: [:admins],
-      react_on: :private,
+      reacting_on: :private,
       prefix: /^/)
 
     match /say (#\S+) (.+)/, method: :say
