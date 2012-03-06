@@ -7,7 +7,7 @@ module Plugins
     set(
       plugin_name: "8ball",
       help: "The Magic 8ball has all the answers!\nUsage: `!8ball [question? <question? <...>>]`",
-      reacting_on: :channel)
+      react_on: :channel)
 
     @@eightball = [
       "It is certain",

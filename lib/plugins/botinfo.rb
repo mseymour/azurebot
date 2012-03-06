@@ -14,7 +14,7 @@ module Plugins
       plugin_name: "Botinfo",
       help: "Notices you information about me.\nUsage: `/msg <nick> info`\nUsage: `/msg <nick> list plugins`",
       required_options: [:template_path, :owner, :bot, :admins],
-      reacting_on: :private)
+      react_on: :private)
 
     def initialize *args
       super

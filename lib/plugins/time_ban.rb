@@ -8,7 +8,7 @@ module Plugins
     include Cinch::Plugin
     include StringHelpers
 
-    set plugin_name: "Timeban", reacting_on: :channel
+    set plugin_name: "Timeban", react_on: :channel
 
     def initialize(*args)
       super
@@ -26,7 +26,7 @@ module Plugins
         channel, nick = *k.match(/(.+):(.+):(.+)/)[2..3]
         if Time.now < Time.parse(v["when.unbanned"])
           @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.parse(v["when.unbanned"]) - Time.now}"
-          Timer(Time.parse(v["when.unbanned"]) - Time.now, shots: 1) {
+          timer(Time.parse(v["when.unbanned"]) - Time.now, shots: 1) {
             unban(channel, nick)
           }
         else # If the timeban already expired, unban on connect.
@@ -97,7 +97,7 @@ module Plugins
       @bot.loggers.debug "TIMEBAN: Kickbanned #{nick} from #{m.channel.name}: #{fields.inspect}"
 
       @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.at(fields["when.unbanned"]) - Time.now}"
-      Timer(Time.at(fields["when.unbanned"]) - Time.now, shots: 1) {
+      timer(Time.at(fields["when.unbanned"]) - Time.now, shots: 1) {
         unban(m.channel.name, nick)
       }
 
@@ -119,7 +119,7 @@ module Plugins
       timebans = @redis.keys "timeban:#{m.channel.name}:*"
       timebans.each {|k|
         v = @redis.hgetall k
-        list << [k.split(":")[-1], Time.parse(v["when.banned"]).strftime("%Y-%m-%d %I:%M:%S %p %Z"), v["banned.by"], v["ban.reason"], v["ban.host"], (Time.now < v["when.unbanned"] ? time_diff_in_natural_language(Time.now, v["when.unbanned"], acro: true) : Format(:red,:bold,"Overdue!"))]
+        list << [k.split(":")[-1], Time.parse(v["when.banned"]).strftime("%Y-%m-%d %I:%M:%S %p %Z"), v["banned.by"], v["ban.reason"], v["ban.host"], time_diff_in_natural_language(Time.now, v["when.unbanned"], acro: true)]
       }
 
       ban_table = Helpers::table_format(list,

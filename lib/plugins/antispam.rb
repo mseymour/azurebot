@@ -62,7 +62,7 @@ module Plugins
 
     class Lister
       include Cinch::Plugin
-      set plugin_name: "Antispam Lister", help: "List those who spam prefixed bot commands.", reacting_on: :private, required_options: [:admins]
+      set plugin_name: "Antispam Lister", help: "List those who spam prefixed bot commands.", react_on: :private, required_options: [:admins]
       match /^list abusers/, use_prefix: false
       def execute(m)
         @bot.handlers.dispatch :antispam_list, m
