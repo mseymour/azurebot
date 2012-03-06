@@ -26,7 +26,7 @@ module Plugins
         channel, nick = *k.match(/(.+):(.+):(.+)/)[2..3]
         if Time.now < Time.parse(v["when.unbanned"])
           @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.parse(v["when.unbanned"]) - Time.now}"
-          timer(Time.parse(v["when.unbanned"]) - Time.now, shots: 1) {
+          Timer(Time.parse(v["when.unbanned"]) - Time.now, shots: 1) {
             unban(channel, nick)
           }
         else # If the timeban already expired, unban on connect.
@@ -97,7 +97,7 @@ module Plugins
       @bot.loggers.debug "TIMEBAN: Kickbanned #{nick} from #{m.channel.name}: #{fields.inspect}"
 
       @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.at(fields["when.unbanned"]) - Time.now}"
-      timer(Time.at(fields["when.unbanned"]) - Time.now, shots: 1) {
+      Timer(Time.at(fields["when.unbanned"]) - Time.now, shots: 1) {
         unban(m.channel.name, nick)
       }
 
