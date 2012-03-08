@@ -38,8 +38,8 @@ module Plugins
         location = ""
         location = "They are from #{Format(:aqua,tweep.location.strip)}" if !tweep.location.blank?
         desc = [] << "has made #{tweep.statuses_count} tweets since #{tweep.created_at.strftime("%B %-d, %Y")}"
-        desc << "has #{tweep.friends_count} friends" if tweep.friends_count > 0
-        desc << "has #{tweep.followers_count} tweeps#{" (of which #{tweep.friends_count} are friends)" if tweep.friends_count > 0} who follow them" if tweep.followers_count > 0
+        desc << "follows #{tweep.friends_count} tweeps" if tweep.friends_count > 0
+        desc << "has #{tweep.followers_count} followers" if tweep.followers_count > 0
         desc << "has favourited #{tweep.favourites_count} tweets" if tweep.favourites_count > 0
         desc << "is also in #{tweep.listed_count} lists" if tweep.listed_count > 0
         flags = []
@@ -48,13 +48,13 @@ module Plugins
         flags << "is verified" if tweep.verified?
         flags << "would rather keep their life secret" if tweep.protected?
         tweet = [] << Format(:aqua,"Their latest tweet:")
-        tweet << tweep.status.text
+        tweet << CGI::unescapeHTML(tweep.status.text.gsub("\n", " ").squeeze(" "))
         tweet_tail = []
         tweet_tail << "from #{tweep.status.place.full_name}" if !tweep.status.place.blank?
         tweet_tail << "at #{tweep.status.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
 
         parts = [head, bio, location, desc, flags].reject(&:blank?).map {|e| e.is_a?(Array) ? "#{tweep.name} " + e.to_sentence + "." : e }
-        parts << [CGI::unescapeHTML(tweet.text.gsub("\n", " ").squeeze(" ")), Format(:silver,["(", tweet_tail.join(" "), ")"].join)].join(" ")
+        parts << [tweet, Format(:silver,["(", tweet_tail.join(" "), ")"].join)].join(" ")
         parts.join("\n")
       end
 
