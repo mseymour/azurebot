@@ -112,6 +112,6 @@ bot = Cinch::Bot.new do
 end
 
 bot.loggers << Cinch::Logger::ZcbotLogger.new(open('/home/azure/bots/logs/bot/freenode-zcbot.log','a'))
-bot.loggers << Cinch::Logger::FormattedLogger.new(open('/home/azure/bots/logs/bot/freenode-std'+Time.now.strftime("%Y-%m-%dT%H%.M.%SZ%z")+'.log','a'))
+bot.loggers << Cinch::Logger::FormattedLogger.new(open('/home/azure/bots/logs/freenode.log','a')) # set up logrotate to rotate weekly, and to keep the last four logs.
 
 bot.start
