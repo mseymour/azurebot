@@ -20,7 +20,7 @@ module Plugins
       @pokers = {}
     end
 
-    match /pokes (\S+)/, reacting_on: :action, method: :listen_poke
+    match /^pokes (.+)$/, react_on: :action, method: :listen_poke, use_prefix: false
     def listen_poke(m, thebot)
       if User(thebot) == @bot
         @pokers[m.user] = 0 if !@pokers.include?(m.user)
