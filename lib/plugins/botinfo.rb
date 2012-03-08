@@ -69,7 +69,7 @@ module Plugins
     def execute_help(m, name)
       list = {}
       @bot.plugins.each {|p| list[p.class.plugin_name.downcase] = {name: p.class.plugin_name, help: p.class.help} };
-      return m.user.notice("Help for \"#{name\" could not be found.") if !list.has_key(name.downcase)
+      return m.user.notice("Help for \"#{name}\" could not be found.") if !list.has_key(name.downcase)
       m.user.notice("Help for #{Format(:bold,list[name.downcase][:name])}:\n#{list[name.downcase][:help]}")
     end
 
