@@ -83,7 +83,7 @@ module Plugins
 
       listen_to :channel, method: :listen_channel
       def listen_channel(m)
-        urlregexp = /(https?:\/\/twitter.com\/(?:#!\/)?(\w+)(?:\/status\/(\d+))?)/i
+        urlregexp = /(https?:\/\/twitter.com\/(?:#!\/)?(\w+)(?:\/status(?:es)?\/(\d+))?)/i
         return unless m.message =~ urlregexp
         urls = m.message.scan(urlregexp)
         urls.each {|url|

@@ -15,7 +15,7 @@ module Plugins
         tail << "via #{tweet.source.gsub( %r{</?[^>]+?>}, '' )}"
         urls << "https://twitter.com/#{tweet.user.screen_name}"
         urls << Format(:grey,"in reply to") if !tweet.in_reply_to_screen_name.blank?
-        urls << "http://twitter.com/#{tweet.in_reply_to_screen_name}#{"/status/" + tweet.in_reply_to_status_id.to_s if !tweet.in_reply_to_status_id.blank?}" if !tweet.in_reply_to_screen_name.blank?
+        urls << "http://twitter.com/#{tweet.in_reply_to_screen_name}#{"/statuses/#{tweet.in_reply_to_status_id.to_s}" if !tweet.in_reply_to_status_id.blank?}" if !tweet.in_reply_to_screen_name.blank?
         parts = [head, body, Format(:grey,["(", tail.join(" "), ")"].join), urls].flatten
         parts.join(" ")
       end
@@ -32,7 +32,7 @@ module Plugins
       end
 
       def format_tweep_info(tweep)
-        head =  "#{Format(:aqua,tweep.name)}" + Format(:silver," (#{tweep.screen_name})") + Format(:grey," - #{tweep.url} https://twitter.com/#!/#{tweep.screen_name}")
+        head =  "#{Format(:aqua,tweep.name)}" + Format(:silver," (#{tweep.screen_name})") + Format(:grey," - #{tweep.url} https://twitter.com/#{tweep.screen_name}")
         bio = ""
         bio = Format(:aqua,"\"#{tweep.description.strip}\"") if !tweep.description.blank?
         location = ""
