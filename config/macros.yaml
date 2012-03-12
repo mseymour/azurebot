@@ -1,4 +1,4 @@
-ruffty: <ruffty> thats hot
+ruffty: <<ruffty>> thats hot
 # --- INSERTED 12:09AM 2012-02-18
 pandemic: http://www.crazymonkeygames.com/Pandemic-2.html
 headbutt: IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA
@@ -40,14 +40,14 @@ sip: http://www.wallpapergravity.com/wallpapers2/212/212684.jpg
 alart:
   type: random
   lines:
-    - /!\ <in,ALART> /!\
-    - /// <in,ALART> ///
-    - \\\ <in,ALART> \\\
+    - /!\ ^<in,ALART>^ /!\
+    - /// ^<in,ALART>^ ///
+    - \\\ ^<in,ALART>^ \\\
 bod:
   - <in> should go eat a bag full of DICKS!!!!
 alice:
-  - ...^<in,alice>^?
-  - WHO THE !@*$ IS ^<in,alice>^?!
+  - ^<in,alice>^
+  - WHO THE !@*$ IS ^<in,alice>^
 hi5:
   - "<in>: http://www.ihighfive.com/"
   #- "<in> (from <self>): http://www.ihighfive.com/"
@@ -139,3 +139,4 @@ fact:
     - <in>, if I have sex with you without permission, is it rape or shoplifting?
     - Why didn't you get those breast implants, <in>?
     - <in>, I love you.
+haha: HA! HA! I'm using the <in,INTERNET>!!!1
