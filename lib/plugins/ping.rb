@@ -17,13 +17,13 @@ module Plugins
     match /ping(?:\s(\S+))?/i
     def execute(m, nick)
       nick = m.user.nick if nick.blank?
-      return m.reply "You cannot make me ping myself!" if m.user == @bot
       user = User(nick)
+      return m.reply "You cannot make me ping myself!" if user == @bot
       user = m.user if user.unknown?
       t = Time.now
       user.ctcp("PING #{t.to_i}")
       @listen_for_ping[user.nick] = {target: (m.channel? ? m.channel : m.user), ts: t}
-      timer(5, shots: 1) {
+      Timer(5, shots: 1) {
         if @listen_for_ping.has_key?(user.nick)
           m.channel.msg "I could not determine #{user.nick}#{user.nick[-1].casecmp("s") == 0 ? "'" : "'s"} ping to me after 5 seconds."
           @listen_for_ping.delete(user.nick)
