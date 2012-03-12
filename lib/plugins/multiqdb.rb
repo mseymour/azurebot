@@ -23,18 +23,15 @@ module Plugins
 
     #def generate_url( selector = nil, id = nil )
     def generate_quote(qdb_access, tail = false)
-        output = []
-        output << "#{qdb_access[:fullname]} quote ##{qdb_access[:id]} (#{qdb_access[:meta]}):" unless tail
-        output <<  (!tail ? qdb_access[:quote].map {|e| "- #{e}" } : qdb_access[:quotetail].map {|e| "- #{e}" })
-
-        footer = []
-        footer << (qdb_access[:quote].size < qdb_access[:fullquote].size && !tail ? "#{qdb_access[:fullquote].size - qdb_access[:lines]} lines omitted." : nil)
-        footer << "View"
-        footer << (qdb_access[:quote].size < qdb_access[:fullquote].size && !tail ? "more from" : nil)
-        footer << "this quote at #{qdb_access[:url]}"
-        output << footer.reject(&:nil?).join(" ")
-
-        output.reject(&:nil?).join("\n");
+      array_end = lambda {|array, element| element.equal?(array.last) ? "*" : "-" }
+      output = []
+      output << "#{qdb_access[:fullname]} quote ##{qdb_access[:id]} (#{qdb_access[:meta]}) (#{qdb_access[:url]}):" unless tail
+      output << if !tail 
+                  qdb_access[:quote].each_with_index.map {|e| array_end.call(qdb_access[:quote],e) + " #{e}" }
+                else
+                  qdb_access[:quotetail].map {|e| array_end.call(qdb_access[:quotetail],e) + " #{e}" }
+                end
+      output.reject(&:nil?).join("\n");
     end
 
     def generate_selector_list
