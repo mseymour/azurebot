@@ -1,192 +1,65 @@
 Azurebot
 ========
 
-A Ruby-powered IRC bot using the [Cinch IRC bot framework](https://github.com/cinchrb/cinch "Cinch at Github")
-
-Plugins
--------
-
-### Admin (`Plugins::AdminHandler`)
-
-Admin handler -- handles admins, of course.
-
-### Antispam Kicker (`Plugins::AntiSpam::Kicker`)
-
-Kicks those who spam prefixed bot commands.
-
-### Antispam Lister (`Plugins::AntiSpam::Lister`)
-
-List those who spam prefixed bot commands.
-
-### Admin auth checker (`Plugins::Authtest`)
-
-Tells you if you are logged into the bot or not. (Admins only)
-
-### 8ball (`Plugins::Eightball`)
-
-The Magic 8ball has all the answers!
-
-Usage: `!8ball [question? <question? <...>>]`
-
-### Random Attacker (`Plugins::Attack`)
-
-Attacks a user with a random attack.
-
-Usage: `!attack <nick or phrase>`; `<nick or phrase>` may be omitted for a random attack on a random nick.
-
-### Auto OP (`Plugins::AutoOP`)
-
-Automatically ops nicks upon join.
-
-Usage: `!autoop [on|off]` -- turns autoop on or off. (Admins only)
-
-### Auto Voice (`Plugins::AutoVoice`)
-
-Automatically voices nicks upon join.
-
-Usage: `!autovoice [on|off]` -- turns autovoice on or off. (Admins only)
-
-### Booru (`Plugins::Booru`)
-
-Generates a handy link to a *booru search
-
-Usage: `!booru <selector> <comma-separated list of tags>`; use `!booru` to get a list of tags.
-
-### Botinfo (`Plugins::BotInfo`)
-
-Notices you information about me.
-
-Usage: `![botnick]`
-
-### Decider (`Plugins::Decide`)
-
-Helps you decide on things.
-
-Usage: `!decide [a list of items separated by ", ", ", or", or " or "]`; Usage: `!coin`; Usage: `!rand [x] [y]`
-
-### Delayed Rejoin (`Plugins::DelayedRejoin`)
-
-If the bot is kicked, it will attempt to rejoin after 10 seconds by default.
-
-### Dicebox (`Plugins::Dice`)
-
-Dicebox -- Uses standard dice notation.
-
-Usage: `<X#>YdZ<[+|-]A>` (Examples: `1d6`; `2d6-3`; `2#1d6`; `5#2d6+10`)
-
-### DJ Info (`Plugins::DJInfo`)
-
-Spams the channel with DJ contact information.
-
-Usage: `!dj <dj_name>`
-
-### Jargon File (`Plugins::JargonFile`)
-
-Gets the entry from the Jargon File.
-
-Usage: `!jargon <entry>`
-
-### Auto Notice (`Plugins::JoinNotice`)
-
-Notices nicks upon join.
-
-Usage: `!hello` to replay entry notice.
-
-### Kickban (`Plugins::Kickban`)
-
-Various commands used for kickbanning users.
-
-Usage: `!moon [nick]` -- kicks the selected user with a My Little Pony: Friendship Is Magic-themed kick reason.
-
-Usage: `!sun [nick]` -- Kickbans the selected user [MLP-themed]
-
-Usage: `!banana [nick]` -- Kicks too. Don't ask.
-
-Usage: `!crp [nick]` -- Also kicks too. Don't ask, as well.
-
-Usage: `!fus [nick]` -- I really need to come up with a better solution for this.
-
-### QDB (`Plugins::MultiQDB`)
-
-Pulls a quote from a QDB.
-
-`Usage: !qdb <selector> <ID|latest>`; `!qdb` for selector list.
-
-### Ping (`Plugins::Ping`)
-
-Pings you or a target via CTCP, and reports the number of milliseconds on recieving a response.
-
-Usage: `!ping <nick>`
-
-### Private toolbox (`Plugins::PrivToolbox`)
-
-Bot administrator-only private commands.
-
-Usage: n/a
-
-### Rainbow (`Plugins::Rainbow`)
-
-Rainbowificates your text.
-
-Usage: `!rainbow [text]`.
-
-Usage: `eyerape [text]`.
-
-### Remote admin (`Plugins::RemoteAdmin`)
-
-Relays certain messages to logged-in admins.
-
-### Russian Roulette (`Plugins::RussianRoulette`)
-
-In Soviet Russia, boolet shoots YOU!
-
-Usage: !rr <nick>
-
-### Ryder (`Plugins::Ryder`)
-
-Beat PunchBeef! Blast Thickneck! Big McLargehuge!
-
-Usage: `!ryder`
-
-### Silly (`Plugins::Silly`)
-
-You know, silly stuff.
-
-### Toolbox (`Plugins::Toolbox`)
-
-Bot administrator-only private commands.
-
-Usage: `~join [channel]`; `~part [channel] <reason>`; `~quit [reason]`; `~nick [newnick]`; `~opadmin`;
-
-### Twitter (`Plugins::Twitter::Client`)
-
-Access Twitter from the comfort of your IRC client!
-
-Usage: `!tw <username><+D> - Gets the latest tweet of the specified user, or the tweet 'D' tweets back, between 1 and 20.
-
-`!tw #[id]` - Gets the tweet at the specified ID
-
-`?tw [username]` - Gets the specified user's Twitter profile
-
-`?ts [term]` - Searches for three of the most recent tweets regarding the specified query
-
-Shorthand: `@[username]<+D>`, @#[id]
-
-### Urban Dictionary (`Plugins::UrbanDictionary`)
-
-Gets the first entry for an entry on UrbanDictionary.
-
-Usage: `!urban <entry>`
-
-### Weather (`Plugins::Weather`)
-
-Grabs the current weather from WeatherUnderground.
-
-Usage: `!weather [query]`
-
-Author information
-------------------
-* Mark Seymour ('Azure')
-* Email: <mark.seymour.ns@gmail.com>
-* WWW: <http://lain.rustedlogic.net/>
-* IRC: #shakesoda @ irc.freenode.net
+Azurebot is a Ruby-based IRC bot that uses the [Cinch IRC bot-building framework](https://github.com/cinchrb/cinch).
+
+(Please note that this readme is still very much still being written. And probably will never get fully finished.)
+
+Gems/requires used in various plugins
+-------------------------------------
+- active_support
+- open-uri
+- json
+- nokogiri
+- cgi
+- yaml
+
+### Gems/requires for specific plugins
+#### ./lib/plugins/time_ban.rb
+- redis
+
+#### ./lib/plugins/twitter.rb
+- twitter ~>2.0.2
+
+#### ./lib/plugins/uptime.rb (may be removed)
+- ruby-wmi
+- socket
+
+#### ./lib/plugins/weather.rb
+- barometer
+
+#### ./lib/plugins/botinfo.rb
+- [tag_formatter](https://github.com/mseymour/tag_formatter) (read the readme!)
+
+Configuration
+=============
+NOTE: Things may change a lot between this writing (2012/03/15) and when this is read.
+
+### Admin password
+To set the bot admin password (`/msg azurebot login <password>`), generate a SHA256 hash from the password that you want, and then save it under `./config/admin-password`.
+
+All plugins that use the Admin command functionality already have the config assigned to them in the bootstrap script (`cinch.rb`).
+
+### Setting up Twitter OAuth
+
+If you already have keys set up, just copy them into a YAML file under "`./config/twitter_oauth.yaml`" with the following structure:
+```
+---
+!ruby/sym consumer_key: KEY
+!ruby/sym consumer_secret: KEY
+!ruby/sym oauth_token: KEY
+!ruby/sym oauth_token_secret: KEY
+```
+
+### Setting per-channel on-join notices
+To set up an on-join notice, make sure that the config is set up to have a folder and a file extension. Example:
+```
+c.plugins.options[Plugins::JoinNotice] = { greetings: File.dirname(__FILE__) + '/config/greetings/freenode/', filext: '.txt' }
+```
+Where "`freenode`" is replaced with whatever network that the bot is on (for organizational purposes.)
+
+For instance, if I want to have an on-join notice for `#cinch-bots`, I would just save a text file named "`./config/greetings/freenode/#cinch-bots.txt`".
+
+Authors
+=======
+Mark Seymour (<mark.seymour.ns@gmail.com>)
