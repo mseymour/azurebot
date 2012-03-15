@@ -43,6 +43,7 @@ All plugins that use the Admin command functionality already have the config ass
 ### Setting up Twitter OAuth
 
 If you already have keys set up, just copy them into a YAML file under "`./config/twitter_oauth.yaml`" with the following structure:
+
 		---
 		!ruby/sym consumer_key: KEY
 		!ruby/sym consumer_secret: KEY
@@ -51,7 +52,9 @@ If you already have keys set up, just copy them into a YAML file under "`./confi
 
 ### Setting per-channel on-join notices
 To set up an on-join notice, make sure that the config is set up to have a folder and a file extension. Example:
+
 		c.plugins.options[Plugins::JoinNotice] = { greetings: File.dirname(__FILE__) + '/config/greetings/freenode/', filext: '.txt' }
+
 Where "`freenode`" is replaced with whatever network that the bot is on (for organizational purposes.)
 
 For instance, if I want to have an on-join notice for `#cinch-bots`, I would just save a text file named "`./config/greetings/freenode/#cinch-bots.txt`".
