@@ -73,27 +73,6 @@ module Plugins
       end
     end
 
-    match "sw", method: :sw
-    match /sw (\S+)/, method: :sw
-    def sw(m, tz = nil)
-      tz ||= "-00:00"
-      tz = tzparser(tz)
-      begin
-        today = Time.now.localtime(tz)
-        xmas = Time.new(2012, 3, 17, 0, 0, 0, tz)
-        xmas = xmas.next_year if xmas.to_date.past?
-        message = if xmas.to_date == today.to_date
-          "501ST, LAUNCH! Today, the Strike Witches movie is released!"
-        else
-          "There's #{time_diff_in_natural_language(today, xmas, seconds: false)} until the Strike Witches movie!"
-        end
-      rescue ArgumentError => ae
-        message = ae.message
-      ensure
-        m.reply message, true
-      end
-    end
-
     match "newyear", method: :newyear
     match /newyear (\S+)/, method: :newyear
     def newyear(m, tz = nil)
