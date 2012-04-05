@@ -27,7 +27,8 @@ module QDB
       raise "@path_template must be set in #{self.class.name}#initialize." if @path_template.nil?
       @base_url.freeze # This prevents the developer from screwing around with the variable.
 
-      @id = (:"#{params[id]}" == :latest || params[:id].nil? ? self.retrieve_latest_quote_id : params[:id])
+      @id = (:"#{params[:id]}" == :latest || params[:id].nil? ? self.retrieve_latest_quote_id : params[:id])
+      @id.gsub(/^#/, '') if @id.is_a?(String) # removing hashes from beginning of value, if string
       @lines = params[:lines]
       @url = "#{@base_url}#{ @path_template % { id: URI.escape(@id, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) } }"
     end

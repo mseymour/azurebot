@@ -37,9 +37,12 @@ module QDB
     def retrieve_meta
       o = Nokogiri::HTML(open(@url))
       raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".quote").nil?
-      rating = CGI.unescape_html o.at(".quote-header").children.to_s.gsub("\r","").split(".")[0]
+      
+      score = o.xpath('//div[@class="quote-header"]/span[@class="score"]')[0].content
+      subscore_up = o.xpath('//div[@class="quote-header"]/span[@class="subscores"]/a[@class="upvotes"]')[0].content
+      subscore_down = o.xpath('//div[@class="quote-header"]/span[@class="subscores"]/a[@class="downvotes"]')[0].content
 
-      "#{rating}"
+      "#{score} (#{subscore_up}/#{subscore_down})"
     end
   end
 
