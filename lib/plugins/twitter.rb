@@ -36,8 +36,8 @@ module Plugins
 
 
       match /tw$/, method: :execute_tweet
-      match /tw (\w+)(?:\+(\d+))?$/, method: :execute_tweet
-      match /^@(\w+)(?:\+(\d+))?$/, method: :execute_tweet, use_prefix: false
+      match /tw (\w+)(?:-(\d+))?$/, method: :execute_tweet
+      match /^@(\w+)(?:-(\d+))?$/, method: :execute_tweet, use_prefix: false
       def execute_tweet(m, username = nil, nth_tweet = nil)
         options = {}
         options[:username] = username unless username.nil?
