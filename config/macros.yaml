@@ -6,7 +6,7 @@ emergency: http://www.emergencyyodel.com/
 carl:
   - CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARL
   - seconds: 5
-    msg: ^<in,that>^ KILLS PEOPLE
+    msg: "{A,<in,that>} KILLS PEOPLE"
 dnf: OH GOD HELL IS FREEZING OVER! Duke Nukem Forever ACTUALLY FUCKING CAME OUT!
 nigger: NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA
 dinner: http://www.whatthefuckshouldimakefordinner.com/
@@ -34,20 +34,20 @@ liru: WHATS UP NIGGAS IM LIRU WHATCHU GONNA DO WITH SOME MATSUKA BEEF NUKKKKKKA
 dickpunch: 
   - type: action
     msg: punches <in> in the dick
-despair: I AM IN DESPAIR! ^<in>^ HAS LEFT ME IN DESPAIR!!
+despair: I AM IN DESPAIR! {A,<in>} HAS LEFT ME IN DESPAIR!!
 # ---
 sip: http://www.wallpapergravity.com/wallpapers2/212/212684.jpg
 alart:
   type: random
   lines:
-    - /!\ ^<in,ALART>^ /!\
-    - /// ^<in,ALART>^ ///
-    - \\\ ^<in,ALART>^ \\\
+    - /!\ {A,<in,ALART>} /!\
+    - /// {A,<in,ALART>} ///
+    - \\\ {A,<in,ALART>} \\\
 bod:
   - <in> should go eat a bag full of DICKS!!!!
 alice:
-  - ^<in,alice>^
-  - WHO THE !@*$ IS ^<in,alice>^
+  - "{A,<in,alice>}"
+  - WHO THE !@*$ IS {A,<in,alice>}
 hi5:
   - "<in>: http://www.ihighfive.com/"
   #- "<in> (from <self>): http://www.ihighfive.com/"

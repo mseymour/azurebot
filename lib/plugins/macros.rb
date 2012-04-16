@@ -47,7 +47,7 @@ module Plugins
             v.join(",")
           end
         }
-        return output.gsub(/\^(.*?)\^/){|m| m[1..-2].upcase }.gsub(/v(.*?)v/){|m| m[1..-2].downcase}
+        return output.gsub(/{A,(.*?)}/){|m| m[3..-2].upcase }.gsub(/{a,(.*?)}/){|m| m[3..-2].downcase}
       } 
 
       lines = lambda {|obj| 
