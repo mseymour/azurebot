@@ -23,7 +23,7 @@ module Plugins
 
     #def generate_url( selector = nil, id = nil )
     def generate_quote(qdb_access, tail = false)
-      array_end = lambda {|array, element| element.equal?(array.last) ? "*" : "-" }
+      array_end = ->(array, element) { element.equal?(array.last) ? (qdb_access[:toolong] ? "\u21E9" : "*") : "-" }
       output = []
       output << "#{qdb_access[:fullname]} quote ##{qdb_access[:id]} (#{qdb_access[:meta]}) (#{qdb_access[:url]}):" unless tail
       output << if !tail 

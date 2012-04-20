@@ -55,7 +55,8 @@ module QDB
         meta: self.retrieve_meta,
         id: @id,
         lines: @lines,
-        url: @url
+        url: @url,
+        toolong: (retrieved_quote.length > @lines ? true : false)
       }
     end
 
