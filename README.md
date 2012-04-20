@@ -31,6 +31,9 @@ Gems/requires used in various plugins
 #### ./lib/plugins/botinfo.rb
 - [tag_formatter](https://github.com/mseymour/tag_formatter) (read the readme!)
 
+#### ./lib/plugins/define.rb
+- insensitive_hash
+
 Configuration
 =============
 NOTE: Things may change a lot between this writing (2012/03/15) and when this is read.

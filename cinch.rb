@@ -22,6 +22,7 @@ require 'plugins/booru'
 require 'plugins/botinfo'
 require 'plugins/byedaddy'
 require 'plugins/decide'
+require 'plugins/define'
 require 'plugins/delayedrejoin'
 require 'plugins/dice'
 require 'plugins/djinfo'
@@ -70,6 +71,7 @@ bot = Cinch::Bot.new do
       Plugins::BotInfo,
       Plugins::ByeDaddy,
       Plugins::Decide,
+      Plugins::Define,
       Plugins::DelayedRejoin,
       Plugins::Dice,
       Plugins::DJInfo,
@@ -103,6 +105,7 @@ bot = Cinch::Bot.new do
     c.plugins.options[Plugins::AutoOP] = { enabled_channels: [] }.merge common_config
     c.plugins.options[Plugins::AutoVoice] = { enabled_channels: [] }.merge common_config
     c.plugins.options[Plugins::BotInfo] = { owner: "Azure", bot: c.nick, template_path: File.dirname(__FILE__) + '/config/info_template.txt'}.merge common_config
+    c.plugins.options[Plugins::Define] = { file: File.dirname(__FILE__) + '/config/define.yaml' }
     c.plugins.options[Plugins::DJInfo] = { dj_info: File.dirname(__FILE__) + '/config/cr_dj_info.yaml' }
     c.plugins.options[Plugins::JoinNotice] = { greetings: File.dirname(__FILE__) + '/config/greetings/freenode/', filext: '.txt' }
     c.plugins.options[Plugins::Macros] = { macro_yaml_path: File.dirname(__FILE__) + '/config/macros.yaml' }
