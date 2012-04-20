@@ -6,9 +6,10 @@ module Plugins
     module Formatter
 
       def format_tweet(tweet)
+        tweet_text = expand_uris(tweet.text, tweet.attrs["entities"]["urls"])
         parts, head, body, tail, urls = [], [], [], [], []
         head = Format(:aqua,"#{tweet.user.screen_name} »")
-        body << CGI::unescapeHTML(tweet.text.gsub("\n", " ").squeeze(" "))
+        body << CGI::unescapeHTML(tweet_text.gsub("\n", " ").squeeze(" "))
         body << Format(:aqua,"*twoosh*") if tweet.text.length == 140
         tail << "From #{tweet.place.full_name}" if !tweet.place.blank?
         tail << "at #{tweet.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
@@ -21,9 +22,10 @@ module Plugins
       end
 
       def format_search(tweet)
+        tweet_text = expand_uris(tweet.text, tweet.attrs["entities"]["urls"])
         parts, head, body, tail, urls = [], [], [], [], []
         head = Format(:aqua,"#{tweet.from_user} »")
-        body << CGI::unescapeHTML(tweet.text.gsub("\n", " ").squeeze(" "))
+        body << CGI::unescapeHTML(tweet_text.gsub("\n", " ").squeeze(" "))
         body << Format(:aqua,"*twoosh*") if tweet.text.length == 140
         tail << "at #{tweet.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
         urls << "https://twitter.com/#{tweet.from_user}"
@@ -32,6 +34,7 @@ module Plugins
       end
 
       def format_tweep_info(tweep)
+        tweep_status_text = expand_uris(tweep.status.text, tweep.status.attrs["entities"]["urls"])
         head =  "#{Format(:aqua,tweep.name)}" + Format(:silver," (#{tweep.screen_name})") + Format(:grey," - #{tweep.url} https://twitter.com/#{tweep.screen_name}")
         bio = ""
         bio = Format(:aqua,"\"#{tweep.description.strip}\"") if !tweep.description.blank?
@@ -48,7 +51,7 @@ module Plugins
         flags << "is verified" if tweep.verified?
         flags << "would rather keep their life secret" if tweep.protected?
         tweet = [] << Format(:aqua,"Their latest tweet:")
-        tweet << CGI::unescapeHTML(tweep.status.text.gsub("\n", " ").squeeze(" "))
+        tweet << CGI::unescapeHTML(tweep_status_text.gsub("\n", " ").squeeze(" "))
         tweet_tail = []
         tweet_tail << "from #{tweep.status.place.full_name}" if !tweep.status.place.blank?
         tweet_tail << "at #{tweep.status.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
@@ -56,6 +59,17 @@ module Plugins
         parts = [head, bio, location, desc, flags].reject(&:blank?).map {|e| e.is_a?(Array) ? "#{tweep.name} " + e.to_sentence + "." : e }
         parts << [tweet, Format(:silver,["(", tweet_tail.join(" "), ")"].join)].join(" ")
         parts.join("\n")
+      end
+    
+      private
+      
+      def expand_uris t, uris
+        tweet = t.dup
+        uris.each {|u|
+          expanded_url, url = u["expanded_url"], u["url"]
+          tweet.gsub! url, expanded_url
+        }
+        return tweet
       end
 
     end

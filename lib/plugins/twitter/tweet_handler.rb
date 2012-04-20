@@ -18,7 +18,7 @@ module Plugins
         params = { username: "Twitter", nth_tweet: 0 }.merge(params)
         begin
           raise Warnings::TooManyTweets if params[:nth_tweet].to_i > 20
-          timeline = ::Twitter.user_timeline params[:username], include_rts: true, count: params[:nth_tweet].to_i.succ
+          timeline = ::Twitter.user_timeline params[:username], include_entities: true, include_rts: true, count: params[:nth_tweet].to_i.succ
           raise Warnings::NoTweets if timeline.blank?
           tweet = timeline.last
           params[:username] = tweet.user.screen_name if !tweet.user.nil? # For proper case.
@@ -36,7 +36,7 @@ module Plugins
       def tweet_by_id(params={})
         params = {id: 0 }.merge(params)
         begin
-          tweet = ::Twitter.status params[:id]
+          tweet = ::Twitter.status params[:id], include_entities: true
           params[:username] = tweet.user.screen_name if !tweet.user.nil? # For easy access.
           AMessage.new format_tweet(tweet) # If there is ever a problem, it'll bubble up here and be caught.
         rescue *EXCEPTIONS => ex
@@ -47,7 +47,7 @@ module Plugins
       def tweep_info(params={})
         params = {username: "Twitter"}.merge(params)
         begin
-          tweep = ::Twitter.user params[:username]
+          tweep = ::Twitter.user params[:username], include_entities: true
           AMessage.new format_tweep_info(tweep)
         rescue *EXCEPTIONS => ex
           AMessage.new handle_error(ex, params[:username], @bot.nick), :notice
@@ -58,7 +58,7 @@ module Plugins
         params = {term: "cat"}.merge(params)
         begin
           results = []
-          ::Twitter.search(params[:term], rpp: 3, result_type: "recent").each {|status|
+          ::Twitter.search(params[:term], include_entities: true, rpp: 3, result_type: "recent").each {|status|
             params[:username] = status.from_user
             results << format_search(status)
           }
