@@ -7,36 +7,36 @@ Azurebot is a Ruby-based IRC bot that uses the [Cinch IRC bot-building framework
 
 Gems/requires used in various plugins
 -------------------------------------
-- active_support
-- open-uri
-- json
-- nokogiri
-- cgi
-- yaml
+- [active_support](https://rubygems.org/gems/active_support)
+- [open-uri](http://www.ruby-doc.org/stdlib-1.9.3/libdoc/open-uri/rdoc/OpenURI.html)
+- [json](http://www.ruby-doc.org/stdlib-1.9.3/libdoc/json/rdoc/JSON.html)
+- [nokogiri](https://rubygems.org/gems/nokogiri)
+- [cgi](http://www.ruby-doc.org/stdlib-1.9.3/libdoc/cgi/rdoc/CGI.html)
+- [yaml](http://www.ruby-doc.org/stdlib-1.9.3/libdoc/yaml/rdoc/YAML.html)
 
 ### Gems/requires for specific plugins
 #### ./lib/plugins/time_ban.rb
-- redis
+- [redis](https://rubygems.org/gems/redis)
 
 #### ./lib/plugins/twitter.rb
-- twitter ~>2.0.2
+- [twitter](https://rubygems.org/gems/twitter) ~>2.0.2
 
 #### ./lib/plugins/uptime.rb (may be removed)
-- ruby-wmi
-- socket
+- [ruby-wmi](https://rubygems.org/gems/ruby-wmi)
+- [socket](http://www.ruby-doc.org/stdlib-1.9.3/libdoc/socket/rdoc/Socket.html)
 
 #### ./lib/plugins/weather.rb
-- barometer
+- [barometer](https://rubygems.org/gems/barometer)
 
 #### ./lib/plugins/botinfo.rb
-- [tag_formatter](https://github.com/mseymour/tag_formatter) (read the readme!)
+- [tag_formatter](https://rubygems.org/gems/tag_formatter)
 
 #### ./lib/plugins/define.rb
-- insensitive_hash
+- [insensitive_hash](https://rubygems.org/gems/insensitive_hash)
 
 Configuration
 =============
-NOTE: Things may change a lot between this writing (2012/03/15) and when this is read.
+NOTE: Things may change a lot between this writing (2012/05/01) and when this is read.
 
 ### Admin password
 To set the bot admin password (`/msg azurebot login <password>`), generate a SHA256 hash from the password that you want, and then save it under `./config/admin-password`.
