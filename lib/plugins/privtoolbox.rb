@@ -19,6 +19,14 @@ module Plugins
       @bot.handlers.dispatch :private_admin, m, "said in #{channel}: #{text}", m.target
     end
 
+    match /msg (\S+) (.+)/, method: :msg
+    def msg(m, user, text)
+      return unless config[:admins].logged_in?(m.user.mask)
+      User(user).send(text)
+      @bot.handlers.dispatch :private_admin, m, "said to #{user}: #{text}", m.target
+    end
+
+
     match /act (#\S+) (.+)/, method: :act
     def act(m, channel, text)
       return unless config[:admins].logged_in?(m.user.mask)
