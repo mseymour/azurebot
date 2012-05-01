@@ -55,7 +55,7 @@ module Plugins
 
       tf = TagFormatter.new open(config[:template_path],&:read), tags: tags
 
-      m.user.notice tf.parse!
+      m.user.notice tf.parse
     end
 
     match /^list plugins$/i, method: :execute_list, use_prefix: false
