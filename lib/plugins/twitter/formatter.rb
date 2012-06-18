@@ -8,7 +8,7 @@ module Plugins
       def format_tweet(tweet)
         tweet_text = expand_uris(tweet.text, tweet.attrs["entities"]["urls"])
         parts, head, body, tail, urls = [], [], [], [], []
-        head = Format(:aqua,"#{tweet.user.screen_name} »")
+        head = Format(:bold,"#{tweet.user.screen_name} »")
         body << CGI::unescapeHTML(tweet_text.gsub("\n", " ").squeeze(" "))
         body << Format(:aqua,"*twoosh*") if tweet.text.length == 140
         tail << "From #{tweet.place.full_name}" if !tweet.place.blank?
@@ -17,19 +17,19 @@ module Plugins
         urls << "https://twitter.com/#{tweet.user.screen_name}"
         urls << Format(:grey,"in reply to") if !tweet.in_reply_to_screen_name.blank?
         urls << "http://twitter.com/#{tweet.in_reply_to_screen_name}#{"/statuses/#{tweet.in_reply_to_status_id.to_s}" if !tweet.in_reply_to_status_id.blank?}" if !tweet.in_reply_to_screen_name.blank?
-        parts = [head, body, Format(:grey,["(", tail.join(" "), ")"].join), urls].flatten
+        parts = [head, body, ["(", tail.join(" "), ")"].join, urls].flatten
         parts.join(" ")
       end
 
       def format_search(tweet)
         tweet_text = expand_uris(tweet.text, tweet.attrs["entities"]["urls"])
         parts, head, body, tail, urls = [], [], [], [], []
-        head = Format(:aqua,"#{tweet.from_user} »")
+        head = Format(:bold,"#{tweet.from_user} »")
         body << CGI::unescapeHTML(tweet_text.gsub("\n", " ").squeeze(" "))
         body << Format(:aqua,"*twoosh*") if tweet.text.length == 140
         tail << "at #{tweet.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
         urls << "https://twitter.com/#{tweet.from_user}"
-        parts = [head, body, Format(:grey,["(", tail.join(" "), ")"].join), urls].flatten
+        parts = [head, body, ["(", tail.join(" "), ")"].join, urls].flatten
         parts.join(" ")
       end
 
