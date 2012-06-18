@@ -24,6 +24,7 @@ module Plugins
         v = @redis.hgetall k
         @bot.loggers.debug "TIMEBAN: Loading timed ban for #{k.split(":")[-1]} from Redis: #{v.inspect}"
         channel, nick = *k.match(/(.+):(.+):(.+)/)[2..3]
+        
         if Time.now < Time.parse(v["when.unbanned"])
           @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.parse(v["when.unbanned"]) - Time.now}"
           Timer(Time.parse(v["when.unbanned"]) - Time.now, shots: 1) {
@@ -31,6 +32,16 @@ module Plugins
           }
         else # If the timeban already expired, unban on connect.
           unban(channel, nick)
+        end
+
+        # Re-arming the ban and kicking the evader, if ban does not exist for some reason.
+        if !m.channel.bans.any? {|ban| ban.mask.eql? v["ban.host"] }
+          @bot.loggers.debug "TIMEBAN: Re-arming ban: #{v["ban.host"]}; TTL: #{Time.parse(v["when.unbanned"]) - Time.now}"
+          m.channel.ban(v["ban.host"])
+          m.channel.users.each_key {|user| 
+            next unless user.mask("*!*@%h") == v["ban.host"] # Unlikely, but could happen.
+            m.channel.kick(user, "Automatically banned for #{time_diff_in_natural_language(Time.now, v["when.unbanned"], acro: false)} by #{m.user.nick} (#{v["ban.reason"]})") 
+          }
         end
       }
     end
@@ -84,17 +95,21 @@ module Plugins
         "when.unbanned" => unbantime,
         "banned.by" => m.user.nick,
         "ban.reason" => reason,
-        "ban.host" => User(nick).mask("*!*@%h") }
-
-
-      @bot.loggers.debug "TIMEBAN: HMSET \"timeban:#{m.channel.name}:#{nick}\": #{fields.inspect}"
-      # schema: timeban:channel:nick (ex: timeban:#shakesoda:kp_centi)
-      @redis.hmset "timeban:#{m.channel.name.downcase}:#{nick.downcase}", *fields.flatten
+        "ban.host" => User(nick).mask("*!*@%h")}#, 
+        #{}"associated.nicks" => [] }
 
       # KICKBAN HIM!
       m.channel.ban(fields["ban.host"]);
-      m.channel.kick(nick, "Banned for #{time_diff_in_natural_language(Time.now, fields["when.unbanned"], acro: false)} by #{m.user.nick} (#{fields["ban.reason"]})");
-      @bot.loggers.debug "TIMEBAN: Kickbanned #{nick} from #{m.channel.name}: #{fields.inspect}"
+      m.channel.users.each_key {|user| 
+        next unless user.mask("*!*@%h") == fields["ban.host"]
+        m.channel.kick(user, "Banned for #{time_diff_in_natural_language(Time.now, fields["when.unbanned"], acro: false)} by #{m.user.nick} (#{fields["ban.reason"]})") 
+        #fields["associated.nicks"] << user.nick
+      }
+
+      # Recording the ban
+      @bot.loggers.debug "TIMEBAN: HMSET \"timeban:#{m.channel.name}:#{nick}\": #{fields.inspect}"
+      # schema: timeban:channel:nick (ex: timeban:#shakesoda:kp_centi)
+      @redis.hmset "timeban:#{m.channel.name.downcase}:#{nick.downcase}", *fields.flatten
 
       @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.at(fields["when.unbanned"]) - Time.now}"
       Timer(Time.at(fields["when.unbanned"]) - Time.now, shots: 1) {
