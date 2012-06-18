@@ -55,6 +55,8 @@ module Plugins
         out << "Visibility: #{w.visibility.kilometers || w.visibility.km} km (#{w.visibility.miles || w.visibility.m} mi)" if !w.visibility.nil?
         out << "Sunrise/set: #{w.sun.rise}, #{w.sun.set}" if !w.sun.nil?
 
+        
+
         "Current weather for #{m.location.name || m.query} as of #{m.measured_at}: #{out.reject(&:blank?).join("; ")}."
 
       rescue
