@@ -2,6 +2,7 @@ require 'active_support/time'
 require 'active_support/core_ext/string'
 require 'active_support/core_ext/object/blank'
 require_relative '../modules/stringhelpers'
+require 'date'
 
 module Plugins
   class Silly
@@ -107,6 +108,20 @@ module Plugins
       ensure
         m.reply message, true
       end
+    end
+
+    match "mayan", method: :mayan
+    def mayan(m)
+      msd = (Date.today.jd - Date.new(1,1,1).jd) + 1137142
+      lc = {
+        baktun: (msd - (msd % 144000)) / 144000,
+        katun:  ((msd - (msd % 7200)) / 7200) % 20,
+        tun:    ((msd - (msd % 360)) / 360) % 20,
+        uinal:  ((msd - (msd % 20)) / 20) % 18,
+        kin:    (msd % 20)
+      }
+
+      m.reply "#{lc[:baktun]}.#{lc[:katun]}.#{lc[:tun]}.#{lc[:uinal]}.#{lc[:kin]}"
     end
 
   end
