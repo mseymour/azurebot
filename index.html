@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Azurebot by mseymour</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Azurebot</h1>
+        <h2>A Ruby and Cinch-based IRC bot mainly used on #shakesoda @ irc.freenode.net, using Cinch &gt;~2.0.1</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/mseymour/azurebot/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/mseymour/azurebot/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/mseymour/azurebot" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>Azurebot</h1>
+
+<p>Azurebot is a Ruby-based IRC bot that uses the <a href="https://github.com/cinchrb/cinch">Cinch IRC bot-building framework</a>.</p>
+
+<p>(Please note that this readme is still very much still being written. And probably will never get fully finished.)</p>
+
+<h2>Gems/requires used in various plugins</h2>
+
+<ul>
+<li><a href="https://rubygems.org/gems/active_support">active_support</a></li>
+<li><a href="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/open-uri/rdoc/OpenURI.html">open-uri</a></li>
+<li><a href="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/json/rdoc/JSON.html">json</a></li>
+<li><a href="https://rubygems.org/gems/nokogiri">nokogiri</a></li>
+<li><a href="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/cgi/rdoc/CGI.html">cgi</a></li>
+<li><a href="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/yaml/rdoc/YAML.html">yaml</a></li>
+</ul><h3>Gems/requires for specific plugins</h3>
+
+<h4>./lib/plugins/time_ban.rb</h4>
+
+<ul>
+<li><a href="https://rubygems.org/gems/redis">redis</a></li>
+</ul><h4>./lib/plugins/twitter.rb</h4>
+
+<ul>
+<li>
+<a href="https://rubygems.org/gems/twitter">twitter</a> ~&gt;2.0.2</li>
+</ul><h4>./lib/plugins/uptime.rb (may be removed)</h4>
+
+<ul>
+<li><a href="https://rubygems.org/gems/ruby-wmi">ruby-wmi</a></li>
+<li><a href="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/socket/rdoc/Socket.html">socket</a></li>
+</ul><h4>./lib/plugins/weather.rb</h4>
+
+<ul>
+<li><a href="https://rubygems.org/gems/barometer">barometer</a></li>
+</ul><h4>./lib/plugins/botinfo.rb</h4>
+
+<ul>
+<li><a href="https://rubygems.org/gems/tag_formatter">tag_formatter</a></li>
+</ul><h4>./lib/plugins/define.rb</h4>
+
+<ul>
+<li><a href="https://rubygems.org/gems/insensitive_hash">insensitive_hash</a></li>
+</ul><h1>Configuration</h1>
+
+<p>NOTE: Things may change a lot between this writing (2012/05/01) and when this is read.</p>
+
+<h3>Admin password</h3>
+
+<p>To set the bot admin password (<code>/msg azurebot login &lt;password&gt;</code>), generate a SHA256 hash from the password that you want, and then save it under <code>./config/admin-password</code>.</p>
+
+<p>All plugins that use the Admin command functionality already have the config assigned to them in the bootstrap script (<code>cinch.rb</code>).</p>
+
+<h3>Setting up Twitter OAuth</h3>
+
+<p>If you already have keys set up, just copy them into a YAML file under "<code>./config/twitter_oauth.yaml</code>" with the following structure:</p>
+
+<pre><code>    ---
+    !ruby/sym consumer_key: KEY
+    !ruby/sym consumer_secret: KEY
+    !ruby/sym oauth_token: KEY
+    !ruby/sym oauth_token_secret: KEY
+</code></pre>
+
+<h3>Setting per-channel on-join notices</h3>
+
+<p>To set up an on-join notice, make sure that the config is set up to have a folder and a file extension. Example:</p>
+
+<pre><code>    c.plugins.options[Plugins::JoinNotice] = { greetings: File.dirname(__FILE__) + '/config/greetings/freenode/', filext: '.txt' }
+</code></pre>
+
+<p>Where "<code>freenode</code>" is replaced with whatever network that the bot is on (for organizational purposes.)</p>
+
+<p>For instance, if I want to have an on-join notice for <code>#cinch-bots</code>, I would just save a text file named "<code>./config/greetings/freenode/#cinch-bots.txt</code>".</p>
+
+<h1>Authors</h1>
+
+<p>Mark Seymour (<a href="mailto:mark.seymour.ns@gmail.com">mark.seymour.ns@gmail.com</a>)</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
