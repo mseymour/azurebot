@@ -109,6 +109,7 @@ bot = Cinch::Bot.new do
     c.plugins.options[Plugins::DJInfo] = { dj_info: File.dirname(__FILE__) + '/config/cr_dj_info.yaml' }
     c.plugins.options[Plugins::JoinNotice] = { greetings: File.dirname(__FILE__) + '/config/greetings/freenode/', filext: '.txt' }
     c.plugins.options[Plugins::Macros] = { macro_yaml_path: File.dirname(__FILE__) + '/config/macros.yaml' }
+    c.plugins.options[Plugins::MultiQDB] = { limit: 6 }
     c.plugins.options[Plugins::Twitter::Client] = { access_keys: File.dirname(__FILE__) + '/config/twitter_oauth.yaml' }
   end
 
