@@ -81,32 +81,6 @@ module Plugins
         end
       end
 
-      listen_to :channel, method: :listen_channel
-      def listen_channel(m)
-        return if m.user.name ~= /^auxilium$/ # Temporary solution for blocking bots.
-        urlregexp = /(https?:\/\/twitter.com\/(?:#!\/)?(\w+)(?:\/status(?:es)?\/(\d+))?)/i
-        return unless m.message =~ urlregexp
-        urls = m.message.scan(urlregexp)
-        urls.each {|url|
-          username, id = url[1..2]
-          if id.blank?
-            result = tweet_by_username(username: username)
-            if is_notice?(result)
-              m.user.notice result.message
-            else
-              m.reply result.message
-            end
-          else
-            result = tweet_by_id(id: id)
-            if is_notice?(result)
-              m.user.notice result.message
-            else
-              m.reply result.message
-            end
-          end
-        }
-      end
-
     end
   end
 end
