@@ -1,49 +1,38 @@
-# -*- coding: utf-8 -*-
-
-require 'open-uri'
-require 'nokogiri'
-require 'cgi'
-
 require_relative 'base'
 
 module QDB
+  class Shakesoda < Base # Inheriting Base
 
-  class Shakesoda < Base
-    def initialize(*args)
-      @fullname = "#shakesoda QDB"
-      @base_url = "http://www.shakesoda.org/qdb/"
-      @path_template = "view/%<id>s"
-      super
+    # attr_reader :name, :shortname, :url, :id_path_template, :random_path, :latest_path
+
+    def initialize
+      @name, @shortname, @url = "#shakesoda", "ss", "http://www.shakesoda.org/qdb/"
+      @id_path_template = "view/%<id>s"
     end
 
-    def retrieve_latest_quote_id
-      url = "#{@base_url}"
-      o = Nokogiri::HTML(open(url));
-      id = CGI.unescape_html o.at(".quote .quote-header a").children.to_s.strip.gsub("\r","").gsub("#","")
-      id.to_s
-    end
-
-    def retrieve_quote(params={})
-      params = { lines: @lines }.merge(params)
-
-      o = Nokogiri::HTML(open(@url))
-      raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".quote").nil?
+    def by_id(id)
+      o = Nokogiri::HTML(open(@url + (@id_path_template % {id: id})))
+      raise QDB::Error::QuoteNotFound.new(id), "Quote ##{id} does not exist." if o.at(".quote").nil?
       quotes = CGI.unescape_html o.at(".quote-content").children.to_s.gsub("\r","")
-      quotes = quotes.split(/<br *\/?>/i)
-
-      params[:lines] > -1 ? quotes[0..params[:lines]-1] : quotes[0..params[:lines]]
+      Quote.new(id, quotes.split(/<br *\/?>/i))
     end
-
-    def retrieve_meta
+    
+    def random
       o = Nokogiri::HTML(open(@url))
-      raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".quote").nil?
-      
-      score = o.xpath('//div[@class="quote-header"]/span[@class="score"]')[0].content
-      subscore_up = o.xpath('//div[@class="quote-header"]/span[@class="subscores"]/a[@class="upvotes"]')[0].content
-      subscore_down = o.xpath('//div[@class="quote-header"]/span[@class="subscores"]/a[@class="downvotes"]')[0].content
-
-      "#{score} (#{subscore_up}/#{subscore_down})"
+      random = o.css(".quote .quote-header a[href*=\"qdb/view\"]").to_a.sample.inner_text.gsub("#",'')
+      self.by_id(random)
     end
-  end
 
+    def latest
+      self.by_id(get_first_id(@url))
+    end
+
+    private
+
+    def get_first_id(url)
+      o = Nokogiri::HTML(open(@url))
+      o.css(".quote .quote-header a[href*=\"qdb/view\"]").to_a.first.inner_text.gsub("#",'')
+    end
+
+  end
 end

@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+require 'zlib'
+
 require_relative 'qdb/bash'
 require_relative 'qdb/qdbus'
 require_relative 'qdb/shakesoda'
+require_relative 'qdb/mit'
 
 module Plugins
 
@@ -11,63 +14,66 @@ module Plugins
 
     set(
     plugin_name: "QDB",
-    help: "Pulls a quote from a QDB.\n`Usage: !qdb <selector> <ID|latest>`; `!qdb` for selector list.")
+    help: "Pulls a quote from a QDB.\n`Usage: !qdb <selector> <ID|latest|random>`; `!qdb` for selector list.",
+    required_options: [:limit])
 
-    match /qdb\s?(\w+)?\s?(.+)?/
-
-    @@selectors = {
-      :bash => QDB::Bash,
-      :us => QDB::Qdbus,
-      :ss => QDB::Shakesoda,
-    };
-
-    #def generate_url( selector = nil, id = nil )
-    def generate_quote(qdb_access, tail = false)
-      array_end = ->(array, element) { element.equal?(array.last) ? (qdb_access[:toolong] ? "\u21E9" : "*") : "-" }
-      output = []
-      output << "#{qdb_access[:fullname]} quote ##{qdb_access[:id]} (#{qdb_access[:meta]}) (#{qdb_access[:url]}):" unless tail
-      output << if !tail 
-                  qdb_access[:quote].each_with_index.map {|e| array_end.call(qdb_access[:quote],e) + " #{e}" }
-                else
-                  qdb_access[:quotetail].map {|e| array_end.call(qdb_access[:quotetail],e) + " #{e}" }
-                end
-      output.reject(&:nil?).join("\n");
+    def initialize *args
+      super
+      # Creating a hash of all QDB objects available.
+      names = [QDB::Bash, QDB::QdbUS, QDB::Shakesoda, QDB::MIT].map {|qdb| [qdb.new.shortname, qdb] }
+      @@qdbs = Hash[*names.flatten]
     end
 
-    def generate_selector_list
-      selectors = [];
-      @@selectors.each {|key, value| selectors << key.to_s; }
-      selectors[0..-2].join(", ") + ", and " + selectors[-1]
-    end
+    match /qdb\s?(\w+)?\s?(.+)?/, method: :execute_qdb
+    def execute_qdb m, selector, id
+      m.reply "You have not supplied a selector. Selectors: #{@@qdbs.keys * ", "}" and return if !selector
+      m.reply "#{selector} does not exist. Valid selectors: #{@@qdbs.keys * ", "}" and return if !@@qdbs.include?(selector)
 
-    def execute(m, selector = nil, id = nil)
-      retries = 3
-      begin
-        if (selector.nil? || @@selectors[selector.to_sym].nil?)
-          m.reply "You have #{!id ? 'not listed a selector' : 'used an invalid selector'}. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}
-         else
-          qdb_access = @@selectors[selector.to_sym].new(:id => id, :lines => 5).to_hsh;
+      qdb = @@qdbs[selector].new # Instantize the QDB object
 
-          public_quote = generate_quote(qdb_access)
-          m.reply(public_quote);
-
-          if qdb_access[:fullquote].size > qdb_access[:quote].size
-            sleep 2
-            private_quote = generate_quote(qdb_access, true)
-            m.user.notice("The rest of the quote:\n" + private_quote);
-          end
-        end
-      rescue QDB::QuoteDoesNotExistError => e
-        m.reply "It appears that quote ##{e.id} does not exist."
-      rescue OpenURI::HTTPError => e
-        m.reply "An error has occured. #{$!}"
-      rescue Errno::ETIMEDOUT
-        if retries > 0
-          retries = retries.pred
-          retry
-        else m.reply "I cannot access the selected QDB (#{selector}, ##{id}) at the moment.", true
-        end
+      result = case id
+      when "latest" then qdb.latest
+      when "random" then qdb.random
+      when /^#?[[:digit:]]+$/ then qdb.by_id(id.gsub(/\D+/, ''))
+      else
+        qdb.random
       end
+
+      banner = "#{qdb.name} ##{result.id}"
+      #rcolors = [:green, :red, :purple, :yellow, :lime, :teal, :aqua, :royal, :pink]
+      #colorize_text = ->(text) { (Zlib::crc32(text) % rcolors.size)-1 }
+      m.reply banner
+      result.quote.each_with_index {|q,i|
+        is_at_limit = -> {i+1 == config[:limit] && config[:limit] < result.quote.size}
+        if (1..config[:limit]).include?(i+1)
+          m.reply "#{is_at_limit.call ? "+" : "-"} #{q}"
+          m.reply "The full quote can be viewed online at #{qdb.url + qdb.id_path_template % {id: result.id}}." if is_at_limit.call
+        else
+          m.user.notice "#{banner} continued:" if i+1 == config[:limit]+1
+          bar = -> {i+1 == config[:limit]+1}
+          m.user.notice "- " + q
+        end
+      }
+    rescue QDB::Error::QuoteNotFound => e
+      m.reply e.message, true
+    rescue OpenURI::HTTPError => e
+      m.reply "An error has occured. #{$!}", true
+    rescue Errno::ETIMEDOUT
+      if retries > 0
+        retries = retries.pred
+        retry
+      else m.reply "I cannot access the selected QDB (#{selector}, ##{id}) at the moment. Please try again later.", true
+      end
+    end
+
+    match "qdb list", method: :execute_list
+    def execute_list m
+      list = []
+      @@qdbs.each_value {|q|
+        qdb = q.new
+        list << "#{q.name} (#{q.shortname}): #{q.url}"
+      }
+      m.notice "To use a QDB, type " + Format(:bold, "!qdb <selector> <ID|latest|random>") + ".\n" + list.join("\n")
     end
 
   end

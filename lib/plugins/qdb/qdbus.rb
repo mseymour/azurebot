@@ -1,47 +1,37 @@
-# -*- coding: utf-8 -*-
-
-require 'open-uri'
-require 'nokogiri'
-require 'cgi'
-
 require_relative 'base'
 
 module QDB
+  class QdbUS < Base # Inheriting Base
 
-  class Qdbus < Base
-    def initialize(*args)
-      @fullname = "Qdb.us"
-      @base_url = "http://qdb.us/"
-      @path_template = "?%<id>s"
-      super
+    # attr_reader :name, :shortname, :url, :id_path_template, :random_path, :latest_path
+
+    def initialize
+      @name, @shortname, @url = "Qdb.us", "us", "http://qdb.us/"
+      @id_path_template = "%<id>s"
+      @random_path = "random"
     end
 
-    def retrieve_latest_quote_id
-      url = "#{@base_url}"
-      o = Nokogiri::HTML(open(url));
-      id = CGI.unescape_html o.at(".q .ql").children.to_s.strip.gsub("\r","").gsub("#","")
-      id.to_s
-    end
-
-    def retrieve_quote(params={})
-      params = { lines: @lines }.merge(params)
-
-      o = Nokogiri::HTML(open(@url))
-      raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".qt").nil?
+    def by_id(id)
+      o = Nokogiri::HTML(open(@url + (@id_path_template % {id: id})))
+      raise QDB::Error::QuoteNotFound.new(id), "Quote ##{id} does not exist." if o.at(".qt").nil?
       quotes = CGI.unescape_html o.at(".qt").children.to_s.gsub(/[\r\n]/,"")
-      quotes = quotes.split(/<br *\/?>/i)
-
-      params[:lines] > -1 ? quotes[0..params[:lines]-1] : quotes[0..params[:lines]]
+      Quote.new(id, quotes.split(/<br *\/?>/i))
+    end
+    
+    def random
+      self.by_id(get_first_id(@url + @random_path))
     end
 
-    def retrieve_meta
-      o = Nokogiri::HTML(open(@url))
-      raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".qt").nil?
-      rating_qs = CGI.unescape_html o.at(".q b span").children.to_s
-      rating_qvc = CGI.unescape_html o.at(".q > span").children.to_s
-
-      "Rating: #{rating_qs}#{rating_qvc}"
+    def latest
+      self.by_id(get_first_id(@url))
     end
+
+    private
+
+    def get_first_id(url)
+      o = Nokogiri::HTML(open(url))
+      o.at(".q .ql").children.to_s.strip.gsub("\r","").gsub("#","").to_i
+    end
+
   end
-
 end
