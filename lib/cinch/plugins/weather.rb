@@ -95,7 +95,6 @@ module Cinch
         end
       rescue => e
         errmsg = e.message.respond_to?(:description) ? e.message.description : e.message.to_s
-        m.reply "UH OH SOMETHING WENT WRONG JEGUS FCUK. By the way, e.message #{e.message.respond_to?(:description) ? "responds to" : "does not respond to"} :description."
         m.user.notice "#{Format(:red,:bold,"Uhoh!")} · #{errmsg}"
       end
 
