@@ -1,0 +1,9 @@
+/* Currently, there are 13 fields available:
+ * bot_name, owner_name, is_admin, cinch_version, uptime, total_channels, total_users, session_start_date, plugins_head, plugins_body_remaining, ruby_version, ruby_platform, and ruby_release_date.
+ * All fields are to be surrounded by {}'s. */
+I am {bot_name} and I am run by {owner_name}.
+I am based on Cinch {cinch_version} running on Ruby-{ruby_version} {ruby_platform} {ruby_release_date}.
+I am in {total_channels} channels and see {total_users} users.
+I was started on {session_start_date} and have been running for {uptime}.
+My currently loaded plugins are {plugins_head}, and {plugins_count_remaining} more. (Use `/msg {bot_name} list plugins' to view.)
+Visit my github repo @ https://github.com/mseymour/azurebot/

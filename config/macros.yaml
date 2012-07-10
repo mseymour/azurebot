@@ -1,0 +1,142 @@
+ruffty: <<ruffty>> thats hot
+# --- INSERTED 12:09AM 2012-02-18
+pandemic: http://www.crazymonkeygames.com/Pandemic-2.html
+headbutt: IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA
+emergency: http://www.emergencyyodel.com/
+carl:
+  - CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARL
+  - seconds: 5
+    msg: "{A,<in,that>} KILLS PEOPLE"
+dnf: OH GOD HELL IS FREEZING OVER! Duke Nukem Forever ACTUALLY FUCKING CAME OUT!
+nigger: NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA
+dinner: http://www.whatthefuckshouldimakefordinner.com/
+dvno: DVNO, four capital letters printed in gold...
+dnvo: http://instantboss.org/
+souljaboy: Soulja boy up in this hoe, Watch me crank it, Watch me roll, Watch me crank dat soulja boy, Then superman that hoe!!
+fancyboy: Soldier boy is in the presence of a prostitute. Observe one cranking it as well as rolling it. Observe one cranking the soldier boy, and then "superman" the aforementioned prostitute.
+goku: BITCH I LOOK LIKE GOKU
+anime: ANIME SWAG I'M FLYIN' LIKE GOKU
+bustback: FUCK THAT, a nigga wanna come in my face, I bust back, with the skills now you runnin' away, so fuck that, y'all don't feel me, get the fuck out my way, cuz I don't play dat, say FUCK THAT if ya feel me
+knicks: FUCK THE KNICKS!
+bapes: HATERS GET MAD CAUSE I GOT ME SOME GATORADE
+ruckus:
+  - - Don't trust them new niggers over there 
+    - Leaving they nigger essence in the air
+    - Them happy, nappy head niggers
+    - With they finger on the trigger
+    - Don't trust them new niggers over there
+  - - Don't trust them big nostrils over yonder
+    - They suck up so much air it'll make you wonder
+    - Don't them new niggers
+    - With they spidey little nigger figures
+    - Don't trust them new niggers over there.
+liru: WHATS UP NIGGAS IM LIRU WHATCHU GONNA DO WITH SOME MATSUKA BEEF NUKKKKKKA
+dickpunch: 
+  - type: action
+    msg: punches <in> in the dick
+despair: I AM IN DESPAIR! {A,<in>} HAS LEFT ME IN DESPAIR!!
+# ---
+sip: http://www.wallpapergravity.com/wallpapers2/212/212684.jpg
+alart:
+  type: random
+  lines:
+    - /!\ {A,<in,ALART>} /!\
+    - /// {A,<in,ALART>} ///
+    - \\\ {A,<in,ALART>} \\\
+bod:
+  - <in> should go eat a bag full of DICKS!!!!
+alice:
+  - "{A,<in,alice>}"
+  - WHO THE !@*$ IS {A,<in,alice>}
+hi5:
+  - "<in>: http://www.ihighfive.com/"
+  #- "<in> (from <self>): http://www.ihighfive.com/"
+drpepper:
+  - type: action
+    msg: dispenses a Dr Pepper for <in>
+drink:
+  type: random
+  lines:
+    - type: action
+      msg: gets <in> a dr pepper
+    - type: action
+      msg: gets <in> a coke
+    - type: action
+      msg: gets <in> a pepsi
+    - type: action
+      msg: gets <in> a glass of Sussex Golden ginger ale
+juggernaut:
+  type: random
+  lines:
+    - Silly bitch, your weapons cannot harm me!
+    - Don't you know who the fuck I am?
+    - I'm the Juggernaut, bitch!
+    - Got my pimp cane, bitch!
+    - I'll beat the shit out ya, Charles
+    - This is a Dodge.
+    - I'm ketchup, motherfucker.
+    - I'm made of Laffy Taffy.
+    - I'm going kill him, and rape him, and eat his fuckin' costume.
+    - Comb your beard. I don't wanna hear that shit.
+    - I'm a part-time stripper and I do hair.
+    - I'm the Juggernaut, bitch, and I gots a bitch wit me!
+    - I wonder what the fuck is on tv tonight.
+    - What up, mon ami?
+    - Initiate laser dodging!
+    - Not as long as I'm wearin' these Jamaican colors!
+    - My breasts are good for something.
+    - Jugg's gotcha!
+    - And in this corner the welterweight champion The Juggernaut, bitch! Why the fuck is this shit fallin'?
+    - I like yo raincoat!
+    - Optimus muthafuckin' Prime?!
+dcoil:
+    type: random
+    lines:
+    - "1: \"According to rumors among the other kids, many cases of pets going missing have been occurring in Daikoku City recently.\""
+    - "2: \"According to urban legend, kids who call out to Miss Michiko are sent to the 'other side'.\""
+    - "3: \"According to rumors in the industry, there are some hidden functions in the glasses that are better left unmentioned.\""
+    - "4: \"According to rumors on the Net, a few years ago an Encoder tried to devastate the Space. But nobody knows what happened to this Encoder.\""
+    - "5: \"According to rumors on the Net, it's said that you can sometimes find data such as sounds or images inside metabugs. But nobody really knows where they come from.\""
+    - "6: \"According to the newspapers, there's an increasing rate of car accidents involving kids wearing glasses.\""
+    - "7: \"According to rumors circulating among some people, if you think constantly about a person you want to meet, you'll suddenly end up seeing them.\""
+    - "8: \"According to urban legends, kids that have fallen asleep with their cyberglasses on have ended up going to the 'other side'.\""
+    - "9: \"According to rumors told by kids, Miss Michiko's true identity is whispered to be that of an illegal.\""
+    - "10: \"According to rumors on the Net, long before glasses ever hit the market, Nakatsu Crossroads was a mysterious place - the site of many accidents.\""
+    - "11: \"According to certain statistics, if a sixth grade male and female fight, the female has a higher probability of winning.\""
+    - "12: \"According to rumors amongst Bearded Ones, when it's 5550 minutes, Lady Yasako will take them to the promised land.\""
+    - "13: \"According to an old folk saying, normally, people are supposed to know what path they should pursue. But despite this, they tend to lose sight of the most important path.\""
+    - "14: \"According to rumors from the industry, the reason the Micet series was taken off the market was because it facilitated breaches of privacy such as covert photography and eavesdropping.\""
+    - "15: \"According to rumors among the kids from the other side of the station, in the deepest part of obsolete Space lives a dangerous Illegal.\""
+    - "16: \"According to industry rumors, the first company that produced the glasses discovered a technique that allowed you to change things you imagined into cybersubstances. But nobody really knows how it ended up.\""
+    - "17: \"What happens to people when they die? Where do their souls go? Nobody knows the truth.\""
+    - "18: \"According to rumors on the net, the process of creating and developing the glasses encompasses a complex history with many interesting points.\""
+    - "19: \"According to rumors among informed people, there is a deep connection between Imago and Cybercures.\""
+    - "20: \"According to my old memories, the body I was given was an empty shell, without life.\""
+    - "21: \"According to the history of glasses development, in the past they researched many techniques for projection.\""
+    - "22: \"According to industry rumors, Megamass wasn't able to remove the Imago function, so they reformatted the Space instead.\""
+    - "23: \"According to the Nulls, by eating the seed of pain, they became creatures whose goal is pain itself.\""
+    - "24: \"According to Yuko Amasawa, the path of feelings that connects people is thin and breaks easily.\""
+    - "25: \"According to the Coil data, in the beginning, the Null Carrier was a radar device that collected pieces of souls.\""
+    - "26: \"According to urban legends, after they die, cyberpets go live somewhere else.\""
+fact:
+  type: random
+  lines:
+    - Go to the kitchen, <in>.
+    - Go back to the kitchen, <in>.
+    - Stop walking into walls, <in>.
+    - Make me a sandwich, <in>.
+    - "<in>: Home Economics is that way."
+    - "<in>: Go and lose ten pounds--no, wait, make it 50."
+    - Be quiet <in>, the adults are talking.
+    - How cute <in>, you think your opinion matters.
+    - Looks like <in> is our new village bicycle.
+    - <in>, please remove your muffin top from this room.
+    - <in>, cover up your god damn face. It's revolting.
+    - Great, <in> is here. Out of the way everyone, thunder thighs is in the room.
+    - Hey <in>, why are you online. There is no laptop in the kitchen.
+    - <in> warms the cockles of my heart, MUA HA HA HA HA!
+    - Hey, hey, <in>, I have a better idea. EAT A FUCKING DICK YOU SMELLY CUNT!
+    - <in>, if I have sex with you without permission, is it rape or shoplifting?
+    - Why didn't you get those breast implants, <in>?
+    - <in>, I love you.
+haha: HA! HA! I'm using the <in,INTERNET>!!!1
