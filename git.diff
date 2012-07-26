@@ -1,0 +1,638 @@
+diff --git a/cinch.rb b/cinch.rb
+index dc0bde4..0c61b93 100644
+--- a/cinch.rb
++++ b/cinch.rb
+@@ -109,6 +109,7 @@ bot = Cinch::Bot.new do
+     c.plugins.options[Plugins::DJInfo] = { dj_info: File.dirname(__FILE__) + '/config/cr_dj_info.yaml' }
+     c.plugins.options[Plugins::JoinNotice] = { greetings: File.dirname(__FILE__) + '/config/greetings/freenode/', filext: '.txt' }
+     c.plugins.options[Plugins::Macros] = { macro_yaml_path: File.dirname(__FILE__) + '/config/macros.yaml' }
++    c.plugins.options[Plugins::MultiQDB] = { limit: 6 }
+     c.plugins.options[Plugins::Twitter::Client] = { access_keys: File.dirname(__FILE__) + '/config/twitter_oauth.yaml' }
+   end
+ 
+diff --git a/lib/plugins/multiqdb.rb b/lib/plugins/multiqdb.rb
+index 43fb060..54e09ac 100644
+--- a/lib/plugins/multiqdb.rb
++++ b/lib/plugins/multiqdb.rb
+@@ -1,8 +1,11 @@
+ # -*- coding: utf-8 -*-
+ 
++require 'zlib'
++
+ require_relative 'qdb/bash'
+ require_relative 'qdb/qdbus'
+ require_relative 'qdb/shakesoda'
++require_relative 'qdb/mit'
+ 
+ module Plugins
+ 
+@@ -11,65 +14,68 @@ module Plugins
+ 
+     set(
+     plugin_name: "QDB",
+-    help: "Pulls a quote from a QDB.\n`Usage: !qdb <selector> <ID|latest>`; `!qdb` for selector list.")
+-
+-    match /qdb\s?(\w+)?\s?(.+)?/
++    help: "Pulls a quote from a QDB.\n`Usage: !qdb <selector> <ID|latest|random>`; `!qdb` for selector list.",
++    required_options: [:limit])
+ 
+-    @@selectors = {
+-      :bash => QDB::Bash,
+-      :us => QDB::Qdbus,
+-      :ss => QDB::Shakesoda,
+-    };
+-
+-    #def generate_url( selector = nil, id = nil )
+-    def generate_quote(qdb_access, tail = false)
+-      array_end = ->(array, element) { element.equal?(array.last) ? (qdb_access[:toolong] ? "\u21E9" : "*") : "-" }
+-      output = []
+-      output << "#{qdb_access[:fullname]} quote ##{qdb_access[:id]} (#{qdb_access[:meta]}) (#{qdb_access[:url]}):" unless tail
+-      output << if !tail 
+-                  qdb_access[:quote].each_with_index.map {|e| array_end.call(qdb_access[:quote],e) + " #{e}" }
+-                else
+-                  qdb_access[:quotetail].map {|e| array_end.call(qdb_access[:quotetail],e) + " #{e}" }
+-                end
+-      output.reject(&:nil?).join("\n");
++    def initialize *args
++      super
++      # Creating a hash of all QDB objects available.
++      names = [QDB::Bash, QDB::QdbUS, QDB::Shakesoda, QDB::MIT].map {|qdb| [qdb.new.shortname, qdb] }
++      @@qdbs = Hash[*names.flatten]
+     end
+ 
+-    def generate_selector_list
+-      selectors = [];
+-      @@selectors.each {|key, value| selectors << key.to_s; }
+-      selectors[0..-2].join(", ") + ", and " + selectors[-1]
+-    end
++    match /qdb\s?(\w+)?\s?(.+)?/, method: :execute_qdb
++    def execute_qdb m, selector, id
++      m.reply "You have not supplied a selector. Selectors: #{@@qdbs.keys * ", "}" and return if !selector
++      m.reply "#{selector} does not exist. Valid selectors: #{@@qdbs.keys * ", "}" and return if !@@qdbs.include?(selector)
+ 
+-    def execute(m, selector = nil, id = nil)
+-      retries = 3
+-      begin
+-        if (selector.nil? || @@selectors[selector.to_sym].nil?)
+-          m.reply "You have #{!id ? 'not listed a selector' : 'used an invalid selector'}. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}
+-         else
+-          qdb_access = @@selectors[selector.to_sym].new(:id => id, :lines => 5).to_hsh;
++      qdb = @@qdbs[selector].new # Instantize the QDB object
+ 
+-          public_quote = generate_quote(qdb_access)
+-          m.reply(public_quote);
++      result = case id
++      when "latest" then qdb.latest
++      when "random" then qdb.random
++      when /^#?[[:digit:]]+$/ then qdb.by_id(id.gsub(/\D+/, ''))
++      else
++        qdb.random
++      end
+ 
+-          if qdb_access[:fullquote].size > qdb_access[:quote].size
+-            sleep 2
+-            private_quote = generate_quote(qdb_access, true)
+-            m.user.notice("The rest of the quote:\n" + private_quote);
+-          end
+-        end
+-      rescue QDB::QuoteDoesNotExistError => e
+-        m.reply "It appears that quote ##{e.id} does not exist."
+-      rescue OpenURI::HTTPError => e
+-        m.reply "An error has occured. #{$!}"
+-      rescue Errno::ETIMEDOUT
+-        if retries > 0
+-          retries = retries.pred
+-          retry
+-        else m.reply "I cannot access the selected QDB (#{selector}, ##{id}) at the moment.", true
++      banner = "#{qdb.name} ##{result.id}"
++      #rcolors = [:green, :red, :purple, :yellow, :lime, :teal, :aqua, :royal, :pink]
++      #colorize_text = ->(text) { (Zlib::crc32(text) % rcolors.size)-1 }
++      m.reply banner
++      result.quote.each_with_index {|q,i|
++        is_at_limit = -> {i+1 == config[:limit] && config[:limit] < result.quote.size}
++        if (1..config[:limit]).include?(i+1)
++          m.reply "#{is_at_limit.call ? "+" : "-"} #{q}"
++          m.reply "The full quote can be viewed online at #{qdb.url + qdb.id_path_template % {id: result.id}}." if is_at_limit.call
++        else
++          m.user.notice "#{banner} continued:" if i+1 == config[:limit]+1
++          bar = -> {i+1 == config[:limit]+1}
++          m.user.notice "- " + q
+         end
++      }
++    rescue QDB::Error::QuoteNotFound => e
++      m.reply e.message, true
++    rescue OpenURI::HTTPError => e
++      m.reply "An error has occured. #{$!}", true
++    rescue Errno::ETIMEDOUT
++      if retries > 0
++        retries = retries.pred
++        retry
++      else m.reply "I cannot access the selected QDB (#{selector}, ##{id}) at the moment. Please try again later.", true
+       end
+     end
+ 
++    match "qdb list", method: :execute_list
++    def execute_list m
++      list = []
++      @@qdbs.each_value {|q|
++        qdb = q.new
++        list << "#{q.name} (#{q.shortname}): #{q.url}"
++      }
++      m.notice "To use a QDB, type " + Format(:bold, "!qdb <selector> <ID|latest|random>") + ".\n" + list.join("\n")
++    end
++
+   end
+ 
+ end
+diff --git a/lib/plugins/qdb/base.rb b/lib/plugins/qdb/base.rb
+index 2ee8beb..1f07219 100644
+--- a/lib/plugins/qdb/base.rb
++++ b/lib/plugins/qdb/base.rb
+@@ -1,64 +1,30 @@
+-# -*- coding: utf-8 -*-
+-
+-require 'uri'
++require 'open-uri'
++require 'nokogiri'
++require 'cgi'
+ 
+ module QDB
+-  class QuoteDoesNotExistError < StandardError
+-    attr :id
+-    def initialize(id)
+-      @id = id
+-    end
++
++  module Error
++    class QuoteNotFound < StandardError; attr :id; def initialize(id); @id = id; end; end;
+   end
+ 
+   class Base
+-    attr_reader :fullname
+-    attr_accessor :id
+-    attr_reader :lines
+-    attr_reader :url
+-
+-    def initialize(params={})
+-      params = {
+-        id: :latest,
+-        lines: 4
+-      }.merge(params)
++    attr_reader :name, :shortname, :url, :id_path_template, :random_path, :latest_path
+ 
+-      raise "@fullname must be set in #{self.class.name}#initialize." if @fullname.nil?
+-      raise "@base_url must be set in #{self.class.name}#initialize." if @base_url.nil?
+-      raise "@path_template must be set in #{self.class.name}#initialize." if @path_template.nil?
+-      @base_url.freeze # This prevents the developer from screwing around with the variable.
++    Quote = Struct.new(:id, :quote) # Quote object for using in returning quote data
+ 
+-      @id = (:"#{params[:id]}" == :latest || params[:id].nil? ? self.retrieve_latest_quote_id : params[:id])
+-      @id.gsub(/^#/, '') if @id.is_a?(String) # removing hashes from beginning of value, if string
+-      @lines = params[:lines]
+-      @url = "#{@base_url}#{ @path_template % { id: URI.escape(@id, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) } }"
++    def initialize
+     end
+ 
+-    def retrieve_latest_quote_id
+-      raise "retrieve_latest_quote_id must be overridden."
+-    end
+-
+-    def retrieve_quote(params={})
+-      raise "retrieve_quote must be overridden."
+-    end
++    def by_id(id); raise "#{__method__} must be overridden."; end;
+ 
+-    def retrieve_meta(params={})
+-      raise "retrieve_meta must be overridden."
++    def random # This can be overridden if needed.
++      self.by_id(@url + @random_path)
+     end
+ 
+-    def to_hsh
+-      retrieved_quote = self.retrieve_quote lines: -1
+-      {
+-        fullname: @fullname,
+-        quote: retrieved_quote[0..@lines-1],
+-        quotetail: retrieved_quote[@lines..-1],
+-        fullquote: retrieved_quote,
+-        meta: self.retrieve_meta,
+-        id: @id,
+-        lines: @lines,
+-        url: @url,
+-        toolong: (retrieved_quote.length > @lines ? true : false)
+-      }
++    def latest # This can be overridden if needed.
++      self.by_id(@url + @latest_path)
+     end
+ 
+   end
+-end
++end
+\ No newline at end of file
+diff --git a/lib/plugins/qdb/bash.rb b/lib/plugins/qdb/bash.rb
+index e2faedc..9e000aa 100644
+--- a/lib/plugins/qdb/bash.rb
++++ b/lib/plugins/qdb/bash.rb
+@@ -1,46 +1,38 @@
+-# -*- coding: utf-8 -*-
+-
+-require 'open-uri'
+-require 'nokogiri'
+-require 'cgi'
+-
+ require_relative 'base'
+ 
+ module QDB
++  class Bash < Base # Inheriting Base
+ 
+-  class Bash < Base
+-    def initialize(*args)
+-      @fullname = "Bash.org"
+-      @base_url = "http://bash.org/"
+-      @path_template = "?%<id>s"
+-      super
+-    end
++    # attr_reader :name, :shortname, :url, :id_path_template, :random_path, :latest_path
+ 
+-    def retrieve_latest_quote_id
+-      url = "#{@base_url}?latest"
+-      o = Nokogiri::HTML(open(url));
+-      id = CGI.unescape_html o.at(".quote a b").children.to_s.strip.gsub("\r","").gsub("#","")
+-      id.to_s
++    def initialize
++      @name, @shortname, @url = "Bash.org", "bash", "http://bash.org/"
++      @id_path_template = "?%<id>s"
++      @random_path = "?random"
++      @latest_path = "?latest"
+     end
+ 
+-    def retrieve_quote(params={})
+-      params = { lines: @lines }.merge(params)
+-
+-      o = Nokogiri::HTML(open(@url))
+-      raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".qt").nil?
++    def by_id(id)
++      o = Nokogiri::HTML(open(@url + (@id_path_template % {id: id})))
++      raise QDB::Error::QuoteNotFound.new(id), "Quote ##{id} does not exist." if o.at(".qt").nil?
+       quotes = CGI.unescape_html o.at(".qt").children.to_s.gsub(/[\r\n]/,"")
+-      quotes = quotes.split(/<br *\/?>/i)
++      Quote.new(id, quotes.split(/<br *\/?>/i))
++    end
++    
++    def random
++      self.by_id(get_first_id(@url + @random_path))
++    end
+ 
+-      params[:lines] > -1 ? quotes[0..params[:lines]-1] : quotes[0..params[:lines]]
++    def latest
++      self.by_id(get_first_id(@url + @latest_path))
+     end
+ 
+-    def retrieve_meta
+-      o = Nokogiri::HTML(open(@url))
+-      raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".quote").nil?
+-      rating = o.at(".quote").children.to_s.match(/\((-?\d+)\)/)[1]
++    private
+ 
+-      "Rating: #{rating}"
++    def get_first_id(url)
++      o = Nokogiri::HTML(open(url))
++      o.at(".quote a b").children.to_s.strip.gsub("\r","").gsub("#","").to_i
+     end
+-  end
+ 
+-end
++  end
++end
+\ No newline at end of file
+diff --git a/lib/plugins/qdb/qdbus.rb b/lib/plugins/qdb/qdbus.rb
+index 8edfcc2..6188d8c 100644
+--- a/lib/plugins/qdb/qdbus.rb
++++ b/lib/plugins/qdb/qdbus.rb
+@@ -1,47 +1,37 @@
+-# -*- coding: utf-8 -*-
+-
+-require 'open-uri'
+-require 'nokogiri'
+-require 'cgi'
+-
+ require_relative 'base'
+ 
+ module QDB
++  class QdbUS < Base # Inheriting Base
+ 
+-  class Qdbus < Base
+-    def initialize(*args)
+-      @fullname = "Qdb.us"
+-      @base_url = "http://qdb.us/"
+-      @path_template = "?%<id>s"
+-      super
+-    end
++    # attr_reader :name, :shortname, :url, :id_path_template, :random_path, :latest_path
+ 
+-    def retrieve_latest_quote_id
+-      url = "#{@base_url}"
+-      o = Nokogiri::HTML(open(url));
+-      id = CGI.unescape_html o.at(".q .ql").children.to_s.strip.gsub("\r","").gsub("#","")
+-      id.to_s
++    def initialize
++      @name, @shortname, @url = "Qdb.us", "us", "http://qdb.us/"
++      @id_path_template = "%<id>s"
++      @random_path = "random"
+     end
+ 
+-    def retrieve_quote(params={})
+-      params = { lines: @lines }.merge(params)
+-
+-      o = Nokogiri::HTML(open(@url))
+-      raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".qt").nil?
++    def by_id(id)
++      o = Nokogiri::HTML(open(@url + (@id_path_template % {id: id})))
++      raise QDB::Error::QuoteNotFound.new(id), "Quote ##{id} does not exist." if o.at(".qt").nil?
+       quotes = CGI.unescape_html o.at(".qt").children.to_s.gsub(/[\r\n]/,"")
+-      quotes = quotes.split(/<br *\/?>/i)
++      Quote.new(id, quotes.split(/<br *\/?>/i))
++    end
++    
++    def random
++      self.by_id(get_first_id(@url + @random_path))
++    end
+ 
+-      params[:lines] > -1 ? quotes[0..params[:lines]-1] : quotes[0..params[:lines]]
++    def latest
++      self.by_id(get_first_id(@url))
+     end
+ 
+-    def retrieve_meta
+-      o = Nokogiri::HTML(open(@url))
+-      raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".qt").nil?
+-      rating_qs = CGI.unescape_html o.at(".q b span").children.to_s
+-      rating_qvc = CGI.unescape_html o.at(".q > span").children.to_s
++    private
+ 
+-      "Rating: #{rating_qs}#{rating_qvc}"
++    def get_first_id(url)
++      o = Nokogiri::HTML(open(url))
++      o.at(".q .ql").children.to_s.strip.gsub("\r","").gsub("#","").to_i
+     end
+-  end
+ 
+-end
++  end
++end
+\ No newline at end of file
+diff --git a/lib/plugins/qdb/shakesoda.rb b/lib/plugins/qdb/shakesoda.rb
+index 740b876..c9cf219 100644
+--- a/lib/plugins/qdb/shakesoda.rb
++++ b/lib/plugins/qdb/shakesoda.rb
+@@ -1,49 +1,38 @@
+-# -*- coding: utf-8 -*-
+-
+-require 'open-uri'
+-require 'nokogiri'
+-require 'cgi'
+-
+ require_relative 'base'
+ 
+ module QDB
++  class Shakesoda < Base # Inheriting Base
+ 
+-  class Shakesoda < Base
+-    def initialize(*args)
+-      @fullname = "#shakesoda QDB"
+-      @base_url = "http://www.shakesoda.org/qdb/"
+-      @path_template = "view/%<id>s"
+-      super
+-    end
++    # attr_reader :name, :shortname, :url, :id_path_template, :random_path, :latest_path
+ 
+-    def retrieve_latest_quote_id
+-      url = "#{@base_url}"
+-      o = Nokogiri::HTML(open(url));
+-      id = CGI.unescape_html o.at(".quote .quote-header a").children.to_s.strip.gsub("\r","").gsub("#","")
+-      id.to_s
++    def initialize
++      @name, @shortname, @url = "#shakesoda", "ss", "http://www.shakesoda.org/qdb/"
++      @id_path_template = "view/%<id>s"
+     end
+ 
+-    def retrieve_quote(params={})
+-      params = { lines: @lines }.merge(params)
+-
+-      o = Nokogiri::HTML(open(@url))
+-      raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".quote").nil?
++    def by_id(id)
++      o = Nokogiri::HTML(open(@url + (@id_path_template % {id: id})))
++      raise QDB::Error::QuoteNotFound.new(id), "Quote ##{id} does not exist." if o.at(".quote").nil?
+       quotes = CGI.unescape_html o.at(".quote-content").children.to_s.gsub("\r","")
+-      quotes = quotes.split(/<br *\/?>/i)
++      Quote.new(id, quotes.split(/<br *\/?>/i))
++    end
++    
++    def random
++      o = Nokogiri::HTML(open(@url))
++      random = o.css(".quote .quote-header a[href*=\"qdb/view\"]").to_a.sample.inner_text.gsub("#",'')
++      self.by_id(random)
++    end
+ 
+-      params[:lines] > -1 ? quotes[0..params[:lines]-1] : quotes[0..params[:lines]]
++    def latest
++      self.by_id(get_first_id(@url))
+     end
+ 
+-    def retrieve_meta
+-      o = Nokogiri::HTML(open(@url))
+-      raise QDB::QuoteDoesNotExistError.new(@id), "Quote ##{@id} does not exist." if o.at(".quote").nil?
+-      
+-      score = o.xpath('//div[@class="quote-header"]/span[@class="score"]')[0].content
+-      subscore_up = o.xpath('//div[@class="quote-header"]/span[@class="subscores"]/a[@class="upvotes"]')[0].content
+-      subscore_down = o.xpath('//div[@class="quote-header"]/span[@class="subscores"]/a[@class="downvotes"]')[0].content
++    private
+ 
+-      "#{score} (#{subscore_up}/#{subscore_down})"
++    def get_first_id(url)
++      o = Nokogiri::HTML(open(@url))
++      o.css(".quote .quote-header a[href*=\"qdb/view\"]").to_a.first.inner_text.gsub("#",'')
+     end
+-  end
+ 
+-end
++  end
++end
+\ No newline at end of file
+diff --git a/lib/plugins/silly.rb b/lib/plugins/silly.rb
+index f8ae6d3..cd17b33 100644
+--- a/lib/plugins/silly.rb
++++ b/lib/plugins/silly.rb
+@@ -2,6 +2,7 @@ require 'active_support/time'
+ require 'active_support/core_ext/string'
+ require 'active_support/core_ext/object/blank'
+ require_relative '../modules/stringhelpers'
++require 'date'
+ 
+ module Plugins
+   class Silly
+@@ -109,5 +110,19 @@ module Plugins
+       end
+     end
+ 
++    match "mayan", method: :mayan
++    def mayan(m)
++      msd = (Date.today.jd - Date.new(1,1,1).jd) + 1137142
++      lc = {
++        baktun: (msd - (msd % 144000)) / 144000,
++        katun:  ((msd - (msd % 7200)) / 7200) % 20,
++        tun:    ((msd - (msd % 360)) / 360) % 20,
++        uinal:  ((msd - (msd % 20)) / 20) % 18,
++        kin:    (msd % 20)
++      }
++
++      m.reply "#{lc[:baktun]}.#{lc[:katun]}.#{lc[:tun]}.#{lc[:uinal]}.#{lc[:kin]}"
++    end
++
+   end
+ end
+diff --git a/lib/plugins/time_ban.rb b/lib/plugins/time_ban.rb
+index b8c1eef..998cadb 100644
+--- a/lib/plugins/time_ban.rb
++++ b/lib/plugins/time_ban.rb
+@@ -24,6 +24,7 @@ module Plugins
+         v = @redis.hgetall k
+         @bot.loggers.debug "TIMEBAN: Loading timed ban for #{k.split(":")[-1]} from Redis: #{v.inspect}"
+         channel, nick = *k.match(/(.+):(.+):(.+)/)[2..3]
++        
+         if Time.now < Time.parse(v["when.unbanned"])
+           @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.parse(v["when.unbanned"]) - Time.now}"
+           Timer(Time.parse(v["when.unbanned"]) - Time.now, shots: 1) {
+@@ -32,6 +33,16 @@ module Plugins
+         else # If the timeban already expired, unban on connect.
+           unban(channel, nick)
+         end
++
++        # Re-arming the ban and kicking the evader, if ban does not exist for some reason.
++        if !m.channel.bans.any? {|ban| ban.mask.eql? v["ban.host"] }
++          @bot.loggers.debug "TIMEBAN: Re-arming ban: #{v["ban.host"]}; TTL: #{Time.parse(v["when.unbanned"]) - Time.now}"
++          m.channel.ban(v["ban.host"])
++          m.channel.users.each_key {|user| 
++            next unless user.mask("*!*@%h") == v["ban.host"] # Unlikely, but could happen.
++            m.channel.kick(user, "Automatically banned for #{time_diff_in_natural_language(Time.now, v["when.unbanned"], acro: false)} by #{m.user.nick} (#{v["ban.reason"]})") 
++          }
++        end
+       }
+     end
+ 
+@@ -84,18 +95,22 @@ module Plugins
+         "when.unbanned" => unbantime,
+         "banned.by" => m.user.nick,
+         "ban.reason" => reason,
+-        "ban.host" => User(nick).mask("*!*@%h") }
++        "ban.host" => User(nick).mask("*!*@%h")}#, 
++        #{}"associated.nicks" => [] }
+ 
++      # KICKBAN HIM!
++      m.channel.ban(fields["ban.host"]);
++      m.channel.users.each_key {|user| 
++        next unless user.mask("*!*@%h") == fields["ban.host"]
++        m.channel.kick(user, "Banned for #{time_diff_in_natural_language(Time.now, fields["when.unbanned"], acro: false)} by #{m.user.nick} (#{fields["ban.reason"]})") 
++        #fields["associated.nicks"] << user.nick
++      }
+ 
++      # Recording the ban
+       @bot.loggers.debug "TIMEBAN: HMSET \"timeban:#{m.channel.name}:#{nick}\": #{fields.inspect}"
+       # schema: timeban:channel:nick (ex: timeban:#shakesoda:kp_centi)
+       @redis.hmset "timeban:#{m.channel.name.downcase}:#{nick.downcase}", *fields.flatten
+ 
+-      # KICKBAN HIM!
+-      m.channel.ban(fields["ban.host"]);
+-      m.channel.kick(nick, "Banned for #{time_diff_in_natural_language(Time.now, fields["when.unbanned"], acro: false)} by #{m.user.nick} (#{fields["ban.reason"]})");
+-      @bot.loggers.debug "TIMEBAN: Kickbanned #{nick} from #{m.channel.name}: #{fields.inspect}"
+-
+       @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.at(fields["when.unbanned"]) - Time.now}"
+       Timer(Time.at(fields["when.unbanned"]) - Time.now, shots: 1) {
+         unban(m.channel.name, nick)
+diff --git a/lib/plugins/twitter.rb b/lib/plugins/twitter.rb
+index 4a65b2d..055ccdd 100644
+--- a/lib/plugins/twitter.rb
++++ b/lib/plugins/twitter.rb
+@@ -81,32 +81,6 @@ module Plugins
+         end
+       end
+ 
+-      listen_to :channel, method: :listen_channel
+-      def listen_channel(m)
+-        return if m.user.name ~= /^auxilium$/ # Temporary solution for blocking bots.
+-        urlregexp = /(https?:\/\/twitter.com\/(?:#!\/)?(\w+)(?:\/status(?:es)?\/(\d+))?)/i
+-        return unless m.message =~ urlregexp
+-        urls = m.message.scan(urlregexp)
+-        urls.each {|url|
+-          username, id = url[1..2]
+-          if id.blank?
+-            result = tweet_by_username(username: username)
+-            if is_notice?(result)
+-              m.user.notice result.message
+-            else
+-              m.reply result.message
+-            end
+-          else
+-            result = tweet_by_id(id: id)
+-            if is_notice?(result)
+-              m.user.notice result.message
+-            else
+-              m.reply result.message
+-            end
+-          end
+-        }
+-      end
+-
+     end
+   end
+ end
+diff --git a/lib/plugins/twitter/formatter.rb b/lib/plugins/twitter/formatter.rb
+index b4ab93d..03616ec 100644
+--- a/lib/plugins/twitter/formatter.rb
++++ b/lib/plugins/twitter/formatter.rb
+@@ -8,7 +8,7 @@ module Plugins
+       def format_tweet(tweet)
+         tweet_text = expand_uris(tweet.text, tweet.attrs["entities"]["urls"])
+         parts, head, body, tail, urls = [], [], [], [], []
+-        head = Format(:aqua,"#{tweet.user.screen_name} »")
++        head = Format(:bold,"#{tweet.user.screen_name} »")
+         body << CGI::unescapeHTML(tweet_text.gsub("\n", " ").squeeze(" "))
+         body << Format(:aqua,"*twoosh*") if tweet.text.length == 140
+         tail << "From #{tweet.place.full_name}" if !tweet.place.blank?
+@@ -17,19 +17,19 @@ module Plugins
+         urls << "https://twitter.com/#{tweet.user.screen_name}"
+         urls << Format(:grey,"in reply to") if !tweet.in_reply_to_screen_name.blank?
+         urls << "http://twitter.com/#{tweet.in_reply_to_screen_name}#{"/statuses/#{tweet.in_reply_to_status_id.to_s}" if !tweet.in_reply_to_status_id.blank?}" if !tweet.in_reply_to_screen_name.blank?
+-        parts = [head, body, Format(:grey,["(", tail.join(" "), ")"].join), urls].flatten
++        parts = [head, body, ["(", tail.join(" "), ")"].join, urls].flatten
+         parts.join(" ")
+       end
+ 
+       def format_search(tweet)
+         tweet_text = expand_uris(tweet.text, tweet.attrs["entities"]["urls"])
+         parts, head, body, tail, urls = [], [], [], [], []
+-        head = Format(:aqua,"#{tweet.from_user} »")
++        head = Format(:bold,"#{tweet.from_user} »")
+         body << CGI::unescapeHTML(tweet_text.gsub("\n", " ").squeeze(" "))
+         body << Format(:aqua,"*twoosh*") if tweet.text.length == 140
+         tail << "at #{tweet.created_at.strftime("%B %-d, %Y, %-I:%m%P")}"
+         urls << "https://twitter.com/#{tweet.from_user}"
+-        parts = [head, body, Format(:grey,["(", tail.join(" "), ")"].join), urls].flatten
++        parts = [head, body, ["(", tail.join(" "), ")"].join, urls].flatten
+         parts.join(" ")
+       end
+ 
+diff --git a/lib/plugins/weather.rb b/lib/plugins/weather.rb
+index e96407f..44225b5 100644
+--- a/lib/plugins/weather.rb
++++ b/lib/plugins/weather.rb
+@@ -55,6 +55,8 @@ module Plugins
+         out << "Visibility: #{w.visibility.kilometers || w.visibility.km} km (#{w.visibility.miles || w.visibility.m} mi)" if !w.visibility.nil?
+         out << "Sunrise/set: #{w.sun.rise}, #{w.sun.set}" if !w.sun.nil?
+ 
++        
++
+         "Current weather for #{m.location.name || m.query} as of #{m.measured_at}: #{out.reject(&:blank?).join("; ")}."
+ 
+       rescue
