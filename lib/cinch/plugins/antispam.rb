@@ -1,82 +1,97 @@
-require_relative "../admin"
-require_relative '../helpers/table_format'
+require_relative "../helpers/check_user"
 
 module Cinch
   module Plugins
-    module AntiSpam
-      class Kicker
-        include Cinch::Plugin
+    class AntiSpam
+      include Cinch::Plugin
+      attr_reader :command_abusers
 
-        set plugin_name: "Antispam Kicker", help: "Kicks those who spam prefixed bot commands.", required_options: [:limit_seconds, :limit_commands]
+      class Abuser
+        attr_reader :kick_count, :current
 
-        attr_reader :abusers
-
-        def initialize(*args)
-          super
-          @abusers = {}
-          @@abuser = Struct.new :abuse_count, :first_message_time, :last_message_time
-          @kicks = 0
-        end
-
-        def delete_abuser!(nick)
-          @abusers.delete(nick)
-        end
-
-        listen_to :kick, method: :listen_to_exit
-        listen_to :quit, method: :listen_to_exit
-        def listen_to_exit(m)
-          return unless @abusers.has_key?(m.user.nick)
-          delete_abuser! m.user.nick
-        end
-
-        listen_to :channel, method: :listen_to_commandspam
-        def listen_to_commandspam(m)
-          trec = Time.now.to_i
-          message = m.message
-          return unless message.match(/^[-!\.%\?](?![-!\.%\?]+)/) && message.length > 1
-          if @abusers.has_key? m.user.nick
-            if (Time.now - @abusers[m.user.nick][:first_message_time]) <= config[:limit_seconds] && (Time.now - @abusers[m.user.nick][:last_message_time]) <= (config[:limit_seconds] / 2)
-                @abusers[m.user.nick][:abuse_count] = @abusers[m.user.nick][:abuse_count].succ
-                @abusers[m.user.nick][:last_message_time] = Time.now
-                #@bot.handlers.dispatch :antispam, m, "#{m.user.nick}'s command abuse count has been increased to #{@abusers[m.user.nick][:abuse_count]}.", m.target
-              if @abusers[m.user.nick][:abuse_count] >= config[:limit_commands]
-                m.channel.kick(m.user,"You have spammed commands #{@abusers[m.user.nick][:abuse_count]} times in #{(Time.now - @abusers[m.user.nick][:first_message_time]).round(2)} seconds.")
-                #m.user.msg "You have used too many bot commands in a short period of time. Cool down and go get a drink, okay?"
-                @abusers.delete m.user.nick
-                @bot.handlers.dispatch :antispam, m, "#{m.user.nick} has been kicked and their abuse record deleted.", m.target
-                #@bot.handlers.dispatch :antispam, m, "#{m.user.nick} has been notified and their abuse record deleted.", m.target
-              end
-            else
-              @abusers.delete m.user.nick
-              #@bot.handlers.dispatch :antispam, m, "#{m.user.nick}'s abuse record has been deleted (for good behaviour).", m.target
-            end
-          else
-            @abusers[m.user.nick] = @@abuser.new 1, Time.now, Time.now
-            #@bot.handlers.dispatch :antispam, m, "A new command abuse record has been created for #{m.user.nick}.", m.target
+        Current = Struct.new(:first_offence, :last_offence, :timer, :count) do          
+          def increment_count!
+            self.count = self.count.succ
           end
         end
+        
+        def initialize
+          @kick_count = 0
+          @current = Current.new(Time.now, Time.now, nil, 0)
+        end
 
-        listen_to :antispam_list, method: :listen_to_listabusers
-        def listen_to_listabusers(m)
-          @bot.handlers.dispatch :antispam_list_response, m, @abusers
+        def increment_current!
+          @current.increment_count!
+          @current.last_offence = Time.now
+        end
+
+        def reset_current!
+          @current = Current.new(Time.now, Time.now, nil, 0)
+        end
+
+        def delete_current_and_increment_kick_count!
+          @kick_count, @current = @kick_count.succ, nil
         end
       end
 
-      class Lister
-        include Cinch::Plugin
-        include Cinch::Admin
-        set plugin_name: "Antispam Lister", help: "List those who spam prefixed bot commands.", react_on: :private, required_options: [:admins]
-        match /^list abusers/, use_prefix: false
-        def execute(m)
-          @bot.handlers.dispatch :antispam_list, m
+      set plugin_name: 'Anti-spam', help: 'to be written', required_options: [:command_threshold, :seconds_threshold, :kick_threshold_for_ban]
+
+      def initialize(*args)
+        super
+        @command_abusers = {}
+      end
+
+      listen_to :channel, method: :listen_to_spam
+      def listen_to_spam(m)
+        d = "spam".object_id
+        #return if check_user(m.channel, m.user)
+        return unless m.message.match(/^[[:punct:]]+\w+/)
+
+        if @command_abusers[m.user] # record exists
+          record = @command_abusers[m.user]
+
+          record.reset_current! unless record.current
+
+          # The timer will run once after seconds_threshold * 120 runs. That is,
+          # if seconds_threshold is set to 30, then timer code will run in an hour.
+          record.current.timer = Timer(config[:seconds_threshold] * 120, shots: 1) do
+            @command_abusers.delete(m.user)
+          end
+
+          record.increment_current!
+          
+          if (record.current.last_offence - record.current.first_offence) <= config[:seconds_threshold] && record.current.count == config[:command_threshold]
+            if record.kick_count < config[:kick_threshold_for_ban]
+              m.channel.kick(m.user, "You have spammed commands #{record.current.count} times in #{(record.current.last_offence - record.current.first_offence).round(2)} seconds.")
+              record.delete_current_and_increment_kick_count!
+            else
+              m.channel.ban(m.user)
+              m.channel.kick(m.user, "You have spammed commands #{record.current.count} times in #{(record.current.last_offence - record.current.first_offence).round(2)} seconds and been kicked #{record.kick_count} times.")
+              @command_abusers.delete(m.user) # Erase record after kickban
+            end
+          elsif (record.current.last_offence - record.current.first_offence) > config[:seconds_threshold]
+            # Reset if user ran a command after the threshold
+            record.reset_current!
+          end
+        else # creating a new record
+          record = Abuser.new
+          record.current.increment_count!
+          record.current.timer = Timer(config[:seconds_threshold] * 120, shots: 1) do
+            # Delete abuse record after timer has elapsed.
+            @command_abusers.delete(m.user)
+          end
+          @command_abusers[m.user] = record
         end
-        listen_to :antispam_list_response
-        def listen(m, abusers)
-          return unless is_trusted?(m.user)
-          abusers = abusers.to_a.map {|e| "%s\t%d\t%s\t%s" % [e[0], e[1][:abuse_count], e[1][:first_message_time], e[1][:last_message_time]] }
-          m.user.msg Helpers::table_format(abusers, gutter: 4, justify: [:left,:right,:left,:left], headers: ["Nick","Abuse count","First Message","Last Message"]), true
-        end
+
+        Channel("##shakesoda").msg "#{d} | #{@command_abusers[m.user].inspect}"
+        
+        @bot.handlers.dispatch :antispam, m, [d,@command_abusers[m.user]], m.target
       end
     end
   end
 end
+
+__END__
+[2012/07/25 20:16:26.179] !! /home/azure/.rvm/gems/ruby-1.9.3-p194/gems/cinch-2.0.3/lib/cinch/timer.rb:79:in `initialize': undefined method `on' for 3600:Fixnum (NoMethodError)
+[2012/07/25 20:16:26.179] !!    /home/azure/azurebot_scaffolding/lib/cinch/plugins/antispam.rb:66:in `new'
+[2012/07/25 20:16:26.179] !!    /home/azure/azurebot_scaffolding/lib/cinch/plugins/antispam.rb:66:in `listen_to_spam'
