@@ -15,7 +15,7 @@ module Cinch
 
       def initialize(*args)
         super
-        Kernel.trap('INT') { @bot.quit("Cinch #{Cinch::VERSION}")}
+        Kernel.trap('INT') { @bot.quit("assimilated into the borg.") }
       end
 
       match /join (.+)/, method: :join
