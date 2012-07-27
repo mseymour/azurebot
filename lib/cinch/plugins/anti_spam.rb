@@ -90,8 +90,3 @@ module Cinch
     end
   end
 end
-
-__END__
-[2012/07/25 20:16:26.179] !! /home/azure/.rvm/gems/ruby-1.9.3-p194/gems/cinch-2.0.3/lib/cinch/timer.rb:79:in `initialize': undefined method `on' for 3600:Fixnum (NoMethodError)
-[2012/07/25 20:16:26.179] !!    /home/azure/azurebot_scaffolding/lib/cinch/plugins/antispam.rb:66:in `new'
-[2012/07/25 20:16:26.179] !!    /home/azure/azurebot_scaffolding/lib/cinch/plugins/antispam.rb:66:in `listen_to_spam'
