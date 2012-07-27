@@ -9,7 +9,7 @@ module Cinch
         user.authed?
     end
 
-    def is_trusted? (user)
+    def is@@trusted? (user)
       cc = Channel(shared[:controlchannel])
       cc.users.member?(user) &&
         cc.users[user].any? {|mode| @@types[:trusted].include? mode } &&
