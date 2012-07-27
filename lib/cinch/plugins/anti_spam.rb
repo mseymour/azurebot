@@ -82,8 +82,6 @@ module Cinch
           end
           @command_abusers[m.user] = record
         end
-
-        Channel("##shakesoda").msg "#{d} | #{@command_abusers[m.user].inspect}"
         
         @bot.handlers.dispatch :antispam, m, [d,@command_abusers[m.user]], m.target
       end
