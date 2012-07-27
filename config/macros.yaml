@@ -1,3 +1,4 @@
+qb: ! "\x0301,00／人\x0304,00◕\x0301,00 ‿‿ \x0304,00◕\x0301,00人＼\x03 Quick <in>, make a contract with me and become a mahou shoujo!"
 ruffty: <<ruffty>> thats hot
 # --- INSERTED 12:09AM 2012-02-18
 pandemic: http://www.crazymonkeygames.com/Pandemic-2.html
@@ -36,7 +37,7 @@ dickpunch:
     msg: punches <in> in the dick
 despair: I AM IN DESPAIR! {A,<in>} HAS LEFT ME IN DESPAIR!!
 # ---
-sip: http://www.wallpapergravity.com/wallpapers2/212/212684.jpg
+sip: http://mkv25.net/anime/Lucky%20Star/kagami_large.png
 alart:
   type: random
   lines:
@@ -140,3 +141,24 @@ fact:
     - Why didn't you get those breast implants, <in>?
     - <in>, I love you.
 haha: HA! HA! I'm using the <in,INTERNET>!!!1
+judgement: JAJUMENTO DESU NO!
+baka:
+  type: random
+  lines:
+    - What are you, an idiot?
+    - ANTA BAKA!
+    - ANTA FULL BAKA!
+    - BWAKA! BWAKA!!
+    - BAKA BAKA BAKA~!
+    - <in> is a bwaka!!
+sinistar:
+  type: random
+  lines:
+    - Beware, I live!
+    - I hunger, coward!
+    - I am Sinistar!
+    - Run! Run! Run!
+    - Beware, coward!
+    - I hunger!
+    - type: action
+      msg: roars!
