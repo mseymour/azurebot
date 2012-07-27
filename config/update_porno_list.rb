@@ -25,7 +25,8 @@ current_list = pornos["channels"].each_with_object([]) {|channel,memo|
 }.uniq
 
 (current_list - stored_list).each {|title| puts "New title: #{title}"}
+puts "No new titles were added." if (current_list - stored_list).empty?
 
-open(yaml_file_name, 'w+') {|file| file.write (stored_list | current_list).to_yaml }
+open(yaml_file_name, 'w+') {|file| file.write((stored_list | current_list).to_yaml) }
 
 puts "Update successful."
