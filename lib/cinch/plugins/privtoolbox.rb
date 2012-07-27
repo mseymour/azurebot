@@ -28,7 +28,6 @@ module Cinch
         @bot.handlers.dispatch :private_admin, m, "said to #{user}: #{text}", m.target
       end
 
-
       match /act (#\S+) (.+)/, method: :act
       def act(m, channel, text)
         return unless is_trusted?(m.user)
@@ -41,6 +40,24 @@ module Cinch
         return unless is_admin?(m.user)
         User("chanserv").send(text)
         @bot.handlers.dispatch :private_admin, m, "chanserv: #{text}", m.target
+      end
+
+      match "reidentify", method: :reidentify
+      def reidentify(m)
+        return unless is_admin?(m.user)
+        identify_plugin = @bot.plugins.find {|plugin| plugin.class == Cinch::Plugins::Identify }
+        if identify_plugin
+          identify_plugin.identify(nil)
+        elsif @bot.config.sasl.password
+          @bot.handlers.dispatch :private_admin, m, "SASL is enabled; restart @bot or manually re-identify with /msg #{@bot.nick} ns identify <password>.", m.target
+        else
+          if @bot.config.password
+            @bot.handlers.dispatch :private_admin, m, "Cinch::Plugins::Identify is not configured! Attempting to use server password for nickserv identification...", m.target
+            User("nickserv").send("identify #{@bot.config.password}")
+          else
+            @bot.handlers.dispatch :private_admin, m, "Cinch::Plugins::Identify is not configured, cannot re-identify to services.", m.target
+          end
+        end
       end
 
       match /ns (.+)/, method: :ns
