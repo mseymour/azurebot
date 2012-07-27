@@ -29,10 +29,10 @@ module Cinch
         Channel(shared[:controlchannel]).msg prettify(nick: m.user.nick, source: m.target.name, type: "ADMIN", string: message)
       end
 
-      #listen_to :antispam, method: :listen_hook_antispam
-      #def listen_hook_antispam(m, message, target)
-        #Channel(shared[:controlchannel]).msg ":antispam m: #{m.inspect}; message: #{message.inspect}; target: #{target.inspect}; command: #{m.command}; events: #{m.events.inspect}"
-      #end
+      listen_to :antispam, method: :listen_hook_antispam
+      def listen_hook_antispam(m, message, target)
+        Channel(shared[:controlchannel]).msg prettify(nick: m.user.nick, source: m.target.name, type: "ANTISPAM", string: "#{message.first} | kick count: #{message.last.kick_count}; first offence: #{(Time.now - message.last.current.first_offence).round(4)}s; last offence: #{(Time.now - message.last.current.last_offence).round(4)}s; count: #{message.last.current.count}")
+      end
 
       private
 
@@ -43,7 +43,11 @@ module Cinch
           type: "---",
           string: ""
         }.merge params
-        "#{Format(:bold, "%<type>s")} [%<nick>s/%<source>s] %<string>s" % params
+        if params[:nick].eql?(params[:source])
+          "#{Format(:bold, "%<type>s")} [%<source>s] %<string>s" % params
+        else
+          "#{Format(:bold, "%<type>s")} [%<nick>s/%<source>s] %<string>s" % params
+        end
       end
 
     end
