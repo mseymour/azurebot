@@ -48,8 +48,10 @@ module Cinch
           "I... I'm cumming from my womb! I've never cum so hard in my whole life!",
           "DO IT! DO IT! Pour your cum all over my unborn fetus! \x0304♥\x03",
           "Dick! Dick! Hard! Hard! Yeah! Yeah! Yeah! P-pussy c-cumming~!!",
+          "Ahe.. \x0304♥\x03 Beniiis \x0304♥\x03 Benis feels good... \x0304♥\x03 Ma, maru..\x0304♥\x03",
+          "NHooOooooo! \x0304♥\x03 It came! Benis milk came! \x0304♥\x03"
         ]
-        @adj1 = %w{big colossal fat gigantic great huge immense large little mammoth massive miniature petite puny scrawny short small tall teeny teeny-tiny tiny}
+        @adj1 = %w{big colossal fat gigantic great huge immense large little mammoth massive miniature petite puny scrawny short small teeny teeny-tiny tiny}
       end
 
       match /lewd\s?(\d+)?/, method: :execute_lewd
