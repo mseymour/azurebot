@@ -17,7 +17,7 @@ module Cinch
         
         def initialize
           @kick_count = 0
-          @current = Current.new(Time.now, Time.now, nil, 0)
+          @current = Current.new(Time.now, Time.now, nil, 1)
         end
 
         def increment_current!
@@ -26,7 +26,7 @@ module Cinch
         end
 
         def reset_current!
-          @current = Current.new(Time.now, Time.now, nil, 0)
+          @current = Current.new(Time.now, Time.now, nil, 1)
         end
 
         def delete_current_and_increment_kick_count!
@@ -75,7 +75,7 @@ module Cinch
           end
         else # creating a new record
           record = Abuser.new
-          record.current.increment_count!
+          #record.current.increment_count!
           record.current.timer = Timer(config[:seconds_threshold] * 120, shots: 1) do
             # Delete abuse record after timer has elapsed.
             @command_abusers.delete(m.user)
