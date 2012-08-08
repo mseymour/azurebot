@@ -43,7 +43,7 @@ module Cinch
         unknown:''
       }
 
-      match /w(?:eather|x)((?> -)[[:alpha:]]+)? (.+)/, method: :execute_weather
+      match /w(?:eather|x)(?:(?> -)([[:alpha:]]+))? (.+)/, method: :execute_weather
       def execute_weather(m, switches, query)
         # Switch handling
         metric, simple = true, false
@@ -71,7 +71,7 @@ module Cinch
         m.user.notice "#{Format(:red,:bold,"Uhoh!")} · #{errmsg}"
       end
 
-      match /forecast((?> -)[[:alpha:]]+)? (.+)/, method: :execute_forecast
+      match /forecast(?:(?> -)([[:alpha:]]+))? (.+)/, method: :execute_forecast
       def execute_forecast(m, switches, query)
         # Switch handling
         metric = true
@@ -117,26 +117,26 @@ module Cinch
         co = result.current_observation
         al = result.almanac
         as = result.moon_phase
-        degrees = '°'<<units[:t].upcase
+        degrees = '°' << units[:t].upcase
 
         outside = []
         outside << co.weather + " #{@@unicon[co.icon.intern]}" unless co.weather.blank?
-        outside << "#{co['temp_'<<units[:t]]}#{degrees}"
-        outside << "feels like #{co['feelslike_'<<units[:t]]}#{degrees}" unless co['feelslike_'<<units[:t]].to_s.eql?(co['temp_'<<units[:t]].to_s)
+        outside << "#{co['temp_' << units[:t]]}#{degrees}"
+        outside << "feels like #{co['feelslike_' << units[:t]]}#{degrees}" unless co['feelslike_' << units[:t]].to_s.eql?(co['temp_' << units[:t]].to_s)
         conditions = {
-          "High/Low" => hilo(al.temp_high.normal[units[:t].upcase]<<degrees,
-                             al.temp_low.normal[units[:t].upcase]<<degrees),
-          "Dew point" => "#{co['dewpoint_'<<units[:t]]}#{degrees}",
+          "High/Low" => hilo(al.temp_high.normal[units[:t].upcase] << degrees,
+                             al.temp_low.normal[units[:t].upcase] << degrees),
+          "Dew point" => "#{co['dewpoint_' << units[:t]]}#{degrees}",
           "Humidity" => co.relative_humidity,
-          "Precip" => precip(co['precip_1hr_'<<units[:p][0]]+" #{units[:p][1]}",
-                             co['precip_today_'<<units[:p][0]]+" #{units[:p][1]}"),
+          "Precip" => precip(co['precip_1hr_' << units[:p][0]]+" #{units[:p][1]}",
+                             co['precip_today_' << units[:p][0]]+" #{units[:p][1]}"),
           "Wind" => wind(co.wind_dir, 
-                         "#{co['wind_'<<units[:s]]} #{units[:s]}", 
-                         "#{co['wind_gust_'<<units[:s]]} #{units[:s]}"),
-          "Wind chill" => "#{co['windchill_'<<units[:t]]}#{degrees}",
-          "Heat index" => "#{co['heat_index_'<<units[:t]]}#{degrees}",
+                         "#{co['wind_' << units[:s]]} #{units[:s]}", 
+                         "#{co['wind_gust_' << units[:s]]} #{units[:s]}"),
+          "Wind chill" => "#{co['windchill_' << units[:t]]}#{degrees}",
+          "Heat index" => "#{co['heat_index_' << units[:t]]}#{degrees}",
           "Pressure" => "#{(co.pressure_mb.to_f / 10.00).round(2)} kPa #{pressure_trend(co.pressure_trend)}",
-          "Visibility" => "#{co['visibility_'<<units[:d]]} #{units[:d]}",
+          "Visibility" => "#{co['visibility_' << units[:d]]} #{units[:d]}",
           "UV Index" => (uv_string(co.UV) + " (#{co.UV})" unless co.UV.to_f < 0),
           "Sunrise/set" => ["#{DateTime.parse([as.sunrise.hour,as.sunrise.minute] * ":").strftime("%-l:%M%P")}",
                             "#{DateTime.parse([as.sunset.hour,as.sunrise.minute] * ":").strftime("%-l:%M%P")}"] * ", ",
@@ -157,9 +157,9 @@ module Cinch
           "Current weather for #{co.display_location.full}:"
         end
 
-        foot = "The full forecast can be viewed at #{co.forecast_url + "?apiref=3fc95544aab994a0"}"
+        foot = is_minimal ? co.forecast_url : "The full forecast can be viewed at #{co.forecast_url}"
 
-        [head,[*outside,collected.join("; ")].join(", ")<<'.',foot] * "\n"
+        [head,[*outside,collected.join("; ")].join(", ") << '.',foot] * (is_minimal ? " " : "\n")
       end
 
       def pressure_trend(pt)
