@@ -114,9 +114,7 @@ module Cinch
         result = Cinch::Plugins::Weather::Wx.new(config[:api_key]).get(query, :conditions, :almanac, :astronomy)
         raise StandardError, result.response.error if result.response.error
 
-        co = result.current_observation
-        al = result.almanac
-        as = result.moon_phase
+        co, al, as = result.current_observation, result.almanac, result.moon_phase
         degrees = '°' << units[:t].upcase
 
         outside = []
@@ -198,11 +196,11 @@ module Cinch
 
       def uv_string(uv)
         case uv.to_i
-        when 0..2 then "Low" #Format(:green,"Low")
-        when 3..5 then "Moderate" #Format(:yellow,"Moderate")
-        when 6..7 then "High" #Format(:orange,"High")
-        when 8..10 then "Very High" #Format(:red,"Very High")
-        when 11..Float::INFINITY then "Extreme" #Format(:violet,"Extreme")
+        when 0..2 then Format(:green,"Low")
+        when 3..5 then Format(:yellow,"Moderate")
+        when 6..7 then Format(:orange,"High")
+        when 8..10 then Format(:red,"Very High")
+        when 11..Float::INFINITY then Format(:violet,"Extreme")
         else
           uv
         end
