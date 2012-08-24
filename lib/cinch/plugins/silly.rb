@@ -33,13 +33,13 @@ module Cinch
           when 4
             m.reply "I said, do NOT poke the bot!"
           when 5
-            m.channel.kick m.user, "WHAT ARE YOU, AN IDIOT? I SAID DO NOT POKE ME!!"
+            m.channel.kick m.user, ["WHAT ARE YOU, AN IDIOT? I SAID DO NOT POKE ME!!","THIS! IS! SPARTA!!"].sample
             @pokers.delete(m.user)
           end
         end
       end
 
-      match /\b(dumb|stupid)\b.+\bbot\b/i, method: :execute_botinsult, use_prefix: false
+      match /\b(dumb|stupid)\b.+\bbots*\b/i, method: :execute_botinsult, use_prefix: false
       def execute_botinsult(m); m.reply ["Stupid human!","Dumb human!","Stupid meatbag.","Silly human, your insults cannot harm me!"].sample if m.user.nick != "TempTina"; end
 
       def tzparser(tz)
