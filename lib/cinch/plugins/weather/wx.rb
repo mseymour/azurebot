@@ -1,4 +1,3 @@
-require 'ap'
 require 'httparty'
 require 'hashie'
 
