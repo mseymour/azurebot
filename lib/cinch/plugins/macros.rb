@@ -27,8 +27,9 @@ module Cinch
         end
       end
 
-      match /(\w+) ?(.+)?/, method: :execute_macro
-      def execute_macro m, macro, arguments
+      match /(\S+) (.+)?/, method: :execute_macro, group: :macro
+      match /(\S+)/, method: :execute_macro, group: :macro
+      def execute_macro m, macro, arguments=nil
 
         selection = @macros[macro]
 
