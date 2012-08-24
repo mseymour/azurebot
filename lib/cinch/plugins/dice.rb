@@ -11,6 +11,16 @@ module Cinch
 
       match /^(.+)/, use_prefix: false
       def execute(m, s)
+        return unless Boneroller.is_valid?(s)
+
+        turn = Boneroller::Dice.new(s)
+        turn.roll
+        m.reply turn.to_s(true)
+      
+      rescue Boneroller::Errors::RollTooHighError => e
+        m.reply "I don't have enough dice to roll that! Try something that is <= #{Boneroller::Dice::HIGH_ROLL_THRESHOLD}."
+      rescue Boneroller::Errors::RollTooLowError => e
+        m.reply "#{m.user.nick} is shooting the wind!"
       end
     end
   end
