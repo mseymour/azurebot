@@ -11,7 +11,7 @@ module Cinch
       
       def initialize(*args)
         super
-        @redis = Redis.new
+        @redis = shared[:redis]
       end
       
       match /define (.+?) as (.+)/, method: :execute_define

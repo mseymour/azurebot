@@ -14,7 +14,7 @@ module Cinch
 
       def initialize(*args)
         super
-        @redis = Redis.new
+        @redis = shared[:redis]
       end
 
       listen_to :join, method: :on_join
