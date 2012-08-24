@@ -51,9 +51,6 @@ module Boneroller
       !@rolls.empty?
     end
 
-    def highest_roll_dropped?; @highest_roll_dropped; end
-    def lowest_roll_dropped?; @lowest_roll_dropped; end
-
     def to_s(include_rolls=false)
       rolls = @rolls.each_with_object([]) {|(notation,results),memo|
         memo << "[%s(%d)=%s]" % [notation, sum_ofArray(results), results * ","]
@@ -70,7 +67,7 @@ module Boneroller
     def attack_roll(dice, faces)
       dice ||= 1
       # Rolls a die `dice` times, and returns the result of a random roll between 1 and the number of faces.
-      results = dice.to_i.times.each_with_object([]) {|roll, result| result << Random.rand(1..faces.to_i) }
+      results = Array.new(dice.to_i) { Random.rand(1..faces.to_i) }
       @rolls << ["#{dice}d#{faces}", results]
       results.inject(0, :+) # sum of results
     end
@@ -94,21 +91,17 @@ module Boneroller
         end
 
         case lh
-        when "-L"
-          roll_result -= sum_ofArray(low_roll.last)
-          @lowest_roll_dropped = true
-        when "-H"
-          roll_result -= sum_ofArray(high_roll.last)
-          @highest_roll_dropped = true
+        when "-L" then roll_result -= sum_ofArray(low_roll[1])
+        when "-H" then roll_result -= sum_ofArray(high_roll[1])
         end
         
         roll_result
       }
     end
 
-    def sum_ofArray(r)
-      r.respond_to?(:reduce) ? r.reduce(0, :+) : r
-    end
+    #def sum_ofArray(r)
+      #r.respond_to?(:reduce) ? r.reduce(0, :+) : r
+    #end
 
     def avg_ofArray(r)
       r.respond_to?(:reduce) ? r.reduce { |sum, el| sum + el }.to_f / r.size : r
@@ -116,13 +109,13 @@ module Boneroller
 
     def low_roll
       @rolls.to_a.sort {|(_,a),(_,b)| 
-        sum_ofArray(a) - avg_ofArray(a) <=> sum_ofArray(b) - avg_ofArray(b) 
+        avg_ofArray(a) <=> avg_ofArray(b) 
       }.first
     end
 
     def high_roll
       @rolls.to_a.sort {|(_,a),(_,b)| 
-        sum_ofArray(a) - avg_ofArray(a) <=> sum_ofArray(b) - avg_ofArray(b) 
+        avg_ofArray(a) <=> avg_ofArray(b) 
       }.last
     end
   end
