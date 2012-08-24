@@ -27,8 +27,10 @@ module Cinch
         }
       end
 
-      match /part(?: (\S+)\s?(.+)?)?/, method: :part
-      def part(m, channel, msg)
+      match 'part', method: :part, group: :part
+      match /part (\S+)/, method: :part, group: :part
+      match /part (\S+) (.+)/, method: :part, group: :part
+      def part(m, channel=nil, msg=nil)
         return unless is_admin?(m.user)
         channel ||= m.channel.name
         msg ||= m.user.nick
@@ -36,8 +38,9 @@ module Cinch
         @bot.handlers.dispatch :admin, m, "Parted #{channel}#{" - #{msg}" unless msg.nil?}", m.target
       end
 
-      match /quit(?: (.+))?/, method: :quit
-      def quit(m, msg)
+      match 'quit', method: :quit, group: :quit
+      match /quit (.+)/, method: :quit, group: :quit
+      def quit(m, msg=nil)
         return unless is_admin?(m.user)
         msg ||= m.user.nick
         @bot.handlers.dispatch :admin, m, "I am being shut down NOW!#{" - Reason: " + msg unless msg.nil?}", m.target

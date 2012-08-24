@@ -124,7 +124,7 @@ module Cinch
         channel.kick(user, msg)
         @bot.handlers.dispatch :admin, m, "Kickbanned #{user} (#{mask.to_s}) from #{channel.name}#{" - \"#{msg}\"" unless msg.nil?}", m.target
       end
-
+      
     end
   end
 end
