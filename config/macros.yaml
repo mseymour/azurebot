@@ -6,8 +6,8 @@ headbutt: IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONN
 emergency: http://www.emergencyyodel.com/
 carl:
   - CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARL
-  - seconds: 5
-    msg: "{A,<in,that>} KILLS PEOPLE"
+  - seconds: 2
+    msg: "THAT KILLS {A,<in,people>}"
 dnf: OH GOD HELL IS FREEZING OVER! Duke Nukem Forever ACTUALLY FUCKING CAME OUT!
 nigger: NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA
 dinner: http://www.whatthefuckshouldimakefordinner.com/
@@ -162,3 +162,227 @@ sinistar:
     - I hunger!
     - type: action
       msg: roars!
+walpurgis:
+  type: random
+  lines:
+    - wallpaper night
+    - brazillian night
+    - Whataburger Night
+    - WaltDisney Night
+    - Walnutshell night
+    - wallawalla night
+    - Wisconsin night
+    - Walrus Punching Night
+    - Walmart Night
+    - White-out Night
+    - Waluigi night
+    - walmart night 
+    - waffle house night
+    - Walparty night
+    - walrus derp night
+    - Walpurgis Night
+    - whargarlb night
+    - Worcestershire Night
+    - where's waldo night
+    - whaleplanet night
+    - West Park Night
+    - wednesday night
+    - warturtle night
+    - walolpurgingnight
+    - lolipurging night
+    - Wcdonaldsnight
+    - warnerbros night
+    - warhammer night
+    - WeGoingToWallyWallyWallyWallyWallyWorld Night
+    - Wailord Night
+    - worcester sauce night
+    - Wololo wololo night
+    - wanpiss night
+    - Wachovia Night
+    - warthogpuma night
+    - walappalachian night
+    - wimplednunpuncher night
+    - Wifflebat night
+meguca.ep1:
+  type: random
+  lines:
+    - Meduka
+    - what is it Coobie?
+    - become Meguca Girl
+    - No Meduka
+    - I become Meguca
+    - for Kyusiko
+    - won't let you
+    - why
+    - I become Meguca?
+    - 'no'
+    - what I wish for?
+    - please
+    - no Meduka no
+    - don't listen to Hameru
+    - we your friends Meduka!
+    - what I do?
+    - I protect Meduka and Kyusiko
+    - thank you Seyiku
+    - but
+    - it okay
+    - | 
+      oh why me
+      Mumi why
+    - go back
+    - too late
+    - fight!
+    - I protect friends!
+    - stop
+    - being Meguka is suffering
+meguca.ep2:
+  type: random
+  lines:
+    - why fight?
+    - because
+    - it can't be helped
+    - i do not understand...
+    - Meguca must fight!
+    - i protect Meguka!
+    - protect happy times!
+    - stop
+    - must become strong...
+    - |
+      Seyiku is weak
+      i need Meduka
+    - night is coming
+    - why we fight?
+    - i will rescue Seyiku
+    - we must fight!
+    - must not lose!
+    - i will... fight
+    - '!'
+    - |
+      no!
+      must not fight!
+    - do not throw souls!
+    - what is happened?
+    - Meduka...
+    - why this happen!?
+    - why...
+    - being Meguca is suffering...
+meguca.ep3:
+  type: random
+  lines:
+    - i zombie
+    - Kyusiko mine
+    - why this
+    - listen
+    - Seyiku...
+    - Seyiku will lose it
+    - become Meguca!
+    - Meguca forbiddened
+    - i still relevant
+    - 'no'
+    - i worried
+    - maybe i become meguca
+    - no Meduka
+    - Meduka... rabu...
+    - Seyiku!
+    - now...
+    - i've lost it
+    - being Meguca is suffering...
+meguca.ep4:
+  type: random
+  lines:
+    - Seyiku!
+    - Seyiku lost it
+    - why you say this
+    - Seyiku why
+    - you know why...
+    - it okay Meduka
+    - sool jim turn to greef sid
+    - must be way back
+    - i save Seyiku!
+    - nnnndRRrrRfffhgrejh
+    - stop Seyiku
+    - Kyaku...
+    - Meduka...
+    - ...
+    - h-hello
+    - Hameru is cool!
+    - Meduka is beauty
+    - i become Meguca!
+    - for Meduka!
+    - help Meduka
+    - promise Meduka
+    - protect Meduka
+    - RABU!
+    - Hameru...
+    - being Meguca is suffering...
+meguca.ep5:
+  type: random
+  lines:
+    - the fate of Meduka
+    - |
+      no
+      fate of all Meguca
+    - i defeat brazilian night
+    - Meduka... rabu
+    - hameru can win?
+    - huehuehuehuehuehuehuehue
+    - |
+      this time
+      i protect Meduka!
+    - die!
+    - huahuahuahuahua
+    - why
+    - it okay hameru
+    - i know now
+    - must save Megucas
+    - no Meduka
+    - coobie
+    - ...
+    - i become Meguca!
+    - '!!!!!!!!!!!!!!!!'
+    - i will
+    - end suffering!
+    - HUEHUEHUEHhudfheasjdh
+    - Meduka don't go
+    - |
+      it okay
+      hameru... rabu
+    - sool jim no longer turn to greef sid
+    - meduka meduka meduka
+    - |
+      that's right
+      Meduka
+    - |
+      as i fight
+      she watch me
+    - |
+      so i pray
+      never to forget
+    - that being Meguca was suffering! 
+meduka:
+  - being Meguka is suffering
+kuma:
+  - 　　 ∩＿＿＿∩
+  - 　　 | ノ　　　　　 ヽ
+  - 　　/　　●　　　● |　クマ──！！
+  - 　 |　　　　( _●_)　 ミ
+  - 　彡､　　　|∪|　　､｀＼
+  - /　＿＿　 ヽノ　/´>　 )
+  - (＿＿＿）　　　/　(_／
+  - 　|　　　　　　 /
+  - 　|　　／＼　＼
+  - 　|　/　　　 )　 )
+  - 　∪　　　 （　 ＼
+  - 　　　　　　 ＼＿)
+shii:
+  - 　　　　　∧ ∧＿__　　Hay guys!
+  - 　 　／(*ﾟーﾟ)　／＼
+  - 　／|￣∪∪￣|＼／
+  - 　 　|　 　 　 　 |／
+  - 　 　 ￣￣￣￣ 
+monaspeak:
+  - 　　　 ∧＿∧
+  - 　　　（　・∀・）　＜　<in,NO U!>
+  - 　　　（　　　　）
+  - 　　　｜ ｜ ｜　
+  - 　　　（＿_）＿）　
