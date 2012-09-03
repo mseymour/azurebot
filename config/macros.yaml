@@ -1,5 +1,20 @@
-qb: ! "\x0301,00／人\x0304,00◕\x0301,00 ‿‿ \x0304,00◕\x0301,00人＼\x03 Quick <in>, make a contract with me and become a mahou shoujo!"
-ruffty: <<ruffty>> thats hot
+test:
+  - 'Single tag test:'
+  - ---
+  - "  in: [in]; bot: [bot]; self: [self]; channel: [channel];"
+  - ---
+  - "tag test with default text ('default text'):"
+  - "  in: (default text)[in]; bot: (default text)[bot]; self: (default text)[self]; channel: (default text)[channel];"
+  - ---
+  - "tag test with transformation:"
+  - "  cap/*: in: cap/[in]; bot: cap/[bot]; self: cap/[self]; channel: cap/[channel];"
+  - "  lc/*: in: lc/[in]; bot: lc/[bot]; self: lc/[self]; channel: lc/[channel];"
+  - ---
+  - "tag test with transformation and default ('default text'):"
+  - "  cap/*: in: cap/(default text)[in]; bot: cap/(default text)[bot]; self: cap/(default text)[self]; channel: cap/(default text)[channel];"
+  - "  lc/*: in: lc/(default text)[in]; bot: lc/(default text)[bot]; self: lc/(default text)[self]; channel: lc/(default text)[channel];"
+qb: "\x0301,00／人\x0304,00◕\x0301,00 ‿‿ \x0304,00◕\x0301,00人＼\x03 Quick [in], make a contract with me and become a mahou shoujo!"
+ruffty: <ruffty> thats hot
 # --- INSERTED 12:09AM 2012-02-18
 pandemic: http://www.crazymonkeygames.com/Pandemic-2.html
 headbutt: IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA
@@ -7,7 +22,7 @@ emergency: http://www.emergencyyodel.com/
 carl:
   - CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARL
   - seconds: 2
-    msg: "THAT KILLS {A,<in,people>}"
+    lines: 'THAT KILLS cap/(people)[in]'
 dnf: OH GOD HELL IS FREEZING OVER! Duke Nukem Forever ACTUALLY FUCKING CAME OUT!
 nigger: NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA
 dinner: http://www.whatthefuckshouldimakefordinner.com/
@@ -33,114 +48,147 @@ ruckus:
     - Don't trust them new niggers over there.
 liru: WHATS UP NIGGAS IM LIRU WHATCHU GONNA DO WITH SOME MATSUKA BEEF NUKKKKKKA
 dickpunch: 
-  - type: action
-    msg: punches <in> in the dick
-despair: I AM IN DESPAIR! {A,<in>} HAS LEFT ME IN DESPAIR!!
+  sent_as: action
+  lines: "punches [in] in the dick"
+despair: "I AM IN DESPAIR! cap/[in] HAS LEFT ME IN DESPAIR!!"
 # ---
 sip: http://mkv25.net/anime/Lucky%20Star/kagami_large.png
 alart:
   type: random
   lines:
-    - /!\ {A,<in,ALART>} /!\
-    - /// {A,<in,ALART>} ///
-    - \\\ {A,<in,ALART>} \\\
+  - /!\ cap/(ALART)[in] /!\
+  - /// cap/(ALART)[in] ///
+  - /// cap/(ALART)[in] \\\
 bod:
-  - <in> should go eat a bag full of DICKS!!!!
+  - "[in] should go eat a bag full of DICKS!!!!"
 alice:
-  - "{A,<in,alice>}"
-  - WHO THE !@*$ IS {A,<in,alice>}
+  - cap/(alice)[in]
+  - WHO THE !@*$ IS cap/(alice)[in]
 hi5:
-  - "<in>: http://www.ihighfive.com/"
-  #- "<in> (from <self>): http://www.ihighfive.com/"
+  - "[in] (from [self]): http://www.ihighfive.com/"
 drpepper:
-  - type: action
-    msg: dispenses a Dr Pepper for <in>
+  sent_as: action
+  lines: dispenses a Dr Pepper for [in]
 drink:
+  sent_as: action
   type: random
   lines:
-    - type: action
-      msg: gets <in> a dr pepper
-    - type: action
-      msg: gets <in> a coke
-    - type: action
-      msg: gets <in> a pepsi
-    - type: action
-      msg: gets <in> a glass of Sussex Golden ginger ale
+  - gets [in] a dr pepper
+  - gets [in] a coke
+  - gets [in] a pepsi
+  - gets [in] a glass of Sussex Golden ginger ale
+  - gets [in] a glass of Canada Dry ginger ale
+  - gets [in] a can of TaB
+  - gets [in] a can of Mtn Dew
+  - gets [in] a can of Fresca
+  - gets [in] a can of Snapple
+  - gets [in] a can of A&W Root Beer
+  - gets [in] a can of Orange Crush
 juggernaut:
   type: random
   lines:
-    - Silly bitch, your weapons cannot harm me!
-    - Don't you know who the fuck I am?
-    - I'm the Juggernaut, bitch!
-    - Got my pimp cane, bitch!
-    - I'll beat the shit out ya, Charles
-    - This is a Dodge.
-    - I'm ketchup, motherfucker.
-    - I'm made of Laffy Taffy.
-    - I'm going kill him, and rape him, and eat his fuckin' costume.
-    - Comb your beard. I don't wanna hear that shit.
-    - I'm a part-time stripper and I do hair.
-    - I'm the Juggernaut, bitch, and I gots a bitch wit me!
-    - I wonder what the fuck is on tv tonight.
-    - What up, mon ami?
-    - Initiate laser dodging!
-    - Not as long as I'm wearin' these Jamaican colors!
-    - My breasts are good for something.
-    - Jugg's gotcha!
-    - And in this corner the welterweight champion The Juggernaut, bitch! Why the fuck is this shit fallin'?
-    - I like yo raincoat!
-    - Optimus muthafuckin' Prime?!
+  - Silly bitch, your weapons cannot harm me!
+  - Don't you know who the fuck I am?
+  - I'm the Juggernaut, bitch!
+  - Got my pimp cane, bitch!
+  - I'll beat the shit out ya, Charles
+  - This is a Dodge.
+  - I'm ketchup, motherfucker.
+  - I'm made of Laffy Taffy.
+  - I'm going kill him, and rape him, and eat his fuckin' costume.
+  - Comb your beard. I don't wanna hear that shit.
+  - I'm a part-time stripper and I do hair.
+  - I'm the Juggernaut, bitch, and I gots a bitch wit me!
+  - I wonder what the fuck is on tv tonight.
+  - What up, mon ami?
+  - Initiate laser dodging!
+  - Not as long as I'm wearin' these Jamaican colors!
+  - My breasts are good for something.
+  - Jugg's gotcha!
+  - And in this corner the welterweight champion The Juggernaut, bitch! Why the fuck
+    is this shit fallin'?
+  - I like yo raincoat!
+  - Optimus muthafuckin' Prime?!
 dcoil:
     type: random
     lines:
-    - "1: \"According to rumors among the other kids, many cases of pets going missing have been occurring in Daikoku City recently.\""
-    - "2: \"According to urban legend, kids who call out to Miss Michiko are sent to the 'other side'.\""
-    - "3: \"According to rumors in the industry, there are some hidden functions in the glasses that are better left unmentioned.\""
-    - "4: \"According to rumors on the Net, a few years ago an Encoder tried to devastate the Space. But nobody knows what happened to this Encoder.\""
-    - "5: \"According to rumors on the Net, it's said that you can sometimes find data such as sounds or images inside metabugs. But nobody really knows where they come from.\""
-    - "6: \"According to the newspapers, there's an increasing rate of car accidents involving kids wearing glasses.\""
-    - "7: \"According to rumors circulating among some people, if you think constantly about a person you want to meet, you'll suddenly end up seeing them.\""
-    - "8: \"According to urban legends, kids that have fallen asleep with their cyberglasses on have ended up going to the 'other side'.\""
-    - "9: \"According to rumors told by kids, Miss Michiko's true identity is whispered to be that of an illegal.\""
-    - "10: \"According to rumors on the Net, long before glasses ever hit the market, Nakatsu Crossroads was a mysterious place - the site of many accidents.\""
-    - "11: \"According to certain statistics, if a sixth grade male and female fight, the female has a higher probability of winning.\""
-    - "12: \"According to rumors amongst Bearded Ones, when it's 5550 minutes, Lady Yasako will take them to the promised land.\""
-    - "13: \"According to an old folk saying, normally, people are supposed to know what path they should pursue. But despite this, they tend to lose sight of the most important path.\""
-    - "14: \"According to rumors from the industry, the reason the Micet series was taken off the market was because it facilitated breaches of privacy such as covert photography and eavesdropping.\""
-    - "15: \"According to rumors among the kids from the other side of the station, in the deepest part of obsolete Space lives a dangerous Illegal.\""
-    - "16: \"According to industry rumors, the first company that produced the glasses discovered a technique that allowed you to change things you imagined into cybersubstances. But nobody really knows how it ended up.\""
-    - "17: \"What happens to people when they die? Where do their souls go? Nobody knows the truth.\""
-    - "18: \"According to rumors on the net, the process of creating and developing the glasses encompasses a complex history with many interesting points.\""
-    - "19: \"According to rumors among informed people, there is a deep connection between Imago and Cybercures.\""
-    - "20: \"According to my old memories, the body I was given was an empty shell, without life.\""
-    - "21: \"According to the history of glasses development, in the past they researched many techniques for projection.\""
-    - "22: \"According to industry rumors, Megamass wasn't able to remove the Imago function, so they reformatted the Space instead.\""
-    - "23: \"According to the Nulls, by eating the seed of pain, they became creatures whose goal is pain itself.\""
-    - "24: \"According to Yuko Amasawa, the path of feelings that connects people is thin and breaks easily.\""
-    - "25: \"According to the Coil data, in the beginning, the Null Carrier was a radar device that collected pieces of souls.\""
-    - "26: \"According to urban legends, after they die, cyberpets go live somewhere else.\""
+    - ! '1: "According to rumors among the other kids, many cases of pets going missing
+      have been occurring in Daikoku City recently."'
+    - ! '2: "According to urban legend, kids who call out to Miss Michiko are sent to
+      the ''other side''."'
+    - ! '3: "According to rumors in the industry, there are some hidden functions in the
+      glasses that are better left unmentioned."'
+    - ! '4: "According to rumors on the Net, a few years ago an Encoder tried to devastate
+      the Space. But nobody knows what happened to this Encoder."'
+    - ! '5: "According to rumors on the Net, it''s said that you can sometimes find data
+      such as sounds or images inside metabugs. But nobody really knows where they come
+      from."'
+    - ! '6: "According to the newspapers, there''s an increasing rate of car accidents
+      involving kids wearing glasses."'
+    - ! '7: "According to rumors circulating among some people, if you think constantly
+      about a person you want to meet, you''ll suddenly end up seeing them."'
+    - ! '8: "According to urban legends, kids that have fallen asleep with their cyberglasses
+      on have ended up going to the ''other side''."'
+    - ! '9: "According to rumors told by kids, Miss Michiko''s true identity is whispered
+      to be that of an illegal."'
+    - ! '10: "According to rumors on the Net, long before glasses ever hit the market,
+      Nakatsu Crossroads was a mysterious place - the site of many accidents."'
+    - ! '11: "According to certain statistics, if a sixth grade male and female fight,
+      the female has a higher probability of winning."'
+    - ! '12: "According to rumors amongst Bearded Ones, when it''s 5550 minutes, Lady
+      Yasako will take them to the promised land."'
+    - ! '13: "According to an old folk saying, normally, people are supposed to know what
+      path they should pursue. But despite this, they tend to lose sight of the most important
+      path."'
+    - ! '14: "According to rumors from the industry, the reason the Micet series was taken
+      off the market was because it facilitated breaches of privacy such as covert photography
+      and eavesdropping."'
+    - ! '15: "According to rumors among the kids from the other side of the station, in
+      the deepest part of obsolete Space lives a dangerous Illegal."'
+    - ! '16: "According to industry rumors, the first company that produced the glasses
+      discovered a technique that allowed you to change things you imagined into cybersubstances.
+      But nobody really knows how it ended up."'
+    - ! '17: "What happens to people when they die? Where do their souls go? Nobody knows
+      the truth."'
+    - ! '18: "According to rumors on the net, the process of creating and developing the
+      glasses encompasses a complex history with many interesting points."'
+    - ! '19: "According to rumors among informed people, there is a deep connection between
+      Imago and Cybercures."'
+    - ! '20: "According to my old memories, the body I was given was an empty shell, without
+      life."'
+    - ! '21: "According to the history of glasses development, in the past they researched
+      many techniques for projection."'
+    - ! '22: "According to industry rumors, Megamass wasn''t able to remove the Imago
+      function, so they reformatted the Space instead."'
+    - ! '23: "According to the Nulls, by eating the seed of pain, they became creatures
+      whose goal is pain itself."'
+    - ! '24: "According to Yuko Amasawa, the path of feelings that connects people is
+      thin and breaks easily."'
+    - ! '25: "According to the Coil data, in the beginning, the Null Carrier was a radar
+      device that collected pieces of souls."'
+    - '26: "According to urban legends, after they die, cyberpets go live somewhere else."'
 fact:
   type: random
   lines:
-    - Go to the kitchen, <in>.
-    - Go back to the kitchen, <in>.
-    - Stop walking into walls, <in>.
-    - Make me a sandwich, <in>.
-    - "<in>: Home Economics is that way."
-    - "<in>: Go and lose ten pounds--no, wait, make it 50."
-    - Be quiet <in>, the adults are talking.
-    - How cute <in>, you think your opinion matters.
-    - Looks like <in> is our new village bicycle.
-    - <in>, please remove your muffin top from this room.
-    - <in>, cover up your god damn face. It's revolting.
-    - Great, <in> is here. Out of the way everyone, thunder thighs is in the room.
-    - Hey <in>, why are you online. There is no laptop in the kitchen.
-    - <in> warms the cockles of my heart, MUA HA HA HA HA!
-    - Hey, hey, <in>, I have a better idea. EAT A FUCKING DICK YOU SMELLY CUNT!
-    - <in>, if I have sex with you without permission, is it rape or shoplifting?
-    - Why didn't you get those breast implants, <in>?
-    - <in>, I love you.
-haha: HA! HA! I'm using the <in,INTERNET>!!!1
+  - Go to the kitchen, [in].
+  - Go back to the kitchen, [in].
+  - Stop walking into walls, [in].
+  - Make me a sandwich, [in].
+  - ! '[in]: Home Economics is that way.'
+  - ! '[in]: Go and lose ten pounds--no, wait, make it 50.'
+  - Be quiet [in], the adults are talking.
+  - How cute [in], you think your opinion matters.
+  - Looks like [in] is our new village bicycle.
+  - ! '[in], please remove your muffin top from this room.'
+  - ! '[in], cover up your god damn face. It''s revolting.'
+  - Great, [in] is here. Out of the way everyone, thunder thighs is in the room.
+  - Hey [in], why are you online. There is no laptop in the kitchen.
+  - ! '[in] warms the cockles of my heart, MUA HA HA HA HA!'
+  - Hey, hey, [in], I have a better idea. EAT A FUCKING DICK YOU SMELLY CUNT!
+  - ! '[in], if I have sex with you without permission, is it rape or shoplifting?'
+  - Why didn't you get those breast implants, [in]?
+  - ! '[in], I love you.'
+haha: HA! HA! I'm using the (INTERNET)[in]!!!1
 judgement: JAJUMENTO DESU NO!
 baka:
   type: random
@@ -150,7 +198,7 @@ baka:
     - ANTA FULL BAKA!
     - BWAKA! BWAKA!!
     - BAKA BAKA BAKA~!
-    - <in> is a bwaka!!
+    - '[in] is a bwaka!!'
 sinistar:
   type: random
   lines:
@@ -160,8 +208,8 @@ sinistar:
     - Run! Run! Run!
     - Beware, coward!
     - I hunger!
-    - type: action
-      msg: roars!
+    - sent_as: action
+      lines: roars!
 walpurgis:
   type: random
   lines:
@@ -203,186 +251,3 @@ walpurgis:
     - walappalachian night
     - wimplednunpuncher night
     - Wifflebat night
-meguca.ep1:
-  type: random
-  lines:
-    - Meduka
-    - what is it Coobie?
-    - become Meguca Girl
-    - No Meduka
-    - I become Meguca
-    - for Kyusiko
-    - won't let you
-    - why
-    - I become Meguca?
-    - 'no'
-    - what I wish for?
-    - please
-    - no Meduka no
-    - don't listen to Hameru
-    - we your friends Meduka!
-    - what I do?
-    - I protect Meduka and Kyusiko
-    - thank you Seyiku
-    - but
-    - it okay
-    - | 
-      oh why me
-      Mumi why
-    - go back
-    - too late
-    - fight!
-    - I protect friends!
-    - stop
-    - being Meguka is suffering
-meguca.ep2:
-  type: random
-  lines:
-    - why fight?
-    - because
-    - it can't be helped
-    - i do not understand...
-    - Meguca must fight!
-    - i protect Meguka!
-    - protect happy times!
-    - stop
-    - must become strong...
-    - |
-      Seyiku is weak
-      i need Meduka
-    - night is coming
-    - why we fight?
-    - i will rescue Seyiku
-    - we must fight!
-    - must not lose!
-    - i will... fight
-    - '!'
-    - |
-      no!
-      must not fight!
-    - do not throw souls!
-    - what is happened?
-    - Meduka...
-    - why this happen!?
-    - why...
-    - being Meguca is suffering...
-meguca.ep3:
-  type: random
-  lines:
-    - i zombie
-    - Kyusiko mine
-    - why this
-    - listen
-    - Seyiku...
-    - Seyiku will lose it
-    - become Meguca!
-    - Meguca forbiddened
-    - i still relevant
-    - 'no'
-    - i worried
-    - maybe i become meguca
-    - no Meduka
-    - Meduka... rabu...
-    - Seyiku!
-    - now...
-    - i've lost it
-    - being Meguca is suffering...
-meguca.ep4:
-  type: random
-  lines:
-    - Seyiku!
-    - Seyiku lost it
-    - why you say this
-    - Seyiku why
-    - you know why...
-    - it okay Meduka
-    - sool jim turn to greef sid
-    - must be way back
-    - i save Seyiku!
-    - nnnndRRrrRfffhgrejh
-    - stop Seyiku
-    - Kyaku...
-    - Meduka...
-    - ...
-    - h-hello
-    - Hameru is cool!
-    - Meduka is beauty
-    - i become Meguca!
-    - for Meduka!
-    - help Meduka
-    - promise Meduka
-    - protect Meduka
-    - RABU!
-    - Hameru...
-    - being Meguca is suffering...
-meguca.ep5:
-  type: random
-  lines:
-    - the fate of Meduka
-    - |
-      no
-      fate of all Meguca
-    - i defeat brazilian night
-    - Meduka... rabu
-    - hameru can win?
-    - huehuehuehuehuehuehuehue
-    - |
-      this time
-      i protect Meduka!
-    - die!
-    - huahuahuahuahua
-    - why
-    - it okay hameru
-    - i know now
-    - must save Megucas
-    - no Meduka
-    - coobie
-    - ...
-    - i become Meguca!
-    - '!!!!!!!!!!!!!!!!'
-    - i will
-    - end suffering!
-    - HUEHUEHUEHhudfheasjdh
-    - Meduka don't go
-    - |
-      it okay
-      hameru... rabu
-    - sool jim no longer turn to greef sid
-    - meduka meduka meduka
-    - |
-      that's right
-      Meduka
-    - |
-      as i fight
-      she watch me
-    - |
-      so i pray
-      never to forget
-    - that being Meguca was suffering! 
-meduka:
-  - being Meguka is suffering
-kuma:
-  - 　　 ∩＿＿＿∩
-  - 　　 | ノ　　　　　 ヽ
-  - 　　/　　●　　　● |　クマ──！！
-  - 　 |　　　　( _●_)　 ミ
-  - 　彡､　　　|∪|　　､｀＼
-  - /　＿＿　 ヽノ　/´>　 )
-  - (＿＿＿）　　　/　(_／
-  - 　|　　　　　　 /
-  - 　|　　／＼　＼
-  - 　|　/　　　 )　 )
-  - 　∪　　　 （　 ＼
-  - 　　　　　　 ＼＿)
-shii:
-  - 　　　　　∧ ∧＿__　　Hay guys!
-  - 　 　／(*ﾟーﾟ)　／＼
-  - 　／|￣∪∪￣|＼／
-  - 　 　|　 　 　 　 |／
-  - 　 　 ￣￣￣￣ 
-monaspeak:
-  - 　　　 ∧＿∧
-  - 　　　（　・∀・）　＜　<in,NO U!>
-  - 　　　（　　　　）
-  - 　　　｜ ｜ ｜　
-  - 　　　（＿_）＿）　
