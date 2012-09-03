@@ -28,7 +28,7 @@ module Cinch
     
       match /redefine (.+?) as (.+)/, method: :execute_redefine
       def execute_redefine(m, term, dfn)
-        return m.reply("You do not have the proper access! (not +qaoh)", true) unless check_user(m.channel.users, m.user)
+        return m.reply("You do not have the proper access! (not +qaoh)", true) unless check_user(m.channel, m.user)
         if @redis.exists("term:"+term.downcase)
           old_dfn = @redis.hgetall("term:"+term.downcase)
           edited = "(last edited by #{old_dfn["edited.by"]}, #{time_diff_in_natural_language(old_dfn["edited.time"], Time.now, acro: true)} ago)"
@@ -43,7 +43,7 @@ module Cinch
     
       match /forget (.+)/, method: :execute_forget
       def execute_forget(m, term)
-        return m.reply("You do not have the proper access! (not +qaoh)", true) unless check_user(m.channel.users, m.user)
+        return m.reply("You do not have the proper access! (not +qaoh)", true) unless check_user(m.channel, m.user)
         if @redis.exists("term:"+term.downcase)
           dfn = @redis.hgetall("term:"+term.downcase)
           edited = "(last edited by #{dfn["edited.by"]}, #{time_diff_in_natural_language(dfn["edited.time"], Time.now, acro: true)} ago)"
