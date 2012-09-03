@@ -27,7 +27,7 @@ module Cinch
       # :bot -- What to display for the "bot_name" field.
       # All fields in the text file must be surrounded by '<>', and lines can be commented out using '#'.
 
-      match /^info$/i, use_prefix: false
+      match 'info', use_prefix: false
       def execute(m)
         tags = {
           bot_name: @bot.nick,
@@ -57,7 +57,7 @@ module Cinch
         m.user.notice tf.parse
       end
 
-      match /^list plugins$/i, method: :execute_list, use_prefix: false
+      match 'list plugins', method: :execute_list, use_prefix: false
       def execute_list(m)
         list = []
         @bot.plugins.each {|p| list << p.class.plugin_name };

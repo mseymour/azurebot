@@ -24,8 +24,8 @@ module Cinch
         @@qdbs = Hash[*names.flatten]
       end
 
-      match /qdb\s?(\w+)?\s?(.+)?/, method: :execute_qdb
-      def execute_qdb m, selector, id
+      match /qdb(?: (\w+))(?: (.+))/, method: :execute_qdb, group: :x_qdb
+      def execute_qdb m, selector=nil, id=nil
         m.reply "You have not supplied a selector. Selectors: #{@@qdbs.keys * ", "}" and return if !selector
         m.reply "#{selector} does not exist. Valid selectors: #{@@qdbs.keys * ", "}" and return if !@@qdbs.include?(selector)
 

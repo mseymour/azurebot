@@ -6,7 +6,7 @@ module Cinch
       include Cinch::Plugin
       set(
         plugin_name: "Ping",
-        help: "Pings you or a target via CTCP, and reports the number of milliseconds on recieving a response.\nUsage: `!ping <nick>`")
+        help: "Pings you or a target via CTCP, and reports the number of milliseconds on recieving a response.\nUsage: `!ping [nick]`")
 
       attr_accessor :listen_for_ping
 
@@ -15,8 +15,8 @@ module Cinch
         @listen_for_ping = {}
       end
 
-      match /ping(?:\s(\S+))?/i
-      def execute(m, nick)
+      match /ping(?: (\S+))/, group: :x_ping
+      def execute(m, nick=nil)
         nick = m.user.nick if nick.blank?
         user = User(nick)
         return m.reply "You cannot make me ping myself!" if user == @bot

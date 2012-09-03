@@ -35,8 +35,8 @@ module Cinch
         @@attackdict.sample % {:target => grab_random_nick(targets), :assailant => assailant, :bot => @bot.nick};
       end
 
-      match /attack\s?(.+)?/
-      def execute(m, target)
+      match /attack(?: (.+))/, group: :attack
+      def execute(m, target=nil)
         target = m.user.nick if !target.nil? && target.among_case?(@bot.nick, "herself", "himself", "itself");
         target.gsub!(/(\bmy\b)/i,m.user.nick+"'s") if !target.nil?;
 

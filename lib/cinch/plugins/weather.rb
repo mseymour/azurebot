@@ -157,7 +157,7 @@ module Cinch
 
         foot = is_minimal ? co.forecast_url : "The full forecast can be viewed at #{co.forecast_url}"
 
-        [head,[*outside,collected.join("; ")].join(", ") << '.',foot] * (is_minimal ? " " : "\n")
+        [head,[*outside,collected.join(" · ")].join(", ") << '.',foot] * (is_minimal ? " " : "\n")
       end
 
       def pressure_trend(pt)

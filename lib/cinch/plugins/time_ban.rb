@@ -66,8 +66,8 @@ module Cinch
 
       match /timeban (\S*) ((?:\d+[yMwdhms])+)\s?(.+)?/
       def execute(m, nick, range, reason)
-        return unless check_user(m.channel.users, m.user)
-        return m.user.notice "I cannot kickban #{nick} because I do not have the correct privileges." unless check_user(m.channel.users, User(@bot.nick))
+        return unless check_user(m.channel, m.user)
+        return m.user.notice "I cannot kickban #{nick} because I do not have the correct privileges." unless check_user(m.channel, User(@bot.nick))
         return if User(nick) == @bot # refuse to kickban the bot
         return if User(nick).unknown? # refuse to ban a user that does not exist
 
@@ -122,8 +122,8 @@ module Cinch
 
       match /unban (\S*)/, method: :execute_unban
       def execute_unban(m, nick)
-        return unless check_user(m.channel.users, m.user)
-        return m.user.notice "I cannot unban #{nick} because I do not have the correct privileges." unless check_user(m.channel.users, User(@bot.nick))
+        return unless check_user(m.channel, m.user)
+        return m.user.notice "I cannot unban #{nick} because I do not have the correct privileges." unless check_user(m.channel, User(@bot.nick))
         return m.user.notice "I cannot find the timeban entry \"timeban:#{m.channel.name.downcase}:#{nick.downcase}\"." if @redis.hgetall("timeban:#{m.channel.name.downcase}:#{nick.downcase}").empty? # Refuse to unban if entry does not exist
         unban(m.channel.name, nick)
       end
@@ -131,7 +131,7 @@ module Cinch
       # TODO: prettier output. Multiple lines?
       match "listbans",  method: :execute_listbans
       def execute_listbans(m)
-        return unless check_user(m.channel.users, m.user)
+        return unless check_user(m.channel, m.user)
         list = []
         
         timebans = @redis.keys "timeban:#{m.channel.name}:*"

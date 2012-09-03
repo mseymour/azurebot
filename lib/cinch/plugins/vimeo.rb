@@ -1,5 +1,6 @@
 # coding: utf-8
 
+require_relative '../helpers/is_channel_disabled'
 require 'httparty'
 
 module Cinch
@@ -14,6 +15,7 @@ module Cinch
 
       listen_to :channel, method: :listen_to_channel
       def listen_to_channel(m)
+        return if is_channel_disabled?(m.channel)
         return unless m.message.match(VIMEO_VIDEO_REGEXP)
         videos = m.message.scan(VIMEO_VIDEO_REGEXP).flatten.reject(&:'nil?').uniq
 

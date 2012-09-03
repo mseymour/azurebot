@@ -27,9 +27,7 @@ module Cinch
         }
       end
 
-      match 'part', method: :part, group: :part
-      match /part (\S+)/, method: :part, group: :part
-      match /part (\S+) (.+)/, method: :part, group: :part
+      match /part(?: (\S+))(?: (.+))/, method: :part, group: :part
       def part(m, channel=nil, msg=nil)
         return unless is_admin?(m.user)
         channel ||= m.channel.name
@@ -38,8 +36,7 @@ module Cinch
         @bot.handlers.dispatch :admin, m, "Parted #{channel}#{" - #{msg}" unless msg.nil?}", m.target
       end
 
-      match 'quit', method: :quit, group: :quit
-      match /quit (.+)/, method: :quit, group: :quit
+      match /quit(?: (.+))/, method: :quit, group: :quit
       def quit(m, msg=nil)
         return unless is_admin?(m.user)
         msg ||= m.user.nick
@@ -51,22 +48,18 @@ module Cinch
       match /nick (.+)/, method: :nick
       def nick(m, nick)
         return unless is_admin?(m.user)
-        botnick = @bot.nick.dup
-        bot.nick=(nick) if nick
+        botnick = @bot.nick.clone
+        bot.nick = nick
         @bot.handlers.dispatch :admin, m, "My nick got changed from #{botnick} to #{@bot.nick} by #{m.user.nick}", m.target
       end
 
-      match 'opadmin', method: :opadmin
-      def opadmin(m)
+      match /eval (.+)/, method: :boteval
+      def boteval(m, s)
         return unless is_admin?(m.user)
-        m.channel.op(m.user.nick);
-        @bot.handlers.dispatch :admin, m, "I have opped #{m.user.nick}.", m.target
-      end
-
-      match 'isupport', method: :isupport
-      def isupport(m)
-        return unless is_admin?(m.user)
-        m.user.notice ap(@bot.irc.isupport)
+        eval(s)
+      rescue => e
+        m.user.msg "%s (%s)" % [e.message, e.class.name]
+        m.user.msg $@.map {|e| "    from #{e}" }.join($/)
       end
 
     end

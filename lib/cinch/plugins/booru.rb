@@ -20,7 +20,6 @@ module Cinch
         "3d" => "http://behoimi.org/post?tags=%<tags>s",
         e621: "http://e621.net/post?tags=%<tags>s",
         nano: "http://booru.nanochan.org/post/list/%<tags>s/1",
-        pony: "http://ponibooru.org/post/list/%<tags>s/1",
         rule34: "http://rule34.paheal.net/post/list/%<tags>s/1",
         katawa: "http://shimmie.katawa-shoujo.com/post/list/%<tags>s/1",
         monster: "http://monstergirlbooru.com/index.php?q=/post/list/%<tags>s/1",
@@ -47,13 +46,12 @@ module Cinch
         selectors[0..-2].join(", ") + ", and " + selectors[-1]
       end
 
-      match "booru", method: :execute_booru
-      match /booru (\w+)?\s?(.+)?/, method: :execute_booru
+      match /booru(?: (\w+))?(?: (.+))?/, method: :execute_booru, group: :x_booru
       def execute_booru(m, selector = nil, tags = nil)
         m.reply(generate_url(selector, tags) || "You have #{!tags ? 'listed no tags' : 'used an invalid selector'}. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}, true);
       end
 
-      match /boorulist/, method: :execute_boorulist
+      match 'booru list', method: :execute_boorulist
       def execute_boorulist(m)
         table_array = []
         @@selectors.each {|k,v|

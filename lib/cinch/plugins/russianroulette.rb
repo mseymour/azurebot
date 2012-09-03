@@ -28,34 +28,34 @@ module Cinch
         @games = []
       end
 
-      match /rr(?:\s(.+))?/
-      def execute(m, nick)
+      match /rr(?: (.+))/, group: :x_rr
+      def execute(m, nick = nil)
         #return if disabled?
         return m.reply("I am sorry comrade, but I do not have pistol on me.") unless check_user(m.channel, User(@bot.nick))
         return m.user.notice "Sorry, but there is already a game going on." if @games.include?(m.channel.name)
         @games << m.channel.name
-        nick = (check_user(m.channel.users, m.user) && !!nick && nick.valid_nick? && !User(nick).unknown? && User(nick) != @bot ? nick : m.user.nick);
+        nick = (check_user(m.channel, m.user) && !!nick && nick.valid_nick? && !User(nick).unknown? && User(nick) != @bot ? nick : m.user.nick);
 
         turn_count = Random.new.rand(1..6)
         round = Random.new.rand(1..6)
         phrases = @@phrases.dup
 
-        @bot.loggers.debug "turn count: #{turn_count}"
-        @bot.loggers.debug "round: #{round}"
-        @bot.loggers.debug "turn_count(#{turn_count}) < round(#{round}): #{turn_count < round}"
+        #@bot.loggers.debug "turn count: #{turn_count}"
+        #@bot.loggers.debug "round: #{round}"
+        #@bot.loggers.debug "turn_count(#{turn_count}) < round(#{round}): #{turn_count < round}"
 
         m.channel.action "starts a #{turn_count}-turn game of Russian Roulette with #{nick}."
         sleep 5
 
         turn_count.times do |chamber|
-          @bot.loggers.debug "Chamber #{chamber.succ}/#{turn_count}"
+          #@bot.loggers.debug "Chamber #{chamber.succ}/#{turn_count}"
           if round != chamber.succ
-            @bot.loggers.debug "round(#{round}) != chamber(#{chamber.succ})"
+            #@bot.loggers.debug "round(#{round}) != chamber(#{chamber.succ})"
             phrase = phrases.sample
             phrases.delete phrase
             m.reply "*click* #{phrase}"
           else
-            @bot.loggers.debug "round(#{round}) == chamber(#{chamber.succ})?"
+            #@bot.loggers.debug "round(#{round}) == chamber(#{chamber.succ})?"
             m.reply "*click*"
             m.channel.kick(User(nick), "*BLAM*")
             m.channel.action "watches #{nick}'s brain splatter across the wall."
