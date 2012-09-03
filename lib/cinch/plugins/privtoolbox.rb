@@ -49,13 +49,18 @@ module Cinch
         if identify_plugin
           identify_plugin.identify(nil)
         elsif @bot.config.sasl.password
-          @bot.handlers.dispatch :private_admin, m, "SASL is enabled; restart @bot or manually re-identify with /msg #{@bot.nick} ns identify <password>.", m.target
+          @bot.handlers.dispatch :private_admin, m, "Attempting to use SASL password for nickserv identification...", m.target
+          User("nickserv").send("release @bot.last_nick #{@bot.config.sasl.password}")
+          @bot.nick = @bot.last_nick
+          User("nickserv").send("identify #{@bot.config.sasl.password}")
         else
           if @bot.config.password
             @bot.handlers.dispatch :private_admin, m, "Cinch::Plugins::Identify is not configured! Attempting to use server password for nickserv identification...", m.target
+            User("nickserv").send("release @bot.last_nick #{@bot.config.password}")
+            @bot.nick = @bot.last_nick
             User("nickserv").send("identify #{@bot.config.password}")
           else
-            @bot.handlers.dispatch :private_admin, m, "Cinch::Plugins::Identify is not configured, cannot re-identify to services.", m.target
+            @bot.handlers.dispatch :private_admin, m, "Neither Cinch::Plugins::Identify, server password, nor SASL password is not configured; cannot re-identify to services.", m.target
           end
         end
       end
