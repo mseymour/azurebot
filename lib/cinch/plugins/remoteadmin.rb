@@ -1,7 +1,10 @@
+require_relative '../admin'
+
 module Cinch
   module Plugins
     class RemoteAdmin
       include Cinch::Plugin
+      include Cinch::Admin
 
       set plugin_name: "Remote admin", help: "Relays certain messages to logged-in admins."
 
@@ -29,10 +32,10 @@ module Cinch
         Channel(shared[:controlchannel]).msg prettify(nick: m.user.nick, source: m.target.name, type: "ADMIN", string: message)
       end
 
-      listen_to :antispam, method: :listen_hook_antispam
-      def listen_hook_antispam(m, message, target)
-        Channel(shared[:controlchannel]).msg prettify(nick: m.user.nick, source: m.target.name, type: "ANTISPAM", string: "#{message.first} | kick count: #{message.last.kick_count}; first offence: #{(Time.now - message.last.current.first_offence).round(4)}s; last offence: #{(Time.now - message.last.current.last_offence).round(4)}s; count: #{message.last.current.count}")
-      end
+      # listen_to :antispam, method: :listen_hook_antispam
+      # def listen_hook_antispam(m, message, target)
+      #   Channel(shared[:controlchannel]).msg prettify(nick: m.user.nick, source: m.target.name, type: "ANTISPAM", string: "#{message.first} | kick count: #{message.last.kick_count}; first offence: #{(Time.now - message.last.current.first_offence).round(4)}s; last offence: #{(Time.now - message.last.current.last_offence).round(4)}s; count: #{message.last.current.count}")
+      # end
 
       private
 
