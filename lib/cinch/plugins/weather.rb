@@ -137,7 +137,7 @@ module Cinch
           "Visibility" => "#{co['visibility_' << units[:d]]} #{units[:d]}",
           "UV Index" => (uv_string(co.UV) + " (#{co.UV})" unless co.UV.to_f < 0),
           "Sunrise/set" => ["#{DateTime.parse([as.sunrise.hour,as.sunrise.minute] * ":").strftime("%-l:%M%P")}",
-                            "#{DateTime.parse([as.sunset.hour,as.sunrise.minute] * ":").strftime("%-l:%M%P")}"] * ", ",
+                            "#{DateTime.parse([as.sunset.hour,as.sunset.minute] * ":").strftime("%-l:%M%P")}"] * ", ",
           "Moon" => @@moon_phases[((as.ageOfMoon.to_i / 30.00) * 8.00).floor]
         }
 
