@@ -13,7 +13,7 @@ module Cinch
       set(
         plugin_name: "Botinfo",
         help: "Notices you information about me.\nUsage: `/msg <nick> info`\nUsage: `/msg <nick> list plugins`",
-        required_options: [:template_path, :owner, :bot],
+        required_options: [:template_path, :owner],
         react_on: :private)
 
       def initialize *args
@@ -24,7 +24,6 @@ module Cinch
       # How to config:
       # :template -- a path to a textual file (such as *.txt) with fields in it.
       # :owner -- What to display for the "owner_name" field.
-      # :bot -- What to display for the "bot_name" field.
       # All fields in the text file must be surrounded by '<>', and lines can be commented out using '#'.
 
       match 'info', use_prefix: false
