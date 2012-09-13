@@ -29,6 +29,16 @@ module Cinch
       shared[:redis].scard("bot.#{network}:admins") == 0
     end
 
+    def get_online_admins
+      all_known_users = @bot.channels.inject([]) {|memo, channel| memo | channel.users.keys } | @bot.user_list
+      all_known_users.find_all {|user| is_admin?(user) && !user.unkown? && user.authed? }
+    end
+
+    def get_online_trusted
+      all_known_users = @bot.channels.inject([]) {|memo, channel| memo | channel.users.keys } | @bot.user_list
+      all_known_users.find_all {|user| is_trusted?(user) && !user.unkown? && user.authed? }
+    end
+
     private
 
     def add_action (mask, type)
