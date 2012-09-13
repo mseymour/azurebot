@@ -2,12 +2,10 @@ require 'json'
 require 'open-uri'
 require 'yaml'
 
-yaml_file_name = File.expand_path('porno_list.yml', File.dirname(__FILE__))
-blacklist = YAML.load(open(File.expand_path('porno_blacklist.yml', File.dirname(__FILE__))))
-autoreplace = {
-  'F...' => 'Fuck',
-  'Gangb...' => 'Gangbang',
-}
+yaml_file_name = File.expand_path('pornos.yml', File.dirname(__FILE__))
+blacklist = YAML.load(open(File.expand_path('blacklist.yml', File.dirname(__FILE__))))
+autoreplace = YAML.load(open(File.expand_path('autoreplace.yml', File.dirname(__FILE__))))
+
 pornos = JSON.parse(open(%q{http://www.directv.com/entertainment/data/guideScheduleSegment.json.jsp?numchannels=14&channelnum=586&blockdur=24}).read)
 
 return warn("Download was unsuccessful, please try again later.") if !pornos["success"]
@@ -19,7 +17,7 @@ current_list = pornos["channels"].each_with_object([]) {|channel,memo|
     next if program["productType"].empty? || !program["repeat"]
     next if blacklist.any? {|badword| program["prTitle"] =~ /\b#{Regexp.escape(badword)}\b/i }
     title = program["prTitle"]
-    title.gsub!(/(\w+\.\.\.)/i, autoreplace)
+    title.gsub!(/(\S+)/i, autoreplace)
     memo << program["prTitle"]
   }
 }.uniq

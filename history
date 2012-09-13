@@ -1,0 +1,42 @@
+Rewrite plugins for better functionality/efficiency:
+- AntiSpam
+- AutoVOP
+  - AutoOP (merged)
+  - AutoVoice (merged)
+- Dice (new dice parsing engine)
+- Macros
+- MultiQDB
+- Twitter (now spun off into cinch-twitter)
+- Weather
+- [✘] TimeBan (n/c)
+- [✘] Acro (n/c)
+
+Develop new plugins/recreate old ones that are not present in Azurebot v3.5
+- Lewd (People seem to like it, so...)
+- Miwiki
+- Vimeo (offshoot of YouTube)
+- YouTube
+
+Develop new plugins/helpers/functionality, reorganize helpers:
+
+- Spun off into the Helpers module:
+  - check_user (channel access)
+  - natural_language
+    - #time_diff_in_natural_language/#time_difference (turning a time range into a friendly format)
+  - table_format (ASCII table generator)
+
+- Develop new helper(s):
+  - is_channel_disabled (bakes in per-plugin channel blacklists via mixins)
+
+- Admin/Trusted user support:
+  - Cinch::Admin 
+    (provides mixed-in methods for checking against, adding, and deleting admins and trusted users in a Redis database. 
+     Requires @bot.config.shared[:redis] that is an instance of the Redis client for Ruby.)
+  - AdminToolbox (Provides admin-only functions for adding/deleting admins and trusted users, as well as getting lists and initially setting up admin access.)
+  - Updated toolbox/privtoolbox/macros/authtest to account for the new system
+  - remoteadmin updated to accomodate the new 'admin channel' concept.
+  - Toolbox now allows graceful shutdown via SIGINT
+
+Other plugin projects that are used in individual bots:
+- CelestiaRadio::StreamInfo (Stream data for CR, listener number tracking per request, play history)
+- CelestiaRadio::DJInfo ([s]needs to be spun off[/s] done.)

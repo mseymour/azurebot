@@ -9,12 +9,11 @@ module Cinch
 
       def initialize(*args)
         super
-        @yaml_file_name = File.expand_path('porno/pornos.yml', File.dirname(__FILE__))
         # Gets listing, adds yaml file to listing, gets unique values, and saves.
         @pornos = get_listing
-        @pornos << YAML.load(open(@yaml_file_name)) if File.exist?(@yaml_file_name)
+        @pornos << YAML.load(open(config[:porno_list_path])) if File.exist?(config[:porno_list_path])
         @pornos.uniq!
-        open(@yaml_file_name, 'w+') {|file| file.write(@pornos.to_yaml)}
+        open(config[:porno_list_path], 'w+') {|file| file.write(@pornos.to_yaml)}
 
         # does the same, but on a timer.
         @timer = Timer(7200) { 
@@ -22,7 +21,7 @@ module Cinch
           updates ||= @pornos
           @pornos << updates
           @pornos.uniq! 
-          open(@yaml_file_name, 'w+') {|file| file.write(@pornos.to_yaml)}
+          open(config[:porno_list_path], 'w+') {|file| file.write(@pornos.to_yaml)}
         }
       end
 
