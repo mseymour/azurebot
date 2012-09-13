@@ -58,8 +58,7 @@ module Cinch
         return unless is_admin?(m.user)
         eval(s)
       rescue => e
-        m.user.msg "%s (%s)" % [e.message, e.class.name]
-        m.user.msg $@.map {|e| "    from #{e}" }.join($/)
+        m.user.msg "eval error: %s\n            %s (%s)" % [s, e.message, e.class.name]
       end
 
     end
