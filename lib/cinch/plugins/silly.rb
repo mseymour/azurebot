@@ -86,7 +86,7 @@ module Cinch
           message = if nyear.to_date == today.to_date
             "Happy New Year #{today.year}!"
           else
-            "There's #{hronicDuration.output(nyear - today, format: long)} until #{nyear.year}!"
+            "There's #{ChronicDuration.output(nyear - today, format: long)} until #{nyear.year}!"
           end
         rescue ArgumentError => ae
           message = ae.message
