@@ -2,14 +2,13 @@
 require 'tag_formatter'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/array/conversions'
-require_relative '../helpers/natural_language'
+require 'chronic_duration'
 
 module Cinch
   module Plugins
     class BotInfo
       include Cinch::Plugin
-      include Cinch::Helpers::NaturalLanguage
-
+      
       set(
         plugin_name: "Botinfo",
         help: "Notices you information about me.\nUsage: `/msg <nick> info`\nUsage: `/msg <nick> list plugins`",
@@ -33,7 +32,7 @@ module Cinch
           cinch_version: Cinch::VERSION,
           #is_admin: config[:admins].is_admin?(m.user.mask) ? "an admin" : "not an admin",
           owner_name: config[:owner],
-          plugins_count_remaining: @bot.plugins.length - 9,
+          plugins_count_remaining: @bot.plugins.length - 10,
           plugins_head: @bot.plugins[0..9].map {|p| p.class.plugin_name }.join(", "),
           ruby_platform: RUBY_PLATFORM,
           ruby_release_date: RUBY_RELEASE_DATE,
@@ -48,7 +47,7 @@ module Cinch
             }; 
             users.uniq.size
           }.call,
-          uptime: time_difference(@started_at, Time.now, acro: true)
+          uptime: ChronicDuration.output(Time.now - @started_at)
         }
 
         tf = TagFormatter.new open(config[:template_path],&:read), tags: tags

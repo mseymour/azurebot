@@ -1,14 +1,14 @@
 require 'active_support/time'
 require 'active_support/core_ext/string'
 require 'active_support/core_ext/object/blank'
-require_relative '../helpers/natural_language'
+require 'chronic_duration'
 require 'date'
 
 module Cinch
   module Plugins
     class Silly
       include Cinch::Plugin
-      include Cinch::Helpers::NaturalLanguage
+
       set(
         plugin_name: "Silly",
         help: "You know, silly stuff.")
@@ -65,7 +65,7 @@ module Cinch
           message = if xmas.to_date == today.to_date
             "Merry Christmas!"
           else
-            "There's #{time_diff_in_natural_language(today, xmas, seconds: false)} until Christmas!"
+            "There's #{ChronicDuration.output(xmas - today, format: long)} until Christmas!"
           end
         rescue ArgumentError => ae
           message = ae.message
@@ -86,7 +86,7 @@ module Cinch
           message = if nyear.to_date == today.to_date
             "Happy New Year #{today.year}!"
           else
-            "There's #{time_diff_in_natural_language(today, nyear)} until #{nyear.year}!"
+            "There's #{hronicDuration.output(nyear - today, format: long)} until #{nyear.year}!"
           end
         rescue ArgumentError => ae
           message = ae.message
