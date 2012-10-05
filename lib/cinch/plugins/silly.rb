@@ -33,7 +33,12 @@ module Cinch
           when 4
             m.reply "I said, do NOT poke the bot!"
           when 5
-            m.channel.kick m.user, ["WHAT ARE YOU, AN IDIOT? I SAID DO NOT POKE ME!!","THIS! IS! SPARTA!!"].sample
+            msg = ["WHAT ARE YOU, AN IDIOT? I SAID DO NOT POKE ME!!","THIS! IS! SPARTA!!"].sample
+            if m.channel[@bot].any? {|e| (@bot.irc.isupport['PREFIX'] - 'v').include(e) }
+              m.channel.kick m.user, ["WHAT ARE YOU, AN IDIOT? I SAID DO NOT POKE ME!!","THIS! IS! SPARTA!!"].sample
+            else
+              m.reply msg
+            end
             @pokers.delete(m.user)
           end
         end
@@ -49,7 +54,7 @@ module Cinch
         if tz =~ regexp
           prefix + tz.gsub(regexp) {|match| (!!$1 ? $1 : "") + $2.rjust(2,"0") + (!!$3 ? ":"+$3.rjust(2,"0") : "") } + suffix
         else
-          raise ArgumentError, "A valid timezome was not supplied."
+          raise ArgumentError, "A valid timezone was not supplied."
         end
       end
 
@@ -65,7 +70,7 @@ module Cinch
           message = if xmas.to_date == today.to_date
             "Merry Christmas!"
           else
-            "There's #{ChronicDuration.output(xmas - today, format: long)} until Christmas!"
+            "There's #{ChronicDuration.output(xmas - today, format: :long)} until Christmas!"
           end
         rescue ArgumentError => ae
           message = ae.message
@@ -86,7 +91,7 @@ module Cinch
           message = if nyear.to_date == today.to_date
             "Happy New Year #{today.year}!"
           else
-            "There's #{ChronicDuration.output(nyear - today, format: long)} until #{nyear.year}!"
+            "There's #{ChronicDuration.output(nyear - today, format: :long)} until #{nyear.year}!"
           end
         rescue ArgumentError => ae
           message = ae.message
