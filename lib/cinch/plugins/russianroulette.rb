@@ -28,13 +28,16 @@ module Cinch
         @games = []
       end
 
-      match /rr(?: (.+))/, group: :x_rr
+      match /rr(?: (.+))?/, group: :x_rr
       def execute(m, nick = nil)
         #return if disabled?
-        return m.reply("I am sorry comrade, but I do not have pistol on me.") unless check_user(m.channel, User(@bot.nick))
+        return m.reply("I am sorry comrade, but I do not have pistol on me.") unless check_user(m.channel, @bot)
         return m.user.notice "Sorry, but there is already a game going on." if @games.include?(m.channel.name)
         @games << m.channel.name
-        nick = (check_user(m.channel, m.user) && !!nick && nick.valid_nick? && !User(nick).unknown? && User(nick) != @bot ? nick : m.user.nick);
+
+        nick ||= m.user.nick
+        target = User(nick)
+        target = m.user if target == @bot || !check_user(m.channel, m.user) || target.unknown?
 
         turn_count = Random.new.rand(1..6)
         round = Random.new.rand(1..6)
@@ -44,10 +47,17 @@ module Cinch
         #@bot.loggers.debug "round: #{round}"
         #@bot.loggers.debug "turn_count(#{turn_count}) < round(#{round}): #{turn_count < round}"
 
-        m.channel.action "starts a #{turn_count}-turn game of Russian Roulette with #{nick}."
+        m.channel.action "starts a #{turn_count}-turn game of Russian Roulette with #{target.nick}."
         sleep 5
 
         turn_count.times do |chamber|
+          if !m.channel.users.include?(target)
+            @games.delete(m.channel.name) #game cancelled
+            m.reply "Oh vell, it vas fun while it lasted."
+            m.channel.action "holsters the pistol."
+            return
+          end
+
           #@bot.loggers.debug "Chamber #{chamber.succ}/#{turn_count}"
           if round != chamber.succ
             #@bot.loggers.debug "round(#{round}) != chamber(#{chamber.succ})"
@@ -57,7 +67,7 @@ module Cinch
           else
             #@bot.loggers.debug "round(#{round}) == chamber(#{chamber.succ})?"
             m.reply "*click*"
-            m.channel.kick(User(nick), "*BLAM*")
+            m.channel.kick(target, "*BLAM*")
             m.channel.action "watches #{nick}'s brain splatter across the wall."
             break
           end
