@@ -93,7 +93,7 @@ module Cinch
         tokens = macro.scan(/((?:(\w+)\/)?(?:\((.+?)\))?(?:\[(\w+)\]))/)
         tokens.each_with_object(macro.dup) {|(token,transform,default,template), memo|
           result = case template
-          when 'in' then if input then input elsif default then default else channel.users.keys.sample.nick end
+          when 'in' then input || default || channel.users.keys.sample.nick
           when 'bot' then @bot.nick
           when 'channel' then channel.name
           when 'self' then user.nick
