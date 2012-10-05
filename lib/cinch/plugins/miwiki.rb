@@ -10,7 +10,7 @@ module Cinch
       def execute(m, search)
         miyuki = Wikipedia.new
         excerpt = miyuki.fetch(search)
-        m.reply "#{excerpt.title}\n#{excerpt.summary}\n#{excerpt.title_to_url}"
+        m.reply "#{Format(:bold, excerpt.title)}\n#{excerpt.summary}¶\n#{excerpt.title_to_url}"
       rescue => e
        m.reply "#{Format(:pink, :bold, 'Uhoh!')} · #{e.message}" 
       end
