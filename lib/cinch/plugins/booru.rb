@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 require_relative '../helpers/table_format'
+require 'cgi'
 
 module Cinch
   module Plugins
@@ -16,8 +17,8 @@ module Cinch
         safe: "http://safebooru.com/index.php?page=post&s=list&tags=%<tags>s",
         kona: "http://konachan.com/post?tags=%<tags>s",
         oreno: "http://oreno.imouto.org/post?tags=%<tags>s&searchDefault=Search",
-        "4walled" => "http://4walled.org/search.php?tags=%<tags>s&board=&width_aspect=&searchstyle=larger&sfw=&search=search",
-        "3d" => "http://behoimi.org/post?tags=%<tags>s",
+        :"4walled" => "http://4walled.org/search.php?tags=%<tags>s&board=&width_aspect=&searchstyle=larger&sfw=&search=search",
+        :"3d" => "http://behoimi.org/post?tags=%<tags>s",
         e621: "http://e621.net/post?tags=%<tags>s",
         nano: "http://booru.nanochan.org/post/list/%<tags>s/1",
         rule34: "http://rule34.paheal.net/post/list/%<tags>s/1",
@@ -35,7 +36,7 @@ module Cinch
       end
 
       def generate_url(selector, tags)
-        return nil if (selector.nil? || @@selectors[selector.to_sym].nil?);
+        return if (selector.nil? || @@selectors[selector.to_sym].nil?);
         return get_base_url(@@selectors[selector.to_sym]) if (tags.nil? || tags.empty?);
         @@selectors[selector.to_sym] % {:tags => CGI::escape(tags)};
       end
@@ -48,7 +49,12 @@ module Cinch
 
       match /booru(?: (\w+))?(?: (.+))?/, method: :execute_booru, group: :x_booru
       def execute_booru(m, selector = nil, tags = nil)
-        m.reply(generate_url(selector, tags) || "You have #{!tags ? 'listed no tags' : 'used an invalid selector'}. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list()}, true);
+        url = generate_url(selector, tags)
+        if url
+          m.reply url, true
+        else
+          m.reply "You have used an invalid selector. Valid selectors: %<selectors>s." % {:selectors => generate_selector_list}, true
+        end
       end
 
       match 'booru list', method: :execute_boorulist
@@ -57,7 +63,7 @@ module Cinch
         @@selectors.each {|k,v|
           table_array << "#{k}\t#{get_base_url(v)}"
         }
-        m.user.notice Helpers::table_format(table_array, justify: [:right, :left], headers: ["selector","url"], gutter: 1)
+        m.user.notice table_format(table_array, justify: [:right, :left], headers: ["selector","url"], gutter: 1)
       end
 
     end
