@@ -8,8 +8,8 @@ Rewrite plugins for better functionality/efficiency:
 - MultiQDB
 - Twitter (now spun off into cinch-twitter)
 - Weather
-- [✘] TimeBan (n/c)
-- [✘] Acro (n/c)
+- TimeBan
+- [✘] Acro (n/c) (Finish at a later date?)
 
 Develop new plugins/recreate old ones that are not present in Azurebot v3.5
 - Lewd (People seem to like it, so...)
