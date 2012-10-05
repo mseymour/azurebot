@@ -27,7 +27,7 @@ module Cinch
         }
       end
 
-      match /part(?: (\S+))(?: (.+))/, method: :part, group: :part
+      match /part(?: (\S+))?(?: (.+))?/, method: :part, group: :part
       def part(m, channel=nil, msg=nil)
         return unless is_admin?(m.user)
         channel ||= m.channel.name
@@ -36,7 +36,7 @@ module Cinch
         @bot.handlers.dispatch :admin, m, "Parted #{channel}#{" - #{msg}" unless msg.nil?}", m.target
       end
 
-      match /quit(?: (.+))/, method: :quit, group: :quit
+      match /quit(?: (.+))?/, method: :quit, group: :quit
       def quit(m, msg=nil)
         return unless is_admin?(m.user)
         msg ||= m.user.nick
@@ -58,7 +58,7 @@ module Cinch
         return unless is_admin?(m.user)
         eval(s)
       rescue => e
-        m.user.msg "eval error: %s\n            %s (%s)" % [s, e.message, e.class.name]
+        m.user.msg "eval error: %s\n- %s (%s)" % [s, e.message, e.class.name]
       end
 
     end
