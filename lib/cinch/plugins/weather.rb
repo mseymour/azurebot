@@ -13,14 +13,14 @@ module Cinch
         help: "Grabs the current weather and forecast from WeatherUnderground.\nUsage: `!weather <-si> [query]`\nUsage: `!forecast <-si> [query]\nSwitches: `s` -- Simple conditions; `i` -- Imperial measurements\nShorthand for !weather: !wx",
         required_options: [:api_key])
 
-      @@mapping = {
+      MAPPING = {
         metric: {t: "c", d: "km", s: "kph", p: %w{metric mm}},
         imperial: {t: "f", d: "mi", s: "mph", p: %w{in in}}
       }
 
-      @@moon_phases = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbious', 'Full Moon', 'Waning Gibbious', 'Last Quarter', 'Waning Crescent']
+      MOON_PHASES = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbious', 'Full Moon', 'Waning Gibbious', 'Last Quarter', 'Waning Crescent']
 
-      @@unicon = {
+      UNICODE_ICONS = {
         chanceflurries:'❄',
         chancerain:'☂',
         chancesleet:'☂❄',
@@ -42,6 +42,13 @@ module Cinch
         tstorms:'☈',
         unknown:''
       }
+
+      def initialize(*args)
+        super
+        Geocoder.configure do |c|
+          c.timeout = 30
+        end
+      end
 
       match /w(?:eather|x)(?:(?> -)([[:alpha:]]+))? (.+)/, method: :execute_weather
       def execute_weather(m, switches, query)
@@ -109,7 +116,7 @@ module Cinch
       end
 
       def fetch_conditions(query, is_metric, is_minimal)
-        units = is_metric ? @@mapping[:metric] : @@mapping[:imperial]
+        units = is_metric ? MAPPING[:metric] : MAPPING[:imperial]
 
         result = Cinch::Plugins::Weather::Wx.new(config[:api_key]).get(query, :conditions, :almanac, :astronomy)
         raise StandardError, result.response.error if result.response.error
@@ -118,7 +125,7 @@ module Cinch
         degrees = '°' << units[:t].upcase
 
         outside = []
-        outside << co.weather + " #{@@unicon[co.icon.intern]}" unless co.weather.blank?
+        outside << co.weather + " #{UNICODE_ICONS[co.icon.intern]}" unless co.weather.blank?
         outside << "#{co['temp_' << units[:t]]}#{degrees}"
         outside << "feels like #{co['feelslike_' << units[:t]]}#{degrees}" unless co['feelslike_' << units[:t]].to_s.eql?(co['temp_' << units[:t]].to_s)
         conditions = {
@@ -138,7 +145,7 @@ module Cinch
           "UV Index" => (uv_string(co.UV) + " (#{co.UV})" unless co.UV.to_f < 0),
           "Sunrise/set" => ["#{DateTime.parse([as.sunrise.hour,as.sunrise.minute] * ":").strftime("%-l:%M%P")}",
                             "#{DateTime.parse([as.sunset.hour,as.sunset.minute] * ":").strftime("%-l:%M%P")}"] * ", ",
-          "Moon" => @@moon_phases[((as.ageOfMoon.to_i / 30.00) * 8.00).floor]
+          "Moon" => MOON_PHASES[((as.ageOfMoon.to_i / 30.00) * 8.00).floor]
         }
 
         minimal_data = ["Wind","Visibility","UV Index","Sunrise/set"]
