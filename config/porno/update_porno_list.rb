@@ -17,7 +17,7 @@ current_list = pornos["channels"].each_with_object([]) {|channel,memo|
     next if program["productType"].empty? || !program["repeat"]
     next if blacklist.any? {|badword| program["prTitle"] =~ /\b#{Regexp.escape(badword)}\b/i }
     title = program["prTitle"]
-    title.gsub!(/(\S+)/i, autoreplace)
+    title.gsub!(/(\S+)/i) { autoreplace.keys.include?($1) ? autoreplace[$1] : $1 }
     memo << program["prTitle"]
   }
 }.uniq
