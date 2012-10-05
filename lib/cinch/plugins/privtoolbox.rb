@@ -118,7 +118,7 @@ module Cinch
         @bot.handlers.dispatch :admin, m, "Unbanned #{mask} from #{channel.name}", m.target
       end
 
-      match /kb (#\S+) (\S+)\s?(.+)?/, method: :kickban
+      match /kb (#\S+) (\S+)(?: (.+))?/, method: :kickban
       def kickban(m, channel, user, msg)
         return unless is_trusted?(m.user)
         msg ||= m.user.nick
