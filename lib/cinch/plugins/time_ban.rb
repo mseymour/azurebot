@@ -1,177 +1,165 @@
-require 'date'
-require 'redis'
-require_relative '../helpers/table_format'
-require_relative '../helpers/natural_language'
-require_relative "../helpers/check_user"
+Thread.abort_on_exception=true
+
+require_relative '../helpers/check_user'
+require 'active_support/core_ext/time/calculations'
+require 'chronic_duration'
 
 module Cinch
   module Plugins
     class TimeBan
       include Cinch::Plugin
-      include Cinch::Helpers::NaturalLanguage
 
-      set plugin_name: "Timeban", react_on: :channel
+      attr_reader :active_timebans
+
+      set plugin_name: 'Timeban',
+          help: 'help'
+
+      TIMEBAN_KEY = 'timeban:%s:%s:%s' # network, channel.name.downcase, nick.downcase
 
       def initialize(*args)
         super
-        @redis = shared[:redis]
+        @active_timebans = Hash.new {|hash, key| hash[key] = {} }
+      end
+
+      match /timeban (\S+) ((?:\d+\w)+)(?: (.+))?/, method: :execute_timeban
+      def execute_timeban(m, nick, range, reason)
+        return m.user.notice('I do not have the correct privileges. (not +%s)' % @bot.irc.isupport["PREFIX"].keys - ['v']) unless check_user(m.channel, @bot)
+        return m.user.notice('You do not have the correct privileges. (not +%s)' % @bot.irc.isupport["PREFIX"].keys - ['v']) unless check_user(m.channel, m.user)
+        user = User(nick)
+        return if user == @bot
+        return m.user.notice('%s does not seem to exist on %s' % [nick, @bot.irc.network.name]) if user.unknown?
+        key = TIMEBAN_KEY % [@bot.irc.isupport['NETWORK'], m.channel.name.downcase, user.nick.downcase]
+        set = key[/(.+):\S+$/,1]
+
+        now = Time.now
+        
+        bandata = {
+          'nick' => user.nick,
+          'host.mask' => user.mask('*!*@%h'),
+          'ban.start' => now,
+          'ban.end' => range2time(range, now),
+          'ban.reason' => reason || 'fuck you!',
+          'banned.by' => m.user.mask
+        }
+        
+        synchronize(:timeban_update) do
+          shared[:redis].hmset key, *bandata
+          shared[:redis].sadd set, key
+          @active_timebans[m.channel.name.downcase][user.nick.downcase] = 
+            Timer(bandata['ban.end'] - Time.now, shots: 1) { unban(m.channel, key) }
+        end
+
+        kickreason = 'Banned for %s by %s (%s)' % [ 
+          ChronicDuration.output((bandata['ban.end'] - bandata['ban.start']).round, format: :long), 
+          m.user.nick, 
+          bandata['ban.reason']
+        ]
+
+        m.channel.ban(bandata['host.mask'])
+        m.channel.kick(user, kickreason)
+
+        # @todo kick all other nicks with the same host
+      end
+
+      match /unban (\S+)$/, method: :execute_unban
+      def execute_unban(m, nick)
+        return m.user.notice('nobotop') unless check_user(m.channel, @bot)
+        return m.user.notice('nogood') unless check_user(m.channel, m.user)
+
+        key = TIMEBAN_KEY % [@bot.irc.isupport['NETWORK'], m.channel.name.downcase, nick.downcase]
+
+        if shared[:redis].exists(key)
+          bandata = shared[:redis].hgetall(key)
+          unban(m.channel, key)
+          
+          m.user.notice("%s (%s) has been unbanned.\nThey were banned by %s for \"%s\", and it lasted %s." % [ 
+            bandata['nick'], bandata['host.mask'], bandata['banned.by'], bandata['ban.reason'],
+            ChronicDuration.output((Time.parse(bandata['ban.end']) - Time.parse(bandata['ban.start']).round), format: :long)
+          ])
+        else
+          m.user.notice('No timed ban could be found for %s.' % nick)
+        end
+      end
+
+      match 'listbans', method: :execute_listbans
+      def execute_listbans(m)
+        return m.user.notice('nogood') unless check_user(m.channel, m.user)
+        key = TIMEBAN_KEY % [@bot.irc.isupport['NETWORK'], m.channel.name.downcase, nil]
+        bans = shared[:redis].smembers(key[0..-2]).each_with_object([]) {|timeban,memo| memo << shared[:redis].hgetall(timeban) }
+        lines = bans.each_with_index.each_with_object([]) {|(timeban,i),memo|
+          width = timeban.keys.max_by(&:length).length
+          memo << timeban.each_with_object([]) {|(k,v),mem| mem << "%-#{width}s: %s" % [k,v] }
+        }
+        if lines.length > 0
+          maxwidth = lines.flatten.max_by {|l| l.length }.length
+          lines.each_with_index {|l,i|
+            m.user.msg ("#%d " % i.succ).ljust(maxwidth, '-')
+            m.user.msg l * $/
+          }
+          m.user.msg '* End of results.'
+        else
+          m.user.msg 'No timebans could be found for %s.' % m.channel.name
+        end
       end
 
       listen_to :join, method: :on_join
       def on_join(m)
         return unless m.user == @bot
-        # Get all timeban keys for #channel:
-        timebans = @redis.keys "timeban:#{m.channel.name}:*"
-        timebans.each {|k|
-          v = @redis.hgetall k
-          @bot.loggers.debug "TIMEBAN: Loading timed ban for #{k.split(":")[-1]} from Redis: #{v.inspect}"
-          channel, nick = *k.match(/(.+):(.+):(.+)/)[2..3]
-          
-          if Time.now < Time.parse(v["when.unbanned"])
-            @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.parse(v["when.unbanned"]) - Time.now}"
-            Timer(Time.parse(v["when.unbanned"]) - Time.now, shots: 1) {
-              unban(channel, nick)
-            }
-          else # If the timeban already expired, unban on connect.
-            unban(channel, nick)
-          end
-
-          # Re-arming the ban and kicking the evader, if ban does not exist for some reason.
-          if !m.channel.bans.any? {|ban| ban.mask.eql? v["ban.host"] }
-            @bot.loggers.debug "TIMEBAN: Re-arming ban: #{v["ban.host"]}; TTL: #{Time.parse(v["when.unbanned"]) - Time.now}"
-            m.channel.ban(v["ban.host"])
-            m.channel.users.each_key {|user| 
-              next unless user.mask("*!*@%h") == v["ban.host"] # Unlikely, but could happen.
-              m.channel.kick(user, "Automatically banned for #{time_diff_in_natural_language(Time.now, v["when.unbanned"], acro: false)} by #{m.user.nick} (#{v["ban.reason"]})") 
-            }
-          end
-        }
+        key = TIMEBAN_KEY % [@bot.irc.isupport['NETWORK'], m.channel.name.downcase, nil]
+        if shared[:redis].exists(key[0..-2])
+          sleep 2
+          shared[:redis].smembers(key[0..-2]).each {|timeban|
+            bandata = shared[:redis].hgetall(timeban)
+            if Time.parse(bandata['ban.end']) > Time.now
+              @active_timebans[m.channel.name.downcase][bandata['nick'].downcase] = 
+              Timer(Time.parse(bandata['ban.end']) - Time.now, shots: 1) { unban(m.channel, timeban) }
+            else
+              unban(m.channel, timeban)
+            end
+          }
+        end
       end
 
-      def calculate_delta(params={})
-        params = {
-          years: 0, months: 0, weeks: 0, days: 0, hours: 0, minutes: 0, seconds: 0
-        }.merge params
-
-        today = Date.today
-        date = today
-        date = date >> (params[:years] * 12) if params[:years] != 0
-        date = date >> params[:months] if params[:months] != 0
-        date = date + params[:days] if params[:days] != 0
-
-        day_delta = (date - today).to_i
-
-        (params[:weeks] * 604800) + (day_delta * 86400) + (params[:hours] * 3600) + (params[:minutes] * 60) + params[:seconds]
+      listen_to :part, method: :on_part
+      def on_part(m)
+        return unless m.user == @bot
+        channel_name = m.channel.name.downcase
+        @active_timebans[channel_name].each {|_, timer| timer.stop }
+        @active_timebans.delete(channel_name)
       end
 
-      match /timeban (\S*) ((?:\d+[yMwdhms])+)\s?(.+)?/
-      def execute(m, nick, range, reason)
-        return unless check_user(m.channel, m.user)
-        return m.user.notice "I cannot kickban #{nick} because I do not have the correct privileges." unless check_user(m.channel, User(@bot.nick))
-        return if User(nick) == @bot # refuse to kickban the bot
-        return if User(nick).unknown? # refuse to ban a user that does not exist
-
-        @bot.loggers.debug "TIMEBAN: nick: #{nick}; range: #{range}; reason: #{reason}"
-
-        reason ||= "fuck you!"
-
-        units = {
-          'y' => :years,
-          'M' => :months,
-          'w' => :weeks,
-          'd' => :days,
-          'h' => :hours,
-          'm' => :minutes,
-          's' => :seconds
-        }
-
-        pattern = /(\d+)([yMwdhms])/
-
-        values = Hash[range.scan(pattern).map{|v,k| [units[k],Integer(v)] }]
-        delta = calculate_delta(values)
-        bantime = Time.now
-        unbantime = Time.now + delta
-
-        fields = {
-          "when.banned" => bantime,
-          "when.unbanned" => unbantime,
-          "banned.by" => m.user.nick,
-          "ban.reason" => reason,
-          "ban.host" => User(nick).mask("*!*@%h")}#, 
-          #{}"associated.nicks" => [] }
-
-        # KICKBAN HIM!
-        m.channel.ban(fields["ban.host"]);
-        m.channel.users.each_key {|user| 
-          next unless user.mask("*!*@%h") == fields["ban.host"]
-          m.channel.kick(user, "Banned for #{time_diff_in_natural_language(Time.now, fields["when.unbanned"], acro: false)} by #{m.user.nick} (#{fields["ban.reason"]})") 
-          #fields["associated.nicks"] << user.nick
-        }
-
-        # Recording the ban
-        @bot.loggers.debug "TIMEBAN: HMSET \"timeban:#{m.channel.name}:#{nick}\": #{fields.inspect}"
-        # schema: timeban:channel:nick (ex: timeban:#shakesoda:kp_centi)
-        @redis.hmset "timeban:#{m.channel.name.downcase}:#{nick.downcase}", *fields.flatten
-
-        @bot.loggers.debug "TIMEBAN: Seconds until unban: #{Time.at(fields["when.unbanned"]) - Time.now}"
-        Timer(Time.at(fields["when.unbanned"]) - Time.now, shots: 1) {
-          unban(m.channel.name, nick)
-        }
-
-      end
-
-      match /unban (\S*)/, method: :execute_unban
-      def execute_unban(m, nick)
-        return unless check_user(m.channel, m.user)
-        return m.user.notice "I cannot unban #{nick} because I do not have the correct privileges." unless check_user(m.channel, User(@bot.nick))
-        return m.user.notice "I cannot find the timeban entry \"timeban:#{m.channel.name.downcase}:#{nick.downcase}\"." if @redis.hgetall("timeban:#{m.channel.name.downcase}:#{nick.downcase}").empty? # Refuse to unban if entry does not exist
-        unban(m.channel.name, nick)
-      end
-
-      # TODO: prettier output. Multiple lines?
-      match "listbans",  method: :execute_listbans
-      def execute_listbans(m)
-        return unless check_user(m.channel, m.user)
-        list = []
-        
-        timebans = @redis.keys "timeban:#{m.channel.name}:*"
-        timebans.each {|k|
-          v = @redis.hgetall k
-          list << [k.split(":")[-1], Time.parse(v["when.banned"]).strftime("%Y-%m-%d %I:%M:%S %p %Z"), v["banned.by"], v["ban.reason"], v["ban.host"], time_diff_in_natural_language(Time.now, v["when.unbanned"], acro: true)]
-        }
-
-        template = "%s (%s)\n"\
-                   "- Reason: %s\n"\
-                   "- Banned %s by %s\n"\
-                   "- Unbanned: %s"
-        
-        m.user.notice "List of all bans in place for #{m.channel.name}:"
-
-        timebans.each {|k|
-          v = @redis.hgetall k
-          m.user.notice template % [ k.split(":")[-1], v["ban.host"], v["ban.reason"], Time.parse(v["when.banned"]).strftime("%Y-%m-%d %I:%M:%S %p %Z"), v["banned.by"], time_diff_in_natural_language(Time.now, v["when.unbanned"], acro: false) ]
-        }
-      end
+      #listen_to :unban, method: :on_unban
+      #def on_unban(m, mask)
+        #return if m.user == @bot
+        # @todo Re-arm ban
+      #end
 
       private
 
-      def check_user(users, user)
-        modes = @bot.irc.isupport["PREFIX"].keys
-        modes.delete("v")
-        modes.any? {|mode| users[user].include?(mode)}
+      # Converts a string range to a time in the future.
+      # Valid range characters are `yMwdhms`
+      # @param [String] s A string in the format `dX[dX...]` where `d` is a number and `x` is a letter. (see above.)
+      # @oaram [Time] t (nil) A +Time+ object.
+      def range2time(s, t=nil)
+        t ||= Time.now
+        range = s.scan(/\d+\w/).each_with_object(Hash.new(0)) {|time, memo| memo[time[-1]] += time[0..-2].to_i }
+        t.utc.advance Hash[[:years, :months, :weeks, :days, :hours, :minutes, :seconds].zip(range.values_at(*%w{y M w d h m s}))]
       end
 
-      def unban(channel, nick)
-        chan = Channel(channel)
-        is_in_channel = @bot.channels.include?(chan.name)
-        fields = @redis.hgetall "timeban:#{chan.name.downcase}:#{nick.downcase}"
-        chan.join if !is_in_channel # To do the unbanning if not in the channel
-        sleep 5 if !is_in_channel # avoiding a possible race condition where the bot is not opped immediately on join
-        chan.unban(fields["ban.host"])
-        #chan.part if !is_in_channel  # Part if was not in the channel
-        @redis.del "timeban:#{chan.name.downcase}:#{nick.downcase}"
-        @bot.loggers.debug "TIMEBAN: #{nick} has been unbanned from #{channel}. Banned by: #{fields["banned.by"]}; Ban reason: #{fields["ban.reason"]}"
+      # Unbans a user from a specified channel and deletes the record.
+      # @param [Channel, String] channel A +Channel+ object or a String that is the channel's name
+      # @param [String] key A String that is the key for the stored hash
+      def unban(channel, key)
+        channel = Channel(channel) if !channel.respond_to?(:name)
+          channel.unban(shared[:redis].hget(key, 'host.mask'))
+          shared[:redis].del key # remove hash from redis
+          shared[:redis].srem key[/(.+):\S+$/,1], key # remove key from set
+          if @active_timebans[channel.name.downcase].member?(key[/.+:(\S+)$/,1])
+            @active_timebans[channel.name.downcase][key[/.+:(\S+)$/,1]].stop # stop timer
+            @active_timebans[channel.name.downcase].delete key[/.+:(\S+)$/,1] # delete timer
+          end
       end
+
     end
   end
 end
