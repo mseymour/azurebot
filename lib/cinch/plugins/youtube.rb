@@ -29,8 +29,8 @@ module Cinch
             uploaded: Time.parse(video['uploaded']).strftime('%F'),
             length: seconds_to_time(video['duration']),
             likes: commify_numbers(video['likeCount'].to_i),
-            dislikes: (video['ratingCount'] - video['likeCount'].to_i),
-            views: commify_numbers(video['viewCount'])
+            dislikes: commify_numbers(video['ratingCount'].to_i - video['likeCount'].to_i),
+            views: commify_numbers(video['viewCount'].to_i)
           }
         }
       rescue => e
