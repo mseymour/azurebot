@@ -14,12 +14,29 @@ module Cinch
         react_on: :channel)
 
       def initialize(*args)
-        @@attackdict = []
+        @attackdict = []
         super
       end
 
+      match /attack(?: (.+))?/, group: :attack
+      def execute(m, target=nil)
+        target = m.user.nick if !target.nil? && target.match(/(\bmy\b|\b#{@bot.nick}\S*\b|\b\S*self\b)/i)
+        target.gsub(/(\bmy\b|\b#{@bot.nick}\S*\b|\b\S*self\b)/i,m.user.nick+"'s") if !target.nil?;
+
+        populate_attacks!
+
+        output = if target
+          attack!(target.gsub(/\x03([0-9]{2}(,[0-9]{2})?)?/,""), m.user.nick)
+        else
+          random_attack!(m.channel.users, m.user.nick)
+        end
+        m.channel.action output;
+      end
+
+      private
+
       def populate_attacks!
-        @@attackdict.replace YAML::load_file(config[:attack_dictionary]).map {|e| e.gsub(/<(\w+)>/, "%<#{'\1'.downcase}>s") }
+        @attackdict.replace YAML::load_file(config[:attack_dictionary]).map {|e| e.gsub(/<(\w+)>/, "%<#{'\1'.downcase}>s") }
       end
 
       def grab_random_nick(users)
@@ -28,26 +45,11 @@ module Cinch
 
       def attack!(target, assailant)
         return nil if target.nil?;
-        @@attackdict.sample % {:target => target, :assailant => assailant, :bot => @bot.nick};
+        @attackdict.sample % {:target => target, :assailant => assailant, :bot => @bot.nick};
       end
 
       def random_attack!(targets, assailant)
-        @@attackdict.sample % {:target => grab_random_nick(targets), :assailant => assailant, :bot => @bot.nick};
-      end
-
-      match /attack(?: (.+))/, group: :attack
-      def execute(m, target=nil)
-        target = m.user.nick if !target.nil? && target.among_case?(@bot.nick, "herself", "himself", "itself");
-        target.gsub!(/(\bmy\b)/i,m.user.nick+"'s") if !target.nil?;
-
-        populate_attacks!
-
-        output = if target
-          attack!(target.irc_strip_colors, m.user.nick)
-        else
-          random_attack!(m.channel.users, m.user.nick)
-        end
-        m.channel.action output;
+        @attackdict.sample % {:target => grab_random_nick(targets), :assailant => assailant, :bot => @bot.nick};
       end
 
     end
