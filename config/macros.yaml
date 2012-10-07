@@ -1,18 +1,3 @@
-test:
-  - 'Single tag test:'
-  - ---
-  - "  in: [in]; bot: [bot]; self: [self]; channel: [channel];"
-  - ---
-  - "tag test with default text ('default text'):"
-  - "  in: (default text)[in]; bot: (default text)[bot]; self: (default text)[self]; channel: (default text)[channel];"
-  - ---
-  - "tag test with transformation:"
-  - "  cap/*: in: cap/[in]; bot: cap/[bot]; self: cap/[self]; channel: cap/[channel];"
-  - "  lc/*: in: lc/[in]; bot: lc/[bot]; self: lc/[self]; channel: lc/[channel];"
-  - ---
-  - "tag test with transformation and default ('default text'):"
-  - "  cap/*: in: cap/(default text)[in]; bot: cap/(default text)[bot]; self: cap/(default text)[self]; channel: cap/(default text)[channel];"
-  - "  lc/*: in: lc/(default text)[in]; bot: lc/(default text)[bot]; self: lc/(default text)[self]; channel: lc/(default text)[channel];"
 qb: "\x0301,00／人\x0304,00◕\x0301,00 ‿‿ \x0304,00◕\x0301,00人＼\x03 Quick [in], make a contract with me and become a mahou shoujo!"
 ruffty: <ruffty> thats hot
 # --- INSERTED 12:09AM 2012-02-18

@@ -74,7 +74,7 @@ module Cinch
           
           m.user.notice("%s (%s) has been unbanned.\nThey were banned by %s for \"%s\", and it lasted %s." % [ 
             bandata['nick'], bandata['host.mask'], bandata['banned.by'], bandata['ban.reason'],
-            ChronicDuration.output((Time.parse(bandata['ban.end']) - Time.parse(bandata['ban.start']).round), format: :long)
+            ChronicDuration.output(Time.parse(bandata['ban.end'].to_i - Time.parse(bandata['ban.start']).to_i), format: :long)
           ])
         else
           m.user.notice('No timed ban could be found for %s.' % nick)

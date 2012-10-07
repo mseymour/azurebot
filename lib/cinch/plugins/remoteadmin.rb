@@ -17,6 +17,7 @@ module Cinch
       listen_to :notice, method: :listen_notice
       def listen_notice(m, message = nil, target = nil)
         return if m.ctcp? || !m.user
+        return if m.user.nick =~ /^.+serv$/i
         Channel(shared[:controlchannel]).msg prettify(nick: m.user.nick, source: m.target.name, type: m.command, string: m.message)
       end
 

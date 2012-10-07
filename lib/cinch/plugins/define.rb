@@ -33,7 +33,7 @@ module Cinch
         return m.reply("You do not have the proper access! (not +qaoh)", true) unless check_user(m.channel, m.user)
         if @redis.exists("term:"+term.downcase)
           old_dfn = @redis.hgetall("term:"+term.downcase)
-          edited = "(last edited by #{old_dfn["edited.by"]}, #{ChronicDuration.output(Time.now.utc - Time.parse(dfn["edited.time"]))} ago)"
+          edited = "(last edited by #{old_dfn["edited.by"]}, #{ChronicDuration.output(Time.now.utc.to_i - Time.parse(dfn["edited.time"]).to_i)} ago)"
           @redis.hmset "term:#{term.downcase}", "dfn", dfn, "edited.by", m.user.nick, "edited.time", Time.now.utc
           m.reply "The definition of #{Format(:bold,old_dfn['term.case'])} has been changed from \"#{old_dfn["dfn"]}\" to \"#{dfn}\". #{edited}"
         else
@@ -64,7 +64,7 @@ module Cinch
         if @redis.exists("term:"+term.downcase)
           dfn = @redis.hgetall("term:"+term.downcase)
           term = dfn["term.case"] ? dfn["term.case"] : term
-          m.reply "#{Format(:bold,term)} is: #{dfn["dfn"]} (last edited by #{dfn["edited.by"]}, #{ChronicDuration.output(Time.now.utc - Time.parse(dfn["edited.time"]))} ago)"
+          m.reply "#{Format(:bold,term)} is: #{dfn["dfn"]} (last edited by #{dfn["edited.by"]}, #{ChronicDuration.output(Time.now.utc.to_i - Time.parse(dfn["edited.time"]).to_i)} ago)"
         else
           m.reply "Sorry, but I do not know what #{Format(:bold,term)} is."
         end

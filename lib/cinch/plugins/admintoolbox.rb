@@ -55,7 +55,7 @@ module Cinch
         return unless is_trusted?(m.user)
         add_trusted(mask)
         m.reply "Added trusted #{mask} to network #{@bot.irc.isupport['NETWORK']}."
-        @bot.handlers.dispatch :trusted, m, "#{m.user.nick} just added #{mask} to Trusted.", m.target
+        @bot.handlers.dispatch :admin, m, "#{m.user.nick} just added #{mask} to Trusted.", m.target
       end
 
       match /del trusted (.+)/, method: :execute_del_trusted
@@ -63,7 +63,7 @@ module Cinch
         return unless is_trusted?(m.user)
         delete_trusted(mask)
         m.reply "Deleted trusted #{mask} from network #{@bot.irc.isupport['NETWORK']}."
-        @bot.handlers.dispatch :trusted, m, "#{m.user.nick} just deleted #{mask} from Trusted.", m.target
+        @bot.handlers.dispatch :admin, m, "#{m.user.nick} just deleted #{mask} from Trusted.", m.target
       end
 
       match 'list trusted', method: :execute_list_trusted

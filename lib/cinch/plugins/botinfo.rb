@@ -47,7 +47,7 @@ module Cinch
             }; 
             users.uniq.size
           }.call,
-          uptime: ChronicDuration.output(Time.now - @started_at)
+          uptime: ChronicDuration.output(Time.now.to_i - @started_at.to_i)
         }
 
         tf = TagFormatter.new open(config[:template_path],&:read), tags: tags

@@ -70,7 +70,7 @@ module Cinch
           message = if xmas.to_date == today.to_date
             "Merry Christmas!"
           else
-            "There's #{ChronicDuration.output(xmas - today, format: :long)} until Christmas!"
+            "There's #{ChronicDuration.output(xmas.to_i - today.to_i, format: :long)} until Christmas!"
           end
         rescue ArgumentError => ae
           message = ae.message
@@ -91,7 +91,7 @@ module Cinch
           message = if nyear.to_date == today.to_date
             "Happy New Year #{today.year}!"
           else
-            "There's #{ChronicDuration.output(nyear - today, format: :long)} until #{nyear.year}!"
+            "There's #{ChronicDuration.output(nyear.to_i - today.to_i, format: :long)} until #{nyear.year}!"
           end
         rescue ArgumentError => ae
           message = ae.message
