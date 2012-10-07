@@ -52,7 +52,7 @@ module Cinch
 
       match /add trusted (.+)/, method: :execute_add_trusted
       def execute_add_trusted(m, mask)
-        return unless is_trusted?(m.user)
+        return unless is_admin?(m.user)
         add_trusted(mask)
         m.reply "Added trusted #{mask} to network #{@bot.irc.isupport['NETWORK']}."
         @bot.handlers.dispatch :admin, m, "#{m.user.nick} just added #{mask} to Trusted.", m.target
@@ -60,7 +60,7 @@ module Cinch
 
       match /del trusted (.+)/, method: :execute_del_trusted
       def execute_del_trusted(m, mask)
-        return unless is_trusted?(m.user)
+        return unless is_admin?(m.user)
         delete_trusted(mask)
         m.reply "Deleted trusted #{mask} from network #{@bot.irc.isupport['NETWORK']}."
         @bot.handlers.dispatch :admin, m, "#{m.user.nick} just deleted #{mask} from Trusted.", m.target
