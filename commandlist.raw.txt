@@ -1,0 +1,173 @@
+# Note: eval command: ~eval @bot.plugins.each{|p| m.reply '%s:' % p.class.name; p.handlers.each {|h| m.reply h.pattern.to_r.source } }
+# Note: regexp - ^\^?\(\?(?:-mix|i-mx):\^?(.+)?)\(?:(\?(?:-mix|i-mx):(.+)\)\)?\$?$
+
+Cinch::Plugins::Eightball:
+  !8ball (.+) ###! (?-mix:^!)(?-mix:8ball (.+))
+  !help\ 8ball ###! ^(?-mix:^!)(?-mix:help\ 8ball)$
+Cinch::Plugins::AdminToolbox:
+  setup\ admin\ access ###! ^(?-mix:^)(?-mix:setup\ admin\ access)$
+  add admin (.+) ###! (?-mix:^)(?-mix:add admin (.+))
+  del admin (.+) ###! (?-mix:^)(?-mix:del admin (.+))
+  list\ admins ###! ^(?-mix:^)(?-mix:list\ admins)$
+  add trusted (.+) ###! (?-mix:^)(?-mix:add trusted (.+))
+  del trusted (.+) ###! (?-mix:^)(?-mix:del trusted (.+))
+  list\ trusted ###! ^(?-mix:^)(?-mix:list\ trusted)$
+  help\ Private\ Administrator\ toolbox ###! ^(?-mix:^)(?-mix:help\ Private\ Administrator\ toolbox)$
+Cinch::Plugins::Alton:
+  !alton ###! ^(?-mix:^!)(?-mix:alton)$
+  !help\ Grandma\ Alton ###! ^(?-mix:^!)(?-mix:help\ Grandma\ Alton)$
+Cinch::Plugins::AntiSpam:
+   ###! (?-mix:)
+  !help\ Anti\-spam ###! ^(?-mix:^!)(?-mix:help\ Anti\-spam)$
+Cinch::Plugins::Attack:
+  !attack ###! ^(?-mix:^!)(?-mix:attack)$
+  !attack (.+) ###! (?-mix:^!)(?-mix:attack (.+))
+  !help\ Random\ Attacker ###! ^(?-mix:^!)(?-mix:help\ Random\ Attacker)$
+Cinch::Plugins::Authtest:
+  Am I (an admin|trusted)\? ###! (?-mix:^)(?i-mx:Am I (an admin|trusted))(?-mix:\?$)
+  help\ Admin\ auth\ checker\? ###! ^(?-mix:^)(?-mix:help\ Admin\ auth\ checker)(?-mix:\?$)$
+Cinch::Plugins::AutoVOP:
+   ###! (?-mix:)
+   ###! (?-mix:)
+  !auto(op|voice) (on|off)$ ###! (?-mix:^!)(?-mix:auto(op|voice) (on|off)$)
+  !help\ AutoVOP ###! ^(?-mix:^!)(?-mix:help\ AutoVOP)$
+Cinch::Plugins::BokunoBibletoads:
+  !bnbt ###! ^(?-mix:^!)(?-mix:bnbt)$
+  !help\ Boku\ no\ Bibletoads ###! ^(?-mix:^!)(?-mix:help\ Boku\ no\ Bibletoads)$
+Cinch::Plugins::Booru:
+  !booru ###! ^(?-mix:^!)(?-mix:booru)$
+  !booru (\w+) ###! (?-mix:^!)(?-mix:booru (\w+))
+  !booru (\w+) (.+) ###! (?-mix:^!)(?-mix:booru (\w+) (.+))
+  !booru\ list ###! ^(?-mix:^!)(?-mix:booru\ list)$
+  !help\ Booru ###! ^(?-mix:^!)(?-mix:help\ Booru)$
+Cinch::Plugins::BotInfo:
+  info ###! ^(?-mix:info)$
+  list\ plugins ###! ^(?-mix:list\ plugins)$
+  help (.+)$ ###! (?i-mx:^help (.+)$)
+  !help\ Botinfo ###! ^(?-mix:^!)(?-mix:help\ Botinfo)$
+Cinch::Plugins::ByeDaddy:
+  !byedaddy (.+) ###! (?-mix:^!)(?-mix:byedaddy (.+))
+  !help\ ByeDaddy ###! ^(?-mix:^!)(?-mix:help\ ByeDaddy)$
+Cinch::Plugins::Decide:
+  !decide (.+) ###! (?-mix:^!)(?-mix:decide (.+))
+  !choose (.+) ###! (?-mix:^!)(?-mix:choose (.+))
+  !coin ###! ^(?-mix:^!)(?-mix:coin)$
+  !rand ((?-mix:(?:-|\+)?\d*\.?\d+(?:e)?(?:-|\+)?\d*\.?\d*)) ((?-mix:(?:-|\+)?\d*\.?\d+(?:e)?(?:-|\+)?\d*\.?\d*)) ###! (?-mix:^!)(?-mix:rand ((?-mix:(?:-|\+)?\d*\.?\d+(?:e)?(?:-|\+)?\d*\.?\d*)) ((?-mix:(?:-|\+)?\d*\.?\d+(?:e)?(?:-|\+)?\d*\.?\d*)))
+  !token (\d+) ###! (?-mix:^!)(?-mix:token (\d+))
+  !help\ Decider ###! ^(?-mix:^!)(?-mix:help\ Decider)$
+Cinch::Plugins::Define:
+  !define (.+?) as (.+) ###! (?-mix:^!)(?-mix:define (.+?) as (.+))
+  !redefine (.+?) as (.+) ###! (?-mix:^!)(?-mix:redefine (.+?) as (.+))
+  !forget (.+) ###! (?-mix:^!)(?-mix:forget (.+))
+  \?d (.+) ###! (?-mix:^\?d (.+))
+  !whatis (.+) ###! (?-mix:^!)(?-mix:whatis (.+))
+  !help\ Definer ###! ^(?-mix:^!)(?-mix:help\ Definer)$
+Cinch::Plugins::DelayedRejoin:
+   ###! (?-mix:)
+  !help\ Delayed\ Rejoin ###! ^(?-mix:^!)(?-mix:help\ Delayed\ Rejoin)$
+Cinch::Plugins::Dice:
+  (.+) ###! (?-mix:^(.+))
+  !help\ Dicebox ###! ^(?-mix:^!)(?-mix:help\ Dicebox)$
+Cinch::Plugins::JargonFile:
+  !jargon (.+) ###! (?-mix:^!)(?-mix:jargon (.+))
+  !help\ Jargon\ File ###! ^(?-mix:^!)(?-mix:help\ Jargon\ File)$
+Cinch::Plugins::JoinNotice:
+   ###! (?-mix:)
+  !hello ###! ^(?-mix:^!)(?-mix:hello)$
+  !help\ Auto\ Notice ###! ^(?-mix:^!)(?-mix:help\ Auto\ Notice)$
+Cinch::Plugins::Macros:
+  reload\ macros ###! ^(?-mix:reload\ macros)$
+  !(\w+)(?: (.+))? ###! (?-mix:^!)(?-mix:(\w+)(?: (.+))?)
+  !help\ Macros ###! ^(?-mix:^!)(?-mix:help\ Macros)$
+Cinch::Plugins::Miwiki:
+  !wiki (.+) ###! (?-mix:^!)(?-mix:wiki (.+))
+Cinch::Plugins::MultiQDB:
+  !qdb ###! ^(?-mix:^!)(?-mix:qdb)$
+  !qdb (\w+) ###! (?-mix:^!)(?-mix:qdb (\w+))
+  !qdb (\w+) (.+) ###! (?-mix:^!)(?-mix:qdb (\w+) (.+))
+  !qdb\ list ###! ^(?-mix:^!)(?-mix:qdb\ list)$
+  !help\ QDB ###! ^(?-mix:^!)(?-mix:help\ QDB)$
+Cinch::Plugins::Ping:
+  !ping ###! ^(?-mix:^!)(?-mix:ping)$
+  !ping (\S+) ###! (?-mix:^!)(?-mix:ping (\S+))
+  PING(?:$| .+) ###! (?-mix:^)(?-mix:PING(?:$| .+))
+  !help\ Ping ###! ^(?-mix:^!)(?-mix:help\ Ping)$
+Cinch::Plugins::Porno:
+  !porno(?> )?(.+)? ###! (?-mix:^!)(?-mix:porno(?> )?(.+)?)
+Cinch::Plugins::PrivToolbox:
+  say (#\S+) (.+) ###! (?-mix:^)(?-mix:say (#\S+) (.+))
+  msg (\S+) (.+) ###! (?-mix:^)(?-mix:msg (\S+) (.+))
+  act (#\S+) (.+) ###! (?-mix:^)(?-mix:act (#\S+) (.+))
+  cs (.+) ###! (?-mix:^)(?-mix:cs (.+))
+  reidentify ###! ^(?-mix:^)(?-mix:reidentify)$
+  ns (.+) ###! (?-mix:^)(?-mix:ns (.+))
+  hs (.+) ###! (?-mix:^)(?-mix:hs (.+))
+  psa (.+) ###! (?-mix:^)(?-mix:psa (.+))
+  kick (#\S+) (\S+)\s?(.+)? ###! (?-mix:^)(?-mix:kick (#\S+) (\S+)\s?(.+)?)
+  ban (#\S+) (\S+) ###! (?-mix:^)(?-mix:ban (#\S+) (\S+))
+  unban (#\S+) (\S+) ###! (?-mix:^)(?-mix:unban (#\S+) (\S+))
+  kb (#\S+) (\S+)\s?(.+)? ###! (?-mix:^)(?-mix:kb (#\S+) (\S+)\s?(.+)?)
+  help\ Private\ toolbox ###! ^(?-mix:^)(?-mix:help\ Private\ toolbox)$
+Cinch::Plugins::Rainbow:
+  !rainbow (.+) ###! (?-mix:^!)(?-mix:rainbow (.+))(?-mix:$)
+  !eyerape (.+) ###! (?-mix:^!)(?-mix:eyerape (.+))(?-mix:$)
+  !help\ Rainbow ###! ^(?-mix:^!)(?-mix:help\ Rainbow)(?-mix:$)$
+Cinch::Plugins::RemoteAdmin:
+   ###! (?-mix:)
+   ###! (?-mix:)
+   ###! (?-mix:)
+   ###! (?-mix:)
+   ###! (?-mix:)
+   ###! (?-mix:)
+  !help\ Remote\ admin ###! ^(?-mix:^!)(?-mix:help\ Remote\ admin)$
+Cinch::Plugins::RussianRoulette:
+  !rr ###! ^(?-mix:^!)(?-mix:rr)$
+  !rr (.+) ###! (?-mix:^!)(?-mix:rr (.+))
+  !help\ Russian\ Roulette ###! ^(?-mix:^!)(?-mix:help\ Russian\ Roulette)$
+Cinch::Plugins::Ryder:
+  !ryder ###! ^(?-mix:^!)(?-mix:ryder)$
+  !help\ Ryder ###! ^(?-mix:^!)(?-mix:help\ Ryder)$
+Cinch::Plugins::Silly:
+  pokes (.+)$ ###! (?-mix:^pokes (.+)$)
+  \b(dumb|stupid)\b.+\bbots*\b ###! (?i-mx:\b(dumb|stupid)\b.+\bbots*\b)
+  !xmas ###! ^(?-mix:^!)(?-mix:xmas)$
+  !xmas (\S+) ###! (?-mix:^!)(?-mix:xmas (\S+))
+  !newyear ###! ^(?-mix:^!)(?-mix:newyear)$
+  !newyear (\S+) ###! (?-mix:^!)(?-mix:newyear (\S+))
+  !tz ###! ^(?-mix:^!)(?-mix:tz)$
+  !tz (\S+) ###! (?-mix:^!)(?-mix:tz (\S+))
+  !mayan ###! ^(?-mix:^!)(?-mix:mayan)$
+  !help\ Silly ###! ^(?-mix:^!)(?-mix:help\ Silly)$
+Cinch::Plugins::TimeBan:
+Cinch::Plugins::Toolbox:
+  ~join (.+) ###! (?-mix:^~)(?-mix:join (.+))
+  ~part(?: (\S+))(?: (.+)) ###! (?-mix:^~)(?-mix:part(?: (\S+))(?: (.+)))
+  ~quit(?: (.+)) ###! (?-mix:^~)(?-mix:quit(?: (.+)))
+  ~nick (.+) ###! (?-mix:^~)(?-mix:nick (.+))
+  ~eval (.+) ###! (?-mix:^~)(?-mix:eval (.+))
+  ~help\ Toolbox ###! ^(?-mix:^~)(?-mix:help\ Toolbox)$
+Cinch::Plugins::Twitter:
+  !tw$ ###! (?-mix:^!)(?-mix:tw$)
+  !tw (\w+)(?:-(\d+))?$ ###! (?-mix:^!)(?-mix:tw (\w+)(?:-(\d+))?$)
+  @(\w+)(?:-(\d+))?$ ###! (?-mix:^@(\w+)(?:-(\d+))?$)
+  !tw #(\d+)$ ###! (?-mix:^!)(?-mix:tw #(\d+)$)
+  @#(\d+)$ ###! (?-mix:^@#(\d+)$)
+  \?tw (\w+)$ ###! (?-mix:^\?tw (\w+)$)
+  \?ts (.+)$ ###! (?-mix:^\?ts (.+)$)
+  !help\ Twitter ###! ^(?-mix:^!)(?-mix:help\ Twitter)$
+Cinch::Plugins::UrbanDictionary:
+  !urban (.+) ###! (?-mix:^!)(?-mix:urban (.+))
+  !help\ Urban\ Dictionary ###! ^(?-mix:^!)(?-mix:help\ Urban\ Dictionary)$
+Cinch::Plugins::Weather:
+  !w(?:eather|x)(?:(?> -)([[:alpha:]]+))? (.+) ###! (?-mix:^!)(?-mix:w(?:eather|x)(?:(?> -)([[:alpha:]]+))? (.+))
+  !forecast(?:(?> -)([[:alpha:]]+))? (.+) ###! (?-mix:^!)(?-mix:forecast(?:(?> -)([[:alpha:]]+))? (.+))
+  !help\ Weather ###! ^(?-mix:^!)(?-mix:help\ Weather)$
+Cinch::Plugins::YouTube:
+   ###! (?-mix:)
+Cinch::Plugins::Vimeo:
+   ###! (?-mix:)
+Cinch::Plugins::CelestiaRadio::StreamInfo:
+  [!.]p$|playing$ ###! (?i-mx:^[!.])(?-mix:p$|playing$)
+  [!.]h$|history$|played$ ###! (?i-mx:^[!.])(?-mix:h$|history$|played$)
+  [!.]s$|stream$ ###! (?i-mx:^[!.])(?-mix:s$|stream$)
+  [!.]l$|listeners$ ###! (?i-mx:^[!.])(?-mix:l$|listeners$)

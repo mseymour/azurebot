@@ -1,0 +1,136 @@
+Cinch::Plugins::Eightball:
+  !8ball <text?[ text? ...]>
+
+Cinch::Plugins::AdminToolbox:  (private message only) (Azurebot v4)
+  setup admin access
+  add admin <host>
+  del admin <host>
+  list admins
+  add trusted <host>
+  del trusted <host>
+  list trusted
+
+Cinch::Plugins::Alton:
+  !alton
+
+Cinch::Plugins::Attack:
+  !attack [nick]
+
+Cinch::Plugins::Authtest:
+  Am I <an admin|trusted>?
+
+Cinch::Plugins::AutoVOP:
+  !auto<op|voice> <on|off>
+
+Cinch::Plugins::BokunoBibletoads:
+  !bnbt
+
+Cinch::Plugins::Booru:
+  !booru [tag] [search_term ...]
+  !booru list
+
+Cinch::Plugins::BotInfo:
+  info
+  list plugins
+  help <plugin name>
+
+Cinch::Plugins::ByeDaddy:
+  !byedaddy <url>
+
+Cinch::Plugins::Decide:
+  !decide <text(, |, or | or )<text ...>>
+  !choose <*>
+  !coin
+  !rand <complex> <complex>
+  !token <length>
+
+Cinch::Plugins::Define:
+  !define <term> as <dfn>
+  !redefine <term> as <dfn>
+  !forget <term>
+  ?d <term>
+  !whatis <term>
+
+Cinch::Plugins::Dice:
+  [M#]XdY[(+-/*)[XdY|#]...]
+
+Cinch::Plugins::JargonFile:
+  !jargon <term>
+
+Cinch::Plugins::JoinNotice:
+  !hello
+
+Cinch::Plugins::Macros:
+  reload macros
+  !<macro_name> [text]
+
+Cinch::Plugins::Miwiki: (Azurebot v4)
+  !wiki <title>
+
+Cinch::Plugins::MultiQDB:
+  !qdb [selector] [id]
+  !qdb list
+
+Cinch::Plugins::Ping:
+  !ping <nick>
+
+Cinch::Plugins::Porno:
+  !porno [search]
+
+Cinch::Plugins::PrivToolbox: (private message only)
+  say <channel> <text>
+  msg <nick> <text>
+  act <channel> <text>
+  cs <commands>
+  reidentify
+  ns <commands>
+  hs <commands>
+  psa <text>
+  kick <channel> <nick> [reason]
+  ban <channel> <nick>
+  unban <channel> <nick>
+  kb <channel> <nick>
+
+Cinch::Plugins::Rainbow:
+  !rainbow <text>
+  !eyerape <text>
+
+Cinch::Plugins::RussianRoulette:
+  !rr [nick]
+
+Cinch::Plugins::Ryder:
+  !ryder
+
+Cinch::Plugins::Silly:
+  !xmas [tz]
+  !newyear [tz]
+  !tz [tz]
+  !mayan
+
+Cinch::Plugins::Toolbox:
+  ~join <channel>
+  ~part <channel> [reason]
+  ~quit [reason]
+  ~nick <newnick>
+  ~eval <code>
+
+Cinch::Plugins::Twitter:
+  !tw [username][-(backtrack # of tweets)]
+  !tw #<tweet_id>
+  @[username][-(backtrack # of tweets)]
+  @#<tweet_id>
+  ?tw <username>
+  ?ts <search term>
+
+Cinch::Plugins::UrbanDictionary:
+  !urban <term>
+
+Cinch::Plugins::Weather:
+  !weather <place>
+
+Cinch::Plugins::CelestiaRadio::StreamInfo:
+  !p, !playing
+  !h, !history, !played
+  !s, !stream
+  !l, !listeners
+  (may subsitute ! for .)

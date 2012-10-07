@@ -7,7 +7,9 @@ module Cinch
     class Define
       include Cinch::Plugin
       
-      set plugin_name: 'Definer', react_on: :channel, help: "Lets you... define things. Usage:\n* `!define <term> as <dfn>` -- Defines a term. Replaces an old one if it already exists.\n* `!whatis <term>` -- Looks up a term.\n* `!forget <term>` -- Forgets a term. (Chanops only)\n* `!reload definitions` `!save definitions` -- reloads/saves definitions from/to disk. (Chanops only)"
+      set plugin_name: 'Definer', 
+          react_on: :channel, 
+          help: "Lets you... define things. Usage:\n* `!define <term> as <dfn>` -- Defines a term. Replaces an old one if it already exists.\n* `!whatis <term>` -- Looks up a term.\n* `!forget <term>` -- Forgets a term. (Chanops only)\n* `!reload definitions` `!save definitions` -- reloads/saves definitions from/to disk. (Chanops only)"
       
       def initialize(*args)
         super
