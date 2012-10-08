@@ -23,8 +23,8 @@ module Cinch
 
       match /timeban (\S+) ((?:\d+\w)+)(?: (.+))?/, method: :execute_timeban
       def execute_timeban(m, nick, range, reason)
-        return m.user.notice('I do not have the correct privileges. (not +%s)' % @bot.irc.isupport["PREFIX"].keys - ['v']) unless check_user(m.channel, @bot)
-        return m.user.notice('You do not have the correct privileges. (not +%s)' % @bot.irc.isupport["PREFIX"].keys - ['v']) unless check_user(m.channel, m.user)
+        return m.user.notice('#{Format(:red,:bold,"Whoops!")} · I do not have the correct privileges. (not +%s)' % @bot.irc.isupport["PREFIX"].keys - ['v']) unless check_user(m.channel, @bot)
+        return m.user.notice('#{Format(:red,:bold,"Whoops!")} · You do not have the correct privileges. (not +%s)' % @bot.irc.isupport["PREFIX"].keys - ['v']) unless check_user(m.channel, m.user)
         user = User(nick)
         return if user == @bot
         return m.user.notice('%s does not seem to exist on %s' % [nick, @bot.irc.network.name]) if user.unknown?
@@ -63,8 +63,8 @@ module Cinch
 
       match /unban (\S+)$/, method: :execute_unban
       def execute_unban(m, nick)
-        return m.user.notice('nobotop') unless check_user(m.channel, @bot)
-        return m.user.notice('nogood') unless check_user(m.channel, m.user)
+        return m.user.notice('#{Format(:red,:bold,"Whoops!")} · I do not have the correct privileges. (not +%s)' % @bot.irc.isupport["PREFIX"].keys - ['v']) unless check_user(m.channel, @bot)
+        return m.user.notice('#{Format(:red,:bold,"Whoops!")} · You do not have the correct privileges. (not +%s)' % @bot.irc.isupport["PREFIX"].keys - ['v']) unless check_user(m.channel, m.user)
 
         key = TIMEBAN_KEY % [@bot.irc.isupport['NETWORK'], m.channel.name.downcase, nick.downcase]
 
@@ -77,13 +77,13 @@ module Cinch
             ChronicDuration.output(Time.parse(bandata['ban.end'].to_i - Time.parse(bandata['ban.start']).to_i), format: :long)
           ])
         else
-          m.user.notice('No timed ban could be found for %s.' % nick)
+          m.user.notice("#{Format(:red,:bold,"Whoops!")} · No timed ban could be found for %s." % nick)
         end
       end
 
       match 'listbans', method: :execute_listbans
       def execute_listbans(m)
-        return m.user.notice('nogood') unless check_user(m.channel, m.user)
+        return m.user.notice("#{Format(:red,:bold,"Whoops!")} · You don't have the proper authorization for that.") unless check_user(m.channel, m.user)
         key = TIMEBAN_KEY % [@bot.irc.isupport['NETWORK'], m.channel.name.downcase, nil]
         bans = shared[:redis].smembers(key[0..-2]).each_with_object([]) {|timeban,memo| memo << shared[:redis].hgetall(timeban) }
         lines = bans.each_with_index.each_with_object([]) {|(timeban,i),memo|
@@ -98,7 +98,7 @@ module Cinch
           }
           m.user.msg '* End of results.'
         else
-          m.user.msg 'No timebans could be found for %s.' % m.channel.name
+          m.user.msg "#{Format(:red,:bold,"Whoops!")} · No timebans could be found for %s." % m.channel.name
         end
       end
 
