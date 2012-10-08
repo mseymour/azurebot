@@ -48,9 +48,9 @@ module Cinch
       match /nick (.+)/, method: :nick
       def nick(m, nick)
         return unless is_admin?(m.user)
-        botnick = @bot.nick.clone
-        bot.nick = nick
-        @bot.handlers.dispatch :admin, m, "My nick got changed from #{botnick} to #{@bot.nick} by #{m.user.nick}", m.target
+        oldnick = @bot.nick.dup
+        @bot.nick = nick
+        @bot.handlers.dispatch :admin, m, "My nick got changed from #{oldnick} to #{nick} by #{m.user.nick}", m.target
       end
 
       match /eval (.+)/, method: :boteval
