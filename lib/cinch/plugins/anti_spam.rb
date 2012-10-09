@@ -34,7 +34,8 @@ module Cinch
         end
       end
 
-      set plugin_name: 'Anti-spam', help: 'to be written', required_options: [:command_threshold, :seconds_threshold, :kick_threshold_for_ban]
+      set plugin_name: 'Anti-spam', help: 'Prevents command spam in channels.', required_options: [:command_threshold, :seconds_threshold, :kick_threshold_for_ban]
+      PERIOD_MULTIPLIER = 120
 
       def initialize(*args)
         super
@@ -45,16 +46,16 @@ module Cinch
       def listen_to_spam(m)
         d = "spam".object_id
         #return if check_user(m.channel, m.user)
-        return unless m.message.match(/^[!@%-.\[\]?]+\w+/)
+        return unless m.message.match(/^[!@%-.\]?]+\w+/)
 
         if @command_abusers[m.user] # record exists
           record = @command_abusers[m.user]
 
           record.reset_current! unless record.current
 
-          # The timer will run once after seconds_threshold * 120 runs. That is,
+          # The timer will run once after seconds_threshold * PERIOD_MULTIPLIER runs. That is,
           # if seconds_threshold is set to 30, then timer code will run in an hour.
-          record.current.timer = Timer(config[:seconds_threshold] * 120, shots: 1) do
+          record.current.timer = Timer(config[:seconds_threshold] * PERIOD_MULTIPLIER, shots: 1) do
             @command_abusers.delete(m.user)
           end
 
@@ -76,7 +77,7 @@ module Cinch
         else # creating a new record
           record = Abuser.new
           #record.current.increment_count!
-          record.current.timer = Timer(config[:seconds_threshold] * 120, shots: 1) do
+          record.current.timer = Timer(config[:seconds_threshold] * PERIOD_MULTIPLIER, shots: 1) do
             # Delete abuse record after timer has elapsed.
             @command_abusers.delete(m.user)
           end
@@ -85,6 +86,21 @@ module Cinch
         
         @bot.handlers.dispatch :antispam, m, [d,@command_abusers[m.user]], m.target
       end
+
+      match 'antispam status', method: :antispam_status
+      def antispam_status(m)
+        m.reply "Abusers will be kicked after %d commands within %d seconds, and will be banned after %d kicks.\n" +
+                "A 'grace period' of %d minutes is given, after which the abuser's record is deleted, unless they abuse again.\n" +
+                "There are currently %d records on %s." % [
+                  config[:command_threshold], 
+                  config[:seconds_threshold], 
+                  config[:kick_threshold_for_ban], 
+                  (config[:seconds_threshold] * PERIOD_MULTIPLIER) / 60, 
+                  command_abusers.size, 
+                  @bot.irc.network.name
+                ]
+      end
+
     end
   end
 end
