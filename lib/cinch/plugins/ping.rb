@@ -13,7 +13,7 @@ module Cinch
         @listen_for_ping = {}
       end
 
-      match /ping(?: (\S+))?/, group: :x_ping
+      match /ping(?: (\S+))?/, react_on: :channel, group: :x_ping
       def execute(m, nick=nil)
         nick ||= m.user.nick
         user = User(nick)
