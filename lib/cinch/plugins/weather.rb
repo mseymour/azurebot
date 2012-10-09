@@ -196,7 +196,7 @@ module Cinch
       def wind(dir, speed, gust)
         return "" if [speed, gust].all? {|i| i.to_f <= 0 }
         parts = []
-        parts << "#{dir} at #{speed}" unless 
+        parts << "#{dir} at #{speed}"
         parts << "gusting to #{gust}" if gust.to_f > 0
         parts.join(", ")
       end
