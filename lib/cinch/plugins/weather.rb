@@ -10,7 +10,7 @@ module Cinch
       include Cinch::Plugin
       set(
         plugin_name: "Weather",
-        help: "Grabs the current weather and forecast from WeatherUnderground.\nUsage: `!weather <-si> [query]`\nUsage: `!forecast <-si> [query]\nSwitches: `s` -- Simple conditions; `i` -- Imperial measurements\nShorthand for !weather: !wx",
+        help: "Grabs the current weather and forecast from WeatherUnderground.\nUsage: `!weather [-si] <query>`\nUsage: `!forecast [-si] <query>\nSwitches: `s` -- Simple conditions; `i` -- Imperial measurements\nShorthand for !weather: !wx",
         required_options: [:api_key])
 
       MAPPING = {
@@ -18,9 +18,9 @@ module Cinch
         imperial: {t: "f", d: "mi", s: "mph", p: %w{in in}}
       }
 
-      MOON_PHASES = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbious', 'Full Moon', 'Waning Gibbious', 'Last Quarter', 'Waning Crescent']
+      MOON_PHASES = ['New Moon 🌑', 'Waxing Crescent 🌒', 'First Quarter 🌓', 'Waxing Gibbious 🌔', 'Full Moon 🌕', 'Waning Gibbious 🌖', 'Last Quarter 🌗', 'Waning Crescent 🌘']
 
-      UNICODE_ICONS = {
+      UNICODE_ICONS = {[]
         chanceflurries:'❄',
         chancerain:'☂',
         chancesleet:'☂❄',
