@@ -20,7 +20,7 @@ module Cinch
 
       MOON_PHASES = ['New Moon 🌑', 'Waxing Crescent 🌒', 'First Quarter 🌓', 'Waxing Gibbious 🌔', 'Full Moon 🌕', 'Waning Gibbious 🌖', 'Last Quarter 🌗', 'Waning Crescent 🌘']
 
-      UNICODE_ICONS = {[]
+      UNICODE_ICONS = {
         chanceflurries:'❄',
         chancerain:'☂',
         chancesleet:'☂❄',
