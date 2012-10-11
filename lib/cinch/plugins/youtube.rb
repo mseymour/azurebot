@@ -23,7 +23,7 @@ module Cinch
           response = HTTParty.get(YOUTUBE_API_VIDEO_URL % v, headers: {'User-Agent' => "HTTParty/#{HTTParty::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}"})
           raise StandardError, '%s - %s (%d)' % [response['error']['message'], v, response['error']['code']] if response['error']
           video = response['data']
-          m.reply "YouTube » #{Format(:bold,'%<title>s')} (%<length>s) · by %<uploader>s on %<uploaded>s · #{Format(:green,'☝')}%<likes>s #{Format(:red,'☟')}%<dislikes>s · %<views>s views" % {
+          m.reply "#{Format(:bold,'YouTube »')} #{Format(:purple,'%<title>s')} (%<length>s) · by %<uploader>s on %<uploaded>s · #{Format(:green,'☝%<likes>s')} #{Format(:red,'☟%<dislikes>s')} · %<views>s views" % {
             title: video['title'],
             uploader: video['uploader'],
             uploaded: Time.parse(video['uploaded']).strftime('%F'),
@@ -34,7 +34,7 @@ module Cinch
           }
         }
       rescue => e
-        m.reply "YouTube » #{e.message}"
+        m.reply "#{Format(:bold,'YouTube »')} #{e.message}"
       end
 
       private
