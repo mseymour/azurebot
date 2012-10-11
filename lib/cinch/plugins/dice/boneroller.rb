@@ -99,9 +99,9 @@ module Boneroller
       }
     end
 
-    #def sum_ofArray(r)
-      #r.respond_to?(:reduce) ? r.reduce(0, :+) : r
-    #end
+    def sum_ofArray(r)
+      r.respond_to?(:reduce) ? r.reduce(0, :+) : r
+    end
 
     def avg_ofArray(r)
       r.respond_to?(:reduce) ? r.reduce { |sum, el| sum + el }.to_f / r.size : r
