@@ -89,16 +89,9 @@ module Cinch
 
       match 'antispam status', method: :antispam_status
       def antispam_status(m)
-        m.reply "Abusers will be kicked after %d commands within %d seconds, and will be banned after %d kicks.\n" +
-                "A 'grace period' of %d minutes is given, after which the abuser's record is deleted, unless they abuse again.\n" +
-                "There are currently %d records on %s." % [
-                  config[:command_threshold], 
-                  config[:seconds_threshold], 
-                  config[:kick_threshold_for_ban], 
-                  (config[:seconds_threshold] * PERIOD_MULTIPLIER) / 60, 
-                  command_abusers.size, 
-                  @bot.irc.network.name
-                ]
+        m.reply "Abusers will be kicked after %d commands within %d seconds, and will be banned after %d kicks.
+A 'grace period' of %d minutes is given, after which the abuser's record is deleted, unless they abuse again.
+There are currently %d records on %s." % [config[:command_threshold], config[:seconds_threshold], config[:kick_threshold_for_ban], (config[:seconds_threshold] * PERIOD_MULTIPLIER) / 60, command_abusers.size, @bot.irc.network.name]
       end
 
     end
