@@ -42,7 +42,8 @@ module Boneroller
       raise Errors::RollTooLowError if faces.to_i < LOW_ROLL_THRESHOLD || dice.to_i < LOW_ROLL_THRESHOLD || repeat_by.to_i < LOW_ROLL_THRESHOLD
       # Roll it!
       repeat_by.to_i.times {
-        @sum += attack_roll(dice, faces) + attack_elements(elements)
+        roll = attack_roll(dice, faces)
+        @sum += attack_elements(roll, elements)
       }
     end
     alias_method :roll!, :roll
@@ -55,7 +56,7 @@ module Boneroller
       rolls = @rolls.each_with_object([]) {|(notation,results),memo|
         memo << "[%s(%d)=%s]" % [notation, sum_ofArray(results), results * ","]
       }.join("; ")
-      "#{@comment + ': ' if @comment}#@sum#{' /' + rolls + '/' if include_rolls}"
+      "#{@comment + ': ' if @comment}#@sum#{' (' + rolls + ')' if include_rolls}"
     end
     
     def inspect
@@ -66,22 +67,23 @@ module Boneroller
 
     def attack_roll(dice, faces)
       dice ||= 1
+      $log.debug '#attack_roll(%p, %p)' % [dice.to_i, faces.to_i]
       # Rolls a die `dice` times, and returns the result of a random roll between 1 and the number of faces.
       results = Array.new(dice.to_i) { Random.rand(1..faces.to_i) }
       @rolls << ["#{dice}d#{faces}", results]
       results.inject(0, :+) # sum of results
     end
 
-    def attack_elements(elements)
-      return 0 unless elements
+    def attack_elements(original_roll, elements)
+      return original_roll unless elements
       parts = elements.scan(ELEMENTS_REGEXP)
-      #roll_result = 0
 
-      parts.inject(0) {|roll_result, (operator, dice, faces, natural, lh)|
+      parts.inject(original_roll) {|roll_result, (operator, dice, faces, natural, lh)|
         if faces
           modifier = attack_roll(dice, faces)
         elsif natural
           modifier = natural.to_i
+        else modifier = 0
         end
 
         case operator
@@ -94,7 +96,7 @@ module Boneroller
         when "-L" then roll_result -= sum_ofArray(low_roll[1])
         when "-H" then roll_result -= sum_ofArray(high_roll[1])
         end
-        
+
         roll_result
       }
     end
