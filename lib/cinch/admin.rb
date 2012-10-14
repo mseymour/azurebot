@@ -26,7 +26,7 @@ module Cinch
 
     def no_admins?
       network = @bot.irc.isupport['NETWORK']
-      shared[:redis].scard("bot.#{network}:admins") == 0
+      shared[:redis].scard("bot.#{network.downcase}:admins") == 0
     end
 
     def get_online_admins
@@ -44,21 +44,21 @@ module Cinch
     def add_action (mask, type)
       raise ArgumentError, 'type must be either :admins or :trusted.' unless TYPES.include?(type)
       network = @bot.irc.isupport['NETWORK']
-      shared[:redis].sadd "bot.#{network}:#{type}", mask
+      shared[:redis].sadd "bot.#{network.downcase}:#{type}", mask
     end
     
     def delete_action (mask, type)
       raise ArgumentError, 'type must be either :admins or :trusted.' unless TYPES.include?(type)
       network = @bot.irc.isupport['NETWORK']
-      shared[:redis].srem "bot.#{network}:#{type}", mask
+      shared[:redis].srem "bot.#{network.downcase}:#{type}", mask
     end
     
     def get_action (type)
       raise ArgumentError, 'type must be either :admins or :trusted.' unless TYPES.include?(type)
       network = @bot.irc.isupport['NETWORK']
       case type
-      when :admins then shared[:redis].smembers "bot.#{network}:admins"
-      when :trusted then shared[:redis].sunion "bot.#{network}:admins", "bot.#{network}:trusted"
+      when :admins then shared[:redis].smembers "bot.#{network.downcase}:admins"
+      when :trusted then shared[:redis].sunion "bot.#{network.downcase}:admins", "bot.#{network.downcase}:trusted"
       end
     end
 
