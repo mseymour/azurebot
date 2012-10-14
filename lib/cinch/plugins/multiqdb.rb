@@ -16,7 +16,7 @@ module Cinch
 
       set(
       plugin_name: "QDB",
-      help: "Pulls a quote from a QDB.\n`Usage: !qdb <selector> <ID|latest|random>`; `!qdb` for selector list.",
+      help: "Pulls a quote from a QDB.\n`Usage: !qdb [selector] [#|latest|random]`; `!qdb` for selector list.",
       required_options: [:limit])
 
       def initialize(*args)
@@ -26,7 +26,7 @@ module Cinch
         @@qdbs = Hash[*names.flatten]
       end
 
-      match /qdb(?: (\w+))(?: (.+))/, method: :execute_qdb, group: :x_qdb
+      match /qdb(?: (\w+))?(?: (.+))?/, method: :execute_qdb, group: :x_qdb
       def execute_qdb(m, selector=nil, id=nil)
         m.reply "You have not supplied a selector. Selectors: #{@@qdbs.keys * ", "}" and return if !selector
         m.reply "#{selector} does not exist. Valid selectors: #{@@qdbs.keys * ", "}" and return if !@@qdbs.include?(selector)
@@ -70,7 +70,7 @@ module Cinch
           qdb = q.new
           list << "#{q.name} (#{q.shortname}): #{q.url}"
         }
-        m.notice "To use a QDB, type " + Format(:bold, "!qdb <selector> <ID|latest|random>") + ".\n" + list.join("\n")
+        m.notice "To use a QDB, type " + Format(:bold, "!qdb [selector] [#|latest|random]") + ".\n" + list.join("\n")
       end
 
       private
@@ -81,7 +81,7 @@ module Cinch
         case id
         when "latest" then qdb.latest
         when "random" then qdb.random
-        when /^#?[[:digit:]]+$/ then qdb.by_id(id.gsub(/\D+/, ''))
+        when /^#?[[:digit:]]+$/ then qdb.by_id(id[/\d+/])
         else qdb.random
         end
       end
