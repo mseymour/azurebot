@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require 'active_support/time'
 require 'active_support/core_ext/string'
 require 'active_support/core_ext/object/blank'
@@ -126,7 +128,12 @@ module Cinch
           kin:    (msd % 20)
         }
 
-        m.reply "#{lc[:baktun]}.#{lc[:katun]}.#{lc[:tun]}.#{lc[:uinal]}.#{lc[:kin]}"
+        m.reply '%<baktun>s.%<katun>s.%<tun>s.%<uinal>s.%<kin>s' % lc
+      end
+
+      match /heavymetalize (.+)/, method: :heavymetalize
+      def heavymetalize(m, s)
+        m.reply s.tr('AEIOUaeiouyYWwXx', 'ÄËÏÖÜäëïöüÿŸẄẅẌẍ')
       end
 
     end
