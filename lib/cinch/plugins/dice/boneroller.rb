@@ -67,7 +67,6 @@ module Boneroller
 
     def attack_roll(dice, faces)
       dice ||= 1
-      $log.debug '#attack_roll(%p, %p)' % [dice.to_i, faces.to_i]
       # Rolls a die `dice` times, and returns the result of a random roll between 1 and the number of faces.
       results = Array.new(dice.to_i) { Random.rand(1..faces.to_i) }
       @rolls << ["#{dice}d#{faces}", results]
