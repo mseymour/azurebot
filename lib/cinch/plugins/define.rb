@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'time'
 require 'chronic_duration'
+require_relative '../helpers/check_user'
 
 module Cinch
   module Plugins
@@ -24,8 +25,6 @@ module Cinch
         else
           m.reply "That term already exists!"
         end
-      rescue
-        m.reply "#{Format(:red,:bold,"Uhoh!")} · #{$!}"
       end
     
       match /redefine (.+?) as (.+)/, method: :execute_redefine
@@ -48,14 +47,12 @@ module Cinch
         return m.reply("You do not have the proper access! (not +qaoh)", true) unless check_user(m.channel, m.user)
         if @redis.exists("term:"+term.downcase)
           dfn = @redis.hgetall("term:"+term.downcase)
-          edited = "(last edited by #{dfn["edited.by"]}, #{time_diff_in_natural_language(dfn["edited.time"], Time.now.utc, acro: true)} ago)"
+          edited = "(last edited by #{dfn["edited.by"]}, #{ChronicDuration.output(Time.now.utc.to_i - Time.parse(dfn["edited.time"]).to_i)} ago)"
           @redis.del("term:"+term.downcase)
           m.reply "I have forgotten #{Format(:bold,term)}. #{edited}"
         else
           m.reply "Sorry, but I do not know what #{Format(:bold,term)} is."
         end
-      rescue
-        m.reply "#{Format(:red,:bold,"Uhoh!")} · #{$!}"
       end
     
       match /^\?d (.+)/, method: :execute_whatis, use_prefix: false, group: :whatis
@@ -70,13 +67,6 @@ module Cinch
         end
       end
 
-      private
-      
-      def check_user(users, user)
-        modes = @bot.irc.isupport["PREFIX"].keys
-        modes.delete("v")
-        modes.any? {|mode| users[user].include?(mode)}
-      end
     end
   end
 end
