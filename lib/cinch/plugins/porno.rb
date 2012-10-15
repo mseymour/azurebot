@@ -5,7 +5,7 @@ module Cinch
     class Porno
       include Cinch::Plugin
 
-      set required_options: [:porno_list_path]
+      set help: "Random porno film names.\nUsage: `!porno [search term]`", required_options: [:porno_list_path]
 
       def initialize(*args)
         super

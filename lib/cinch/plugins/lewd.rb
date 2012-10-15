@@ -6,6 +6,8 @@ module Cinch
     class Lewd
       include Cinch::Plugin
 
+      set help: "Lewd things.\n Usage: `!lewd [1..5]`"
+
       def initialize(*args)
         super
         @lines = [
