@@ -10,16 +10,19 @@ module Cinch
       include Cinch::Plugin
       set(
         plugin_name: "Weather",
-        help: "Grabs the current weather and forecast from WeatherUnderground.\nUsage: `!weather [-si] <query>`\nUsage: `!forecast [-si] <query>\nSwitches: `s` -- Simple conditions; `i` -- Imperial measurements\nShorthand for !weather: !wx",
+        help: "Grabs the current weather and forecast from WeatherUnderground.\nUsage: `!weather [-si] <query>`\nUsage: `!forecast [-si] <query>\nSwitches:\n* `s` -- Simple conditions\n* `i` -- Imperial measurements\nShorthand for !weather: !wx",
         required_options: [:api_key])
 
+      # Format mapping for metric and imperial values
       MAPPING = {
         metric: {t: "c", d: "km", s: "kph", p: %w{metric mm}},
         imperial: {t: "f", d: "mi", s: "mph", p: %w{in in}}
       }
 
+      # Moon phases based on the age of the moon.
       MOON_PHASES = ['New Moon 🌑', 'Waxing Crescent 🌒', 'First Quarter 🌓', 'Waxing Gibbious 🌔', 'Full Moon 🌕', 'Waning Gibbious 🌖', 'Last Quarter 🌗', 'Waning Crescent 🌘']
 
+      # Fancy unicode icons!
       UNICODE_ICONS = {
         chanceflurries:'❄',
         chancerain:'☂',
@@ -107,6 +110,10 @@ module Cinch
 
       private
 
+      # @param [String] query Forecast query
+      # @param [Boolean] is_metric Metric or Imperial output?
+      # @param [Integer] count (-1) The number of lines to return
+      # @return A formatted string containing the forecast for the supplied location.
       def fetch_forecast(query, is_metric, count=-1)
         result = Cinch::Plugins::Weather::Wx.new(config[:api_key]).get(query, :forecast, :geolookup)
         place = [result.location.city, result.location.state]
@@ -115,6 +122,10 @@ module Cinch
         } * "\n"
       end
 
+      # @param [String] query Weather conditions query
+      # @param [Boolean] is_metric Metric or Imperial output?
+      # @param [Boolean] is_minimal Output using the minimal conditions format?
+      # @return A formatted string containing the current weather conditions for the supplied location.
       def fetch_conditions(query, is_metric, is_minimal)
         units = is_metric ? MAPPING[:metric] : MAPPING[:imperial]
 
@@ -167,6 +178,8 @@ module Cinch
         [head,[*outside,collected.join(" · ")].join(", ") << '.',foot] * (is_minimal ? " " : "\n")
       end
 
+      # @param [String] pt The pressure trend from WU's API
+      # @return A human-friendly string stating "rising", "steady", or "falling"
       def pressure_trend(pt)
         case pt.to_s
         when "+" then "rising"
@@ -177,6 +190,9 @@ module Cinch
         end
       end
 
+      # @param [String,Float,Integer] onehour The precipitation for the past hour from WU's API
+      # @param [String,Float,Integer] today The precipitation for today from WU's API
+      # @return A human-friendly string stating the current precipitation
       def precip(onehour, today)
         return "" if [onehour, today].all? {|i| i.to_f <= 1 }
         parts = []
@@ -185,6 +201,9 @@ module Cinch
         parts.join(", and ")
       end
 
+      # @param [String,Float,Integer] hi The forecasted high temperature for the current day from WU's API
+      # @param [String,Float,Integer] lo The forecasted low temperature for the current day from WU's API
+      # @return A human-friendly string stating the high and low for today
       def hilo(hi, lo)
         return "" if [hi, lo].all? {|i| i[0..-3].blank? } # Omits last two chars (°F/C)
         parts = []
@@ -193,6 +212,10 @@ module Cinch
         parts.join(", ")
       end
 
+      # @param [String] dir The wind direction from WU's API
+      # @param [String,Float,Integer] speed The wind speed from WU's API
+      # @param [String,Float,Integer] gust The wind gust from WU's API
+      # @return A human-friendly string stating the wind direction, speed, and gust
       def wind(dir, speed, gust)
         return "" if [speed, gust].all? {|i| i.to_f <= 0 }
         parts = []
@@ -201,6 +224,8 @@ module Cinch
         parts.join(", ")
       end
 
+      # @param [String,Float,Integer] uv The current UV level from WU's API
+      # @return A human-friendly, IRC-formatted string stating the current UV level
       def uv_string(uv)
         case uv.to_i
         when 0..2 then Format(:green,"Low")
