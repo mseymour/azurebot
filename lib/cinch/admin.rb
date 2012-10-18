@@ -29,11 +29,11 @@ module Cinch
     end
 
     def each_online_admin
-      @bot.channels.each {|channel| channel.users.each { |user, _| yield(user) if is_admin?(user) } }
+      @bot.channels.flat_map {|channel| channel.users.keys }.uniq.each {|user| yield(user) if is_admin?(user) }
     end
 
     def each_online_trusted
-      @bot.channels.each {|channel| channel.users.each { |user, _| yield(user) if is_trusted?(user) } }
+      @bot.channels.flat_map {|channel| channel.users.keys }.uniq.each {|user| yield(user) if is_trusted?(user) }
     end
 
     private
