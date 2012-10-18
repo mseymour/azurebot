@@ -139,7 +139,7 @@ module Cinch
       # Converts a string range to a time in the future.
       # Valid range characters are `yMwdhms`
       # @param [String] s A string in the format `dX[dX...]` where `d` is a number and `x` is a letter. (see above.)
-      # @oaram [Time] t (nil) A +Time+ object.
+      # @param [Time] t (nil) A +Time+ object.
       def range2time(s, t=nil)
         t ||= Time.now
         range = s.scan(/\d+\w/).each_with_object(Hash.new(0)) {|time, memo| memo[time[-1]] += time[0..-2].to_i }
