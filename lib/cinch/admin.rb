@@ -29,14 +29,20 @@ module Cinch
       shared[:redis].scard("bot.#{network.downcase}:admins") == 0
     end
 
-    def get_online_admins
-      all_known_users = @bot.channels.inject([]) {|memo, channel| memo | channel.users.keys } | @bot.user_list
-      all_known_users.find_all {|user| is_admin?(user) && !user.unkown? && user.authed? }
+    def each_online_admin(&blk)
+      u = @bot.channels.inject([]) {|memo, chan| memo | chan.users.keys }
+      u.each {|user|
+        next if !is_admin?(user)
+        yield user
+      }
     end
 
-    def get_online_trusted
-      all_known_users = @bot.channels.inject([]) {|memo, channel| memo | channel.users.keys } | @bot.user_list
-      all_known_users.find_all {|user| is_trusted?(user) && !user.unkown? && user.authed? }
+    def each_online_trusted(&blk)
+      u = @bot.channels.inject([]) {|memo, chan| memo | chan.users.keys }
+      u.each {|user|
+        next if !is_trusted?(user)
+        yield user
+      }
     end
 
     private
