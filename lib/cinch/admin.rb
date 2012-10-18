@@ -25,46 +25,34 @@ module Cinch
     end
 
     def no_admins?
-      network = @bot.irc.isupport['NETWORK']
-      shared[:redis].scard("bot.#{network.downcase}:admins") == 0
+      shared[:redis].scard("bot.%s:admins" % @bot.irc.isupport['NETWORK'].downcase) == 0
     end
 
-    def each_online_admin(&blk)
-      u = @bot.channels.inject([]) {|memo, chan| memo | chan.users.keys }
-      u.each {|user|
-        next if !is_admin?(user)
-        yield user
-      }
+    def each_online_admin
+      @bot.channels.each {|channel| channel.users.each { |user, _| yield(user) if is_admin?(user) } }
     end
 
-    def each_online_trusted(&blk)
-      u = @bot.channels.inject([]) {|memo, chan| memo | chan.users.keys }
-      u.each {|user|
-        next if !is_trusted?(user)
-        yield user
-      }
+    def each_online_trusted
+      @bot.channels.each {|channel| channel.users.each { |user, _| yield(user) if is_trusted?(user) } }
     end
 
     private
 
     def add_action (mask, type)
       raise ArgumentError, 'type must be either :admins or :trusted.' unless TYPES.include?(type)
-      network = @bot.irc.isupport['NETWORK']
-      shared[:redis].sadd "bot.#{network.downcase}:#{type}", mask
+      shared[:redis].sadd("bot.%s:%s" % [@bot.irc.isupport['NETWORK'].downcase, type], mask)
     end
     
     def delete_action (mask, type)
       raise ArgumentError, 'type must be either :admins or :trusted.' unless TYPES.include?(type)
-      network = @bot.irc.isupport['NETWORK']
-      shared[:redis].srem "bot.#{network.downcase}:#{type}", mask
+      shared[:redis].srem("bot.%s:%s" % [@bot.irc.isupport['NETWORK'].downcase, type], mask)
     end
     
     def get_action (type)
       raise ArgumentError, 'type must be either :admins or :trusted.' unless TYPES.include?(type)
-      network = @bot.irc.isupport['NETWORK']
       case type
-      when :admins then shared[:redis].smembers "bot.#{network.downcase}:admins"
-      when :trusted then shared[:redis].sunion "bot.#{network.downcase}:admins", "bot.#{network.downcase}:trusted"
+      when :admins then shared[:redis].smembers("bot.%s:admins" % @bot.irc.isupport['NETWORK'].downcase)
+      when :trusted then shared[:redis].sunion("bot.%s:admins" % @bot.irc.isupport['NETWORK'].downcase, "bot.%s:trusted" % @bot.irc.isupport['NETWORK'].downcase)
       end
     end
 
