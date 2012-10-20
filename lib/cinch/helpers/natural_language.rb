@@ -7,6 +7,10 @@ module Cinch
 
       def time_distance(from_time, to_time, opts={})
         opts = {show_seconds: false}.merge(opts)
+        if from_time > to_time # swap if reversed
+          from_time, to_time = to_time, from_time
+          reversed = true
+        end
         from_time = from_time.to_time if from_time.respond_to?(:to_time)
         to_time = to_time.to_time if to_time.respond_to?(:to_time)
         intervals = %w(year month day hour minute second)
@@ -18,8 +22,8 @@ module Cinch
           delta
         end
         mapping = intervals.zip(values).reject {|(l,i)| !opts[:show_seconds] && l.eql?('second') || i < 1 }
-        mapping.map! {|(l,i)| '%d %s' % [i, i > 1 ? l.pluralize : l] if i > 0 }
-        mapping.to_sentence
+        mapping.map! {|(l,i)| '%d %s' % [i, i != 1 ? l.pluralize : l] }
+        reversed ? mapping.to_sentence + ' ago' : mapping.to_sentence
       end
       
     end
