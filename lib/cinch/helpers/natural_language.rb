@@ -5,7 +5,7 @@ module Cinch
   module Helpers
     module NaturalLanguage
 
-      def time_distance(from_time, to_time, opts={})
+      def self.time_distance(from_time, to_time, opts={})
         opts = {show_seconds: false}.merge(opts)
         if from_time > to_time # swap if reversed
           from_time, to_time = to_time, from_time
