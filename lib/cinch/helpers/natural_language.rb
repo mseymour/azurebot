@@ -1,13 +1,12 @@
-require 'date'
 require 'active_support/time'
-require 'active_support/core_ext/date_time/conversions'
+require 'active_support/core_ext/array/conversions'
 
 module Cinch
   module Helpers
     module NaturalLanguage
 
-      def time_diff(from_time, to_time, opts={})
-        opts = {}
+      def time_distance(from_time, to_time, opts={})
+        opts = {show_seconds: false}.merge(opts)
         from_time = from_time.to_time if from_time.respond_to?(:to_time)
         to_time = to_time.to_time if to_time.respond_to?(:to_time)
         intervals = %w(year month day hour minute second)
@@ -18,12 +17,11 @@ module Cinch
           from_time += delta.send(interval)
           delta
         end
-        Hash[intervals.zip(values)]
+        mapping = intervals.zip(values).reject {|(l,i)| !opts[:show_seconds] && l.eql?('second') || i < 1 }
+        mapping.map! {|(l,i)| '%d %s' % [i, i > 1 ? l.pluralize : l] if i > 0 }
+        mapping.to_sentence
       end
       
     end
   end
 end
-
-include Cinch::Helpers::NaturalLanguage
-p time_diff(Time.now, Date.parse('2012-11-10'))
