@@ -28,14 +28,14 @@ module Cinch
     # @return [Boolean] True if the user is a bot Admin and authenticated, False if not.
     def is_admin? (user)
       get_admins.any? {|admin|
-        !!(user =~ admin)
+        user =~ admin
       } && user.authed?
     end
 
     # @see #is_admin?
     def is_trusted? (user)
       get_trusted.any? {|trusted|
-        !!(user =~ trusted)
+        user =~ trusted
       } && user.authed?
     end
 
