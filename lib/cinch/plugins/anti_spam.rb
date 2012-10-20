@@ -46,7 +46,7 @@ module Cinch
       def listen_to_spam(m)
         d = "spam".object_id
         #return if check_user(m.channel, m.user)
-        return unless m.message.match(/^[!@%-.\]?]+\w+/)
+        return unless m.message.match(/^[!@%\-.\]?]+\w+/)
 
         if @command_abusers[m.user] # record exists
           record = @command_abusers[m.user]
