@@ -54,8 +54,6 @@ module Cinch
           return end_game(m.channel, true) if !m.channel.users.include?(player)
           if round_location == chamber.succ
             m.reply "*click*"
-            m.channel.ban(player.mask('*!*@%h'))
-            Timer(15, shots: 1) { m.channel.unban(player.mask('*!*@%h')) }
             m.channel.kick(player, "*BLAM*")
             m.channel.action "watches %s's brain splatter across the wall." % player.nick
             break
