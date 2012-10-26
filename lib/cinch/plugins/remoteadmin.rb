@@ -19,12 +19,14 @@ module Cinch
       listen_to :notice, method: :listen_notice
       def listen_notice(m, message = nil, target = nil)
         return if m.ctcp? || !m.user
-        if m.user.nick =~ /^.+serv$/i
+        if m.user.nick =~ /^.+serv$|^global$/i
           each_online_admin {|admin|
             admin.notice prettify(nick: m.user.nick, source: m.target.name, type: m.command, string: m.message)
           }
         else
-          Channel(shared[:controlchannel]).msg prettify(nick: m.user.nick, source: m.target.name, type: m.command, string: m.message)
+          each_controlchannel {|channel|
+            channel.msg prettify(nick: m.user.nick, source: m.target.name, type: m.command, string: m.message)
+          }
         end
       end
 
@@ -37,13 +39,17 @@ module Cinch
             admin.notice prettify(nick: m.user.nick, source: m.target.name, type: "CTCP", string: m.ctcp_message)
           }
         else
-          Channel(shared[:controlchannel]).msg prettify(nick: m.user.nick, source: m.target.name, type: "CTCP", string: m.ctcp_message)
+          each_controlchannel {|channel|
+            channel.msg prettify(nick: m.user.nick, source: m.target.name, type: "CTCP", string: m.ctcp_message)
+          }
         end
       end
 
       listen_to :admin, method: :listen_hook
       def listen_hook(m, message, target)
-        Channel(shared[:controlchannel]).msg prettify(nick: m.user.nick, source: m.target.name, type: "ADMIN", string: message)
+        each_controlchannel {|channel|
+          channel.msg prettify(nick: m.user.nick, source: m.target.name, type: "ADMIN", string: message)
+        }
       end
 
       listen_to :private_admin, method: :private_listen_hook

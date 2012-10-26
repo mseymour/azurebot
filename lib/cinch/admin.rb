@@ -1,5 +1,8 @@
+require_relative 'helpers/check_user'
+
 module Cinch
   module Admin
+    include Cinch::Helpers
 
     # Valid symbols for bot admin types
     TYPES = [:admins, :trusted]
@@ -44,15 +47,36 @@ module Cinch
       shared[:redis].scard("bot.%s:admins" % @bot.irc.isupport['NETWORK'].downcase) == 0
     end
 
-    # Yields all online users that are bot admins.
+    # Yields all control channels listed in the shared config entry :controlchannel.
+    # The bot will join any control channel that it is not in yet.
+    # @note `:controlchannel` may be either an array or a string. Channel keys are separated by spaces.
+    # @yield [channel] All control channels
+    def each_controlchannel
+      Array[*shared[:controlchannel]].each {|channel| 
+        chan, key = channel.split(' ')
+        c = Channel(chan)
+        c.join(key) if !@bot.channels.include?(chan)
+        yield c
+      }
+    end
+
+    # Yields all online users that are bot admins within all control channels.
     # @yield [user] Users that are bot admins.
     def each_online_admin
-      @bot.channels.flat_map {|channel| channel.users.keys }.uniq.each {|user| yield(user) if is_admin?(user) }
+      each_controlchannel {|channel|
+        channel.each {|user, modes|
+          yield(user) if is_admin?(user)
+        }
+      }
     end
 
     # @see #each_online_admin
-    def each_online_trusted
-      @bot.channels.flat_map {|channel| channel.users.keys }.uniq.each {|user| yield(user) if is_trusted?(user) }
+    def each_online_admin
+      each_controlchannel {|channel|
+        channel.each {|user, modes|
+          yield(user) if is_trusted?(user)
+        }
+      }
     end
 
     private
