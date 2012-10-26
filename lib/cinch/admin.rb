@@ -64,7 +64,7 @@ module Cinch
     # @yield [user] Users that are bot admins.
     def each_online_admin
       each_controlchannel {|channel|
-        channel.each {|user, modes|
+        channel.users.each {|user, modes|
           yield(user) if is_admin?(user)
         }
       }
@@ -73,7 +73,7 @@ module Cinch
     # @see #each_online_admin
     def each_online_admin
       each_controlchannel {|channel|
-        channel.each {|user, modes|
+        channel.users.each {|user, modes|
           yield(user) if is_trusted?(user)
         }
       }
