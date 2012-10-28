@@ -71,7 +71,7 @@ module Cinch
     end
 
     # @see #each_online_admin
-    def each_online_admin
+    def each_online_trusted
       each_controlchannel {|channel|
         channel.users.each {|user, modes|
           yield(user) if is_trusted?(user)
