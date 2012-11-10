@@ -187,7 +187,7 @@ module Cinch
             bandata['nick'], 
             bandata['host'],
             m.channel.name,  
-            bandata['banned.by']
+            bandata['banned.by'],
             bandata['reason'], 
             ChronicDuration.output((bandata['ban.end'] - bandata['ban.start']).round, format: :long)
           ], m.target
