@@ -157,13 +157,13 @@ module Cinch
       # @param [Time] t (nil) A +Time+ object.
       def range2time(s, t=nil)
         t ||= Time.now
-        range = range2h(s)
-        t.utc.advance Hash[[:years, :months, :weeks, :days, :hours, :minutes, :seconds].zip(range.values_at(*%w{y M w d h m s}))]
+        t.utc.advance range2h(s)
       end
 
       # Splits a timeban range into a hash.
       def range2h(s)
-        s.scan(/\d+\w/).each_with_object(Hash.new(0)) {|time, memo| memo[time[-1]] += time[0..-2].to_i }
+        range = s.scan(/\d+\w/).each_with_object(Hash.new(0)) {|time, memo| memo[time[-1]] += time[0..-2].to_i }
+        Hash[[:years, :months, :weeks, :days, :hours, :minutes, :seconds].zip(range.values_at(*%w{y M w d h m s}))]
       end
 
       # Unbans a user from a specified channel and deletes the record.
