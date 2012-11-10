@@ -55,7 +55,7 @@ module Cinch
               m.channel.name, 
               bandata['nick'], 
               bandata['host.mask'], 
-              bandata['reason'], 
+              bandata['ban.reason'], 
               ChronicDuration.output((bandata['ban.end'] - bandata['ban.start']).round, format: :long)
             ], m.target
         else
