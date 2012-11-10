@@ -44,7 +44,6 @@ module Cinch
 
       listen_to :channel, method: :listen_to_spam
       def listen_to_spam(m)
-        d = "spam".object_id
         #return if check_user(m.channel, m.user)
         return unless m.message.match(/^[!@%\-.\]?]+\w+/)
 
@@ -84,7 +83,7 @@ module Cinch
           @command_abusers[m.user] = record
         end
         
-        @bot.handlers.dispatch :antispam, m, [d,@command_abusers[m.user]], m.target
+        #@bot.handlers.dispatch :antispam, m, [d,@command_abusers[m.user]], m.target
       end
 
       match 'antispam status', method: :antispam_status
