@@ -59,6 +59,13 @@ module Cinch
         }
       end
 
+      listen_to :timeban, method: :timeban_listen_hook
+      def timeban_listen_hook(m, message, target)
+        each_controlchannel {|channel|
+          channel.msg prettify(nick: m.user.nick, source: m.target.name, type: "TIMEBAN", string: message)
+        }
+      end
+
       # listen_to :antispam, method: :listen_hook_antispam
       # def listen_hook_antispam(m, message, target)
       #   Channel(shared[:controlchannel]).msg prettify(nick: m.user.nick, source: m.target.name, type: "ANTISPAM", string: "#{message.first} | kick count: #{message.last.kick_count}; first offence: #{(Time.now - message.last.current.first_offence).round(4)}s; last offence: #{(Time.now - message.last.current.last_offence).round(4)}s; count: #{message.last.current.count}")

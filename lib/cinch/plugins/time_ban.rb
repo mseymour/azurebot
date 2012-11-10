@@ -1,5 +1,3 @@
-Thread.abort_on_exception=true
-
 require_relative '../helpers/check_user'
 require 'active_support/core_ext/time/calculations'
 require 'chronic_duration'
@@ -42,11 +40,32 @@ module Cinch
           'banned.by' => m.user.mask
         }
         
-        synchronize(:timeban_update) do
-          shared[:redis].hmset key, *bandata
-          shared[:redis].sadd set, key
-          @active_timebans[m.channel.name.downcase][user.nick.downcase] = 
-            Timer(bandata['ban.end'] - Time.now, shots: 1) { unban(m.channel, key) }
+        # Only add timeban entries that are less than a year in length
+        if range2h(range)[:year] < 1
+          synchronize(:timeban_update) do
+            shared[:redis].hmset key, *bandata
+            shared[:redis].sadd set, key
+            @active_timebans[m.channel.name.downcase][user.nick.downcase] = 
+              Timer(bandata['ban.end'] - Time.now, shots: 1) { unban(m, key) }
+          end
+          @bot.handlers.dispatch :timeban, m, 
+            "%s just set a timed ban in %s for %s (%s) with reason %s. (Lasts %s.)" % [
+              m.user.nick, 
+              m.channel.name, 
+              bandata['nick'], 
+              bandata['host'], 
+              bandata['reason'], 
+              ChronicDuration.output((bandata['ban.end'] - bandata['ban.start']).round, format: :long)
+            ], m.target
+        else
+          @bot.handlers.dispatch :timeban, m, 
+            "%s just set a permanent (un)timed ban in %s for %s (%s) with reason %s." % [
+              m.user.nick, 
+              m.channel.name, 
+              bandata['nick'], 
+              bandata['host'], 
+              bandata['reason']
+            ], m.target
         end
 
         kickreason = 'Banned for %s by %s (%s)' % [ 
@@ -70,12 +89,7 @@ module Cinch
 
         if shared[:redis].exists(key)
           bandata = shared[:redis].hgetall(key)
-          unban(m.channel, key)
-          
-          m.user.notice("%s (%s) has been unbanned.\nThey were banned by %s for \"%s\", and it lasted %s." % [ 
-            bandata['nick'], bandata['host.mask'], bandata['banned.by'], bandata['ban.reason'],
-            ChronicDuration.output(Time.parse(bandata['ban.end'].to_i - Time.parse(bandata['ban.start']).to_i), format: :long)
-          ])
+          unban(m, key)
         else
           m.user.notice("#{Format(:red,:bold,"Whoops!")} · No timed ban could be found for %s." % nick)
         end
@@ -107,14 +121,14 @@ module Cinch
         return unless m.user == @bot
         key = TIMEBAN_KEY % [@bot.irc.isupport['NETWORK'], m.channel.name.downcase, nil]
         if shared[:redis].exists(key[0..-2])
-          sleep 2
+          sleep 4
           shared[:redis].smembers(key[0..-2]).each {|timeban|
             bandata = shared[:redis].hgetall(timeban)
             if Time.parse(bandata['ban.end']) > Time.now
               @active_timebans[m.channel.name.downcase][bandata['nick'].downcase] = 
-              Timer(Time.parse(bandata['ban.end']) - Time.now, shots: 1) { unban(m.channel, timeban) }
+              Timer(Time.parse(bandata['ban.end']) - Time.now, shots: 1) { unban(m, timeban) }
             else
-              unban(m.channel, timeban)
+              unban(m, timeban)
             end
           }
         end
@@ -142,23 +156,41 @@ module Cinch
       # @param [Time] t (nil) A +Time+ object.
       def range2time(s, t=nil)
         t ||= Time.now
-        range = s.scan(/\d+\w/).each_with_object(Hash.new(0)) {|time, memo| memo[time[-1]] += time[0..-2].to_i }
+        range = range2h(s)
         t.utc.advance Hash[[:years, :months, :weeks, :days, :hours, :minutes, :seconds].zip(range.values_at(*%w{y M w d h m s}))]
       end
 
+      # Splits a timeban range into a hash.
+      def range2h(s)
+        s.scan(/\d+\w/).each_with_object(Hash.new(0)) {|time, memo| memo[time[-1]] += time[0..-2].to_i }
+      end
+
       # Unbans a user from a specified channel and deletes the record.
-      # @param [Channel, String] channel A +Channel+ object or a String that is the channel's name
+      # @param [Message] m A +Message+ object from the calling method.
       # @param [String] key A String that is the key for the stored hash
-      def unban(channel, key)
+      def unban(m, key)
         channel = Channel(channel) if !channel.respond_to?(:name)
-          channel.unban(shared[:redis].hget(key, 'host.mask'))
+          m.channel.unban(shared[:redis].hget(key, 'host.mask'))
+          dispatch_unban_handler(m, shared[:redis].hgetall(key))
           shared[:redis].del key # remove hash from redis
           shared[:redis].srem key[/(.+):\S+$/,1], key # remove key from set
-          if @active_timebans[channel.name.downcase].member?(key[/.+:(\S+)$/,1])
-            @active_timebans[channel.name.downcase][key[/.+:(\S+)$/,1]].stop # stop timer
-            @active_timebans[channel.name.downcase].delete key[/.+:(\S+)$/,1] # delete timer
+          if @active_timebans[m.channel.name.downcase].member?(key[/.+:(\S+)$/,1])
+            @active_timebans[m.channel.name.downcase][key[/.+:(\S+)$/,1]].stop # stop timer
+            @active_timebans[m.channel.name.downcase].delete key[/.+:(\S+)$/,1] # delete timer
           end
       end
+
+      def dispatch_unban_handler(m, bandata)
+        @bot.handlers.dispatch :timeban, m, 
+          "%s (%s) was just unbanned from %s. (banned by %s; reason was "%s"; lasted %s.)" % [
+            bandata['nick'], 
+            bandata['host'],
+            m.channel.name,  
+            bandata['banned.by']
+            bandata['reason'], 
+            ChronicDuration.output((bandata['ban.end'] - bandata['ban.start']).round, format: :long)
+          ], m.target
+        end
 
     end
   end
