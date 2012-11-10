@@ -42,7 +42,7 @@ module Cinch
         }
         
         # Only add timeban entries that are less than a year in length
-        if range2h(range)[:year] < 1
+        if range2h(range)[:years] < 1
           synchronize(:timeban_update) do
             shared[:redis].hmset key, *bandata
             shared[:redis].sadd set, key
