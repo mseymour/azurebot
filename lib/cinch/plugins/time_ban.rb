@@ -183,7 +183,7 @@ module Cinch
 
       def dispatch_unban_handler(m, bandata)
         @bot.handlers.dispatch :timeban, m, 
-          "%s (%s) was just unbanned from %s. (banned by %s; reason was "%s"; lasted %s.)" % [
+          "%s (%s) was just unbanned from %s. (banned by %s; reason was \"%s\"; lasted %s.)" % [
             bandata['nick'], 
             bandata['host'],
             m.channel.name,  
