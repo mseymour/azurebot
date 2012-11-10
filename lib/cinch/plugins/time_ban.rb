@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative '../helpers/check_user'
 require 'active_support/core_ext/time/calculations'
 require 'chronic_duration'
