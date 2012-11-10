@@ -1,6 +1,6 @@
 # coding: utf-8
 require_relative '../helpers/check_user'
-require 'active_support/core_ext/time/calculations'
+require 'active_support/time'
 require 'chronic_duration'
 
 module Cinch
@@ -54,7 +54,7 @@ module Cinch
               m.user.nick, 
               m.channel.name, 
               bandata['nick'], 
-              bandata['host'], 
+              bandata['host.mask'], 
               bandata['reason'], 
               ChronicDuration.output((bandata['ban.end'] - bandata['ban.start']).round, format: :long)
             ], m.target
@@ -64,8 +64,8 @@ module Cinch
               m.user.nick, 
               m.channel.name, 
               bandata['nick'], 
-              bandata['host'], 
-              bandata['reason']
+              bandata['host.mask'], 
+              bandata['ban.reason']
             ], m.target
         end
 
@@ -170,26 +170,25 @@ module Cinch
       # @param [Message] m A +Message+ object from the calling method.
       # @param [String] key A String that is the key for the stored hash
       def unban(m, key)
-        channel = Channel(channel) if !channel.respond_to?(:name)
-          m.channel.unban(shared[:redis].hget(key, 'host.mask'))
-          dispatch_unban_handler(m, shared[:redis].hgetall(key))
-          shared[:redis].del key # remove hash from redis
-          shared[:redis].srem key[/(.+):\S+$/,1], key # remove key from set
-          if @active_timebans[m.channel.name.downcase].member?(key[/.+:(\S+)$/,1])
-            @active_timebans[m.channel.name.downcase][key[/.+:(\S+)$/,1]].stop # stop timer
-            @active_timebans[m.channel.name.downcase].delete key[/.+:(\S+)$/,1] # delete timer
-          end
+        m.channel.unban(shared[:redis].hget(key, 'host.mask'))
+        dispatch_unban_handler(m, shared[:redis].hgetall(key))
+        shared[:redis].del key # remove hash from redis
+        shared[:redis].srem key[/(.+):\S+$/,1], key # remove key from set
+        if @active_timebans[m.channel.name.downcase].member?(key[/.+:(\S+)$/,1])
+          @active_timebans[m.channel.name.downcase][key[/.+:(\S+)$/,1]].stop # stop timer
+          @active_timebans[m.channel.name.downcase].delete key[/.+:(\S+)$/,1] # delete timer
+        end
       end
 
       def dispatch_unban_handler(m, bandata)
         @bot.handlers.dispatch :timeban, m, 
           "%s (%s) was just unbanned from %s. (banned by %s; reason was \"%s\"; lasted %s.)" % [
             bandata['nick'], 
-            bandata['host'],
+            bandata['host.mask'],
             m.channel.name,  
             bandata['banned.by'],
-            bandata['reason'], 
-            ChronicDuration.output((bandata['ban.end'] - bandata['ban.start']).round, format: :long)
+            bandata['ban.reason'], 
+            ChronicDuration.output((Time.parse(bandata['ban.end']) - Time.parse(bandata['ban.start'])).round, format: :long)
           ], m.target
         end
 
