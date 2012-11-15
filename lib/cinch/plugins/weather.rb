@@ -156,7 +156,7 @@ module Cinch
           "UV Index" => (uv_string(co.UV) + " (#{co.UV})" unless co.UV.to_f < 0),
           "Sunrise/set" => ["#{DateTime.parse([as.sunrise.hour,as.sunrise.minute] * ":").strftime("%-l:%M%P")}",
                             "#{DateTime.parse([as.sunset.hour,as.sunset.minute] * ":").strftime("%-l:%M%P")}"] * ", ",
-          "Moon" => MOON_PHASES[((as.ageOfMoon.to_i / 30.00) * 8.00).floor]
+          "Moon" => MOON_PHASES[((as.ageOfMoon.to_i / 30.00) * 8.00).round]
         }
 
         minimal_data = ["Wind","Visibility","UV Index","Sunrise/set"]
