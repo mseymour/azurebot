@@ -4,6 +4,7 @@
 # Sensitive bot files
 
 ## directories
+doc/*
 databases/*
 logs/*
 
