@@ -1,20 +1,22 @@
+# YARD
+.yardoc
+
+# Sensitive bot files
+
+## directories
+databases/*
+logs/*
+
+## files
+cinch.rb
+
 # Logs and databases
 *.log
 *.sql
 *.sqlite
 
 # OS generated files
-.DS_Store?
+.DS_Store
 ehthumbs.db
 Icon?
 Thumbs.db
-
-# YARD
-.yardoc
-
-# Sensitive bot files
-## directories
-databases/*
-logs/*
-## files
-cinch.rb
