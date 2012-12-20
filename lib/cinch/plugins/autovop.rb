@@ -8,11 +8,16 @@ module Cinch
 
       set plugin_name: "AutoVOP",
           help: "Automatically voices/ops nicks upon join.\nUsage: `!auto(op|voice) [on|off]` -- turns autoop/voice on or off. (Chanops only)",
-          react_on: :channel,
-          required_options: [:enabled_channels]
+          react_on: :channel#,
+          #required_options: [:enabled_channels]
 
       # Format for :enabled_channels:
       # {"#channel1" => :voice, "#channel2" => :op}
+
+      def initialize(*args)
+        super
+        config[:enabled_channels] = {} if !config.has_key?(:enabled_channels) # Create hash for enabled_channels if key doesn't exist in config.
+      end
       
       listen_to :connect, method: :on_connect
       def on_connect(m)
