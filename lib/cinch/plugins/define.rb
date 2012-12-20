@@ -1,69 +1,69 @@
-# coding: utf-8
-require 'time'
-require 'chronic_duration'
 require_relative '../helpers/check_user'
+require 'chronic_duration'
 
 module Cinch
   module Plugins
     class Define
       include Cinch::Plugin
-      
-      set plugin_name: 'Definer', 
-          react_on: :channel, 
-          help: "Lets you... define things. Usage:\n* `!define <term> as <dfn>` -- Defines a term. Replaces an old one if it already exists.\n* `!whatis <term>` -- Looks up a term.\n* `!forget <term>` -- Forgets a term. (Chanops only)\n* `!reload definitions` `!save definitions` -- reloads/saves definitions from/to disk. (Chanops only)"
-      
-      def initialize(*args)
-        super
-        @redis = shared[:redis]
-      end
-      
+
+      LAST_EDITED = "(last edited by %s, %s ago)"
+      DOES_NOT_EXIST = "I do not know what \"%s\" is."
+      NOT_OP = "You do not have the proper access! (not +qaoh)"
+
       match /define (.+?) as (.+)/, method: :execute_define
       def execute_define(m, term, dfn)
-        if !@redis.exists("term:"+term.downcase)
-          @redis.hmset "term:#{term.downcase}", "term.case", term, "dfn", dfn, "edited.by", m.user.nick, "edited.time", Time.now
-          m.reply "I now know that #{Format(:bold,term)} is \"#{dfn}\""
+        if shared[:redis].exists("term:"+term.downcase)
+          execute_redefine(m, term, dfn) # pass to redefine
         else
-          m.reply "That term already exists!"
+          # create new dfn
+          entry = {
+            "term.case" => term, 
+            "dfn" => dfn, 
+            "edited.by" => m.user.nick, 
+            "edited.time" => Time.now.to_s
+          }
+          shared[:redis].hmset "term:#{term.downcase}", *entry
+          m.reply "I now know that #{Format(:bold,entry['term.case'])} is \"#{entry['dfn']}\"!"
         end
       end
-    
+
       match /redefine (.+?) as (.+)/, method: :execute_redefine
       def execute_redefine(m, term, dfn)
-        return m.reply("You do not have the proper access! (not +qaoh)", true) unless check_user(m.channel, m.user)
-        if @redis.exists("term:"+term.downcase)
-          old_dfn = @redis.hgetall("term:"+term.downcase)
-          edited = "(last edited by #{old_dfn["edited.by"]}, #{ChronicDuration.output(Time.now.utc.to_i - Time.parse(dfn["edited.time"]).to_i)} ago)"
-          @redis.hmset "term:#{term.downcase}", "dfn", dfn, "edited.by", m.user.nick, "edited.time", Time.now.utc
-          m.reply "The definition of #{Format(:bold,old_dfn['term.case'])} has been changed from \"#{old_dfn["dfn"]}\" to \"#{dfn}\". #{edited}"
-        else
-          m.reply "That term does not exist!"
-        end
-      #rescue
-        #m.reply "#{Format(:red,:bold,"Uhoh!")} · #{$!}"
+        return m.reply(NOT_OP, true) unless check_user(m.channel, m.user)
+        m.reply term_exists?(term) {|key, entry|
+          edited_entry = entry.merge 'dfn' => dfn, 'edited.by' => m.user.nick, 'edited.time' => Time.now.to_s
+          shared[:redis].hmset key, *edited_entry
+          edited_time = ChronicDuration.output(Time.now.to_i - Time.parse(entry["edited.time"]).to_i)
+          "I now know that #{Format(:bold,entry['term.case'])} is \"#{edited_entry['dfn']}\", rather than \"#{entry['dfn']}\"! #{LAST_EDITED}" % [entry['edited.by'], edited_time]
+        }
       end
-    
+
       match /forget (.+)/, method: :execute_forget
       def execute_forget(m, term)
-        return m.reply("You do not have the proper access! (not +qaoh)", true) unless check_user(m.channel, m.user)
-        if @redis.exists("term:"+term.downcase)
-          dfn = @redis.hgetall("term:"+term.downcase)
-          edited = "(last edited by #{dfn["edited.by"]}, #{ChronicDuration.output(Time.now.utc.to_i - Time.parse(dfn["edited.time"]).to_i)} ago)"
-          @redis.del("term:"+term.downcase)
-          m.reply "I have forgotten #{Format(:bold,term)}. #{edited}"
-        else
-          m.reply "Sorry, but I do not know what #{Format(:bold,term)} is."
-        end
+        return m.reply(NOT_OP, true) unless check_user(m.channel, m.user)
+        m.reply term_exists?(term) {|key, entry|
+          shared[:redis].del key
+          edited_time = ChronicDuration.output(Time.now.to_i - Time.parse(entry["edited.time"]).to_i)
+          "I have forgotten #{Format(:bold,entry['term.case'])} which was \"#{entry['dfn']}\" #{LAST_EDITED}" % [entry['edited.by'], edited_time]
+        }
       end
-    
-      match /^\?d (.+)/, method: :execute_whatis, use_prefix: false, group: :whatis
-      match /whatis (.+)/, method: :execute_whatis, group: :whatis
-      def execute_whatis(m, term)
-        if @redis.exists("term:"+term.downcase)
-          dfn = @redis.hgetall("term:"+term.downcase)
-          term = dfn["term.case"] ? dfn["term.case"] : term
-          m.reply "#{Format(:bold,term)} is: #{dfn["dfn"]} (last edited by #{dfn["edited.by"]}, #{ChronicDuration.output(Time.now.utc.to_i - Time.parse(dfn["edited.time"]).to_i)} ago)"
+
+      match /whatis (.+)/, method: :execute_lookup, group: :lookup
+      match /d (.+)/, method: :execute_lookup, prefix: /^\?/, group: :lookup
+      def execute_lookup(m, term)
+        m.reply term_exists?(term) {|key, entry|
+          edited_time = ChronicDuration.output(Time.now.to_i - Time.parse(entry["edited.time"]).to_i)
+          "#{Format(:bold,entry['term.case'])} is \"#{entry['dfn']}\" #{LAST_EDITED}" % [entry['edited.by'], edited_time]
+        }
+      end
+
+      private
+
+      def term_exists?(term)
+        if shared[:redis].exists("term:"+term.downcase)
+          yield "term:"+term.downcase, shared[:redis].hgetall("term:"+term.downcase)
         else
-          m.reply "Sorry, but I do not know what #{Format(:bold,term)} is."
+          DOES_NOT_EXIST % term
         end
       end
 
