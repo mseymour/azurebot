@@ -1,11 +1,12 @@
 require_relative '../helpers/check_user'
+require 'chronic_duration'
 
 module Cinch
   module Plugins
     class Define
       include Cinch::Plugin
 
-      LAST_EDITED = "(last edited by %s at %s)"
+      LAST_EDITED = "(last edited by %s, %s ago)"
       DOES_NOT_EXIST = "I do not know what \"%s\" is."
       NOT_OP = "You do not have the proper access! (not +qaoh)"
 
@@ -32,7 +33,8 @@ module Cinch
         m.reply term_exists?(term) {|key, entry|
           edited_entry = entry.merge 'dfn' => dfn, 'edited.by' => m.user.nick, 'edited.time' => Time.now.to_s
           shared[:redis].hmset key, *edited_entry
-          "I now know that #{Format(:bold,entry['term.case'])} is \"#{edited_entry['dfn']}\", rather than \"#{entry['dfn']}\"! #{LAST_EDITED}" % [entry['edited.by'], entry['edited.time']]
+          edited_time = ChronicDuration.output(Time.now.to_i - Time.parse(entry["edited.time"]).to_i)
+          "I now know that #{Format(:bold,entry['term.case'])} is \"#{edited_entry['dfn']}\", rather than \"#{entry['dfn']}\"! #{LAST_EDITED}" % [entry['edited.by'], edited_time]
         }
       end
 
@@ -41,7 +43,8 @@ module Cinch
         return m.reply(NOT_OP, true) unless check_user(m.channel, m.user)
         m.reply term_exists?(term) {|key, entry|
           shared[:redis].del key
-          "I have forgotten #{Fomat(:bold,entry['term.case'])} which was \"#{entry['dfn']}\" #{LAST_EDITED}" % [entry['edited.by'], entry['edited.time']]
+          edited_time = ChronicDuration.output(Time.now.to_i - Time.parse(entry["edited.time"]).to_i)
+          "I have forgotten #{Format(:bold,entry['term.case'])} which was \"#{entry['dfn']}\" #{LAST_EDITED}" % [entry['edited.by'], edited_time]
         }
       end
 
@@ -49,7 +52,8 @@ module Cinch
       match /d (.+)/, method: :execute_lookup, prefix: /^\?/, group: :lookup
       def execute_lookup(m, term)
         m.reply term_exists?(term) {|key, entry|
-          "#{Format(:bold,entry['term.case'])} is \"#{entry['dfn']}\" #{LAST_EDITED}" % [entry['edited.by'], entry['edited.time']]
+          edited_time = ChronicDuration.output(Time.now.to_i - Time.parse(entry["edited.time"]).to_i)
+          "#{Format(:bold,entry['term.case'])} is \"#{entry['dfn']}\" #{LAST_EDITED}" % [entry['edited.by'], edited_time]
         }
       end
 
