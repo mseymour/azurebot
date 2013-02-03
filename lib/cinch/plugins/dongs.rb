@@ -4,8 +4,7 @@ module Cinch
   module Plugins
     class Dongs
       include Cinch::Plugin
-      plugin "dongs"
-      help "dongs -- My master tells you to go eat a bowl of dick."
+      set plugin_name: "dongs", help: "dongs -- My master tells you to go eat a bowl of dick."
 
       def dong
         dicklength = rand(20)+4
