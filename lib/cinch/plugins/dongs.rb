@@ -27,7 +27,7 @@ module Cinch
         m.reply dong
       end
 
-      match /dongs (\d+)$/, method: :execute_multiple
+      match /dongs (-?\d+)$/, method: :execute_multiple
       def execute_multiple(m, d)
         if d.to_i == 37
           m.reply "37"
