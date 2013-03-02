@@ -9,7 +9,7 @@ module Cinch
 
       match /porno(?> )?(.+)?/, method: :execute_porno
       def execute_porno(m, search)
-        pornos = YAML.load(open(config[:porno_list_path]))
+        pornos = YAML.load_file(config[:porno_list_path])
         if search
           results = pornos.find_all {|title| title =~ /#{Regexp.escape(search)}/i }
           m.reply (results.empty? ? pornos : results).sample, true
