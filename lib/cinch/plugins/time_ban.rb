@@ -76,6 +76,7 @@ module Cinch
         ]
 
         m.channel.ban(bandata['host.mask'])
+        m.reply "Setted ban on %s" % bandata['host.mask']
         m.channel.kick(user, kickreason)
 
         # @todo kick all other nicks with the same host

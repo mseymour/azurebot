@@ -8,6 +8,8 @@ module Cinch
     class Vimeo
       include Cinch::Plugin
 
+      # From Google's Closure Library, with slight modifications:
+      # http://closure-library.googlecode.com/svn/docs/closure_goog_ui_media_VIMEO.js.source.html
       VIMEO_VIDEO_REGEXP = /https?:\/\/(?:[a-zA-Z]{2,3}\.)?(?:vimeo\.com\/)(\d+)/i
       VIMEO_API_VIDEO_URL = "http://vimeo.com/api/v2/video/%s.json"
 
