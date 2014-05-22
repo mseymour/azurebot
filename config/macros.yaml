@@ -1,3 +1,27 @@
+# Guide to writing macros:
+# - A macro can be a string, hash, or array
+# - They can be embedded within each other (as lines, etc.)
+# To have options for a macro (either globally or within embedded macros:)
+# => macroname:
+# =>   type: (string) ['random'] (optional)
+# =>   sent_as: (string) ['reply','action'] (optional)
+# =>   sleep: (numeric) a number that represents how many seconds the bot will wait for each line
+# =>   lines: (array, string, hash) an object that represents the individual lines.
+
+# Guide to writing macros v3 templates:
+# transform/(default text)[template]
+# transform/ (optional):
+#   cap (all uppercase)
+#   lc (all lowercase)
+# (default text) (optional):
+#   Can be anything that you want. May want to watch usage of brackets &c.
+# [template] (required):
+#   Can be one of these tags:
+#   * in (input/argument, will default to the default text if available, otherwise it will choose a random nick.)
+#   * channel (the current channel that the command is run in.)
+#   * bot (The bot's nick)
+#   * self (the originating user's nick)
+
 qb: 
   type: random
   lines:
