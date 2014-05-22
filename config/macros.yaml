@@ -1,17 +1,55 @@
-qb: "\x0301,00／人\x0304,00◕\x0301,00 ‿‿ \x0304,00◕\x0301,00人＼\x03 Quick [in], make a contract with me and become a mahou shoujo!"
-ruffty: <ruffty> thats hot
+qb: 
+  type: random
+  lines:
+  - "\x0301,00／人\x0304,00◕\x0301,00 ‿‿ \x0304,00◕\x0301,00人＼\x03 Quick [in], make a contract with me and become a mahou shoujo!"
+  - "\x0301,00／人\x0304,00◕\x0301,00 ‿‿ \x0304,00◕\x0301,00人＼\x03 Make a contract with me and become a mahou shoujo, [in]!"
+  - "\x0301,00／人\x0304,00◕\x0301,00 ‿‿ \x0304,00◕\x0301,00人＼\x03 Quick [in], make a contract with me and become a magical girl!"
+# --- INSERTED 2:54AM 2014-05-22
+moo: moooooooooooooooooooo
+wryyy: wryyyyyyyyyyyyyyyyyyyy
+mon: "[in]mon is best mon."
+spam:
+  type: random
+  lines:
+  - https://www.youtube.com/watch?v=xU4ofXAyXxM
+  - Well, there's egg and bacon; egg sausage and bacon; egg and spam; egg bacon and spam; egg bacon sausage and spam; spam bacon sausage and spam; spam egg spam spam bacon and spam; spam sausage spam spam bacon spam tomato and spam;
+  - Spam spam spam spam...
+  - ...spam spam spam egg and spam; spam spam spam spam spam spam baked beans spam spam spam...
+  - Spam! Lovely spam! Lovely spam!
+  - ...or Lobster Thermidor a Crevette with a mornay sauce served in a Provencale manner with shallots and aubergines garnished with truffle pate, brandy and with a fried egg on top and spam.
+  - Have you got anything without spam?
+  - Well, there's spam egg sausage and spam, that's not got much spam in it.
+  - I don't want ANY spam!
+  - Why can't she have egg bacon spam and sausage?
+  - THAT'S got spam in it!
+  - Hasn't got as much spam in it as spam egg sausage and spam, has it?
+  - Could you do the egg bacon spam and sausage without the spam then?
+  - What do you mean 'Urgghh'? I don't like spam!
+  - Lovely spam! Wonderful spam!
+  - Shut up! Bloody Vikings! You can't have egg bacon spam and sausage without the spam.
+  - I don't like spam!
+  - Sshh, dear, don't cause a fuss. I'll have your spam. I love it. I'm having spam spam spam spam spam spam spam beaked beans spam spam spam and spam!
+  - Spam spam spam spam. Lovely spam! Wonderful spam!
+  - Shut up!! Baked beans are off.
+  - Well could I have her spam instead of the baked beans then?
+  - You mean spam spam spam spam spam spam...
+  - Spam spam spam spam. Lovely spam! Wonderful spam! Spam spa-a-a-a-a-am spam spa-a-a-a-a-am spam. Lovely spam! Lovely spam! Lovely spam! Lovely spam! Lovely spam! Spam spam spam spam!
 # --- INSERTED 12:09AM 2012-02-18
 pandemic: http://www.crazymonkeygames.com/Pandemic-2.html
 headbutt: IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA IM GONNA HEADBUTT YA
 emergency: http://www.emergencyyodel.com/
 carl:
   - CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARL
-  - seconds: 2
+  - seconds: 4
     lines: 'THAT KILLS cap/(people)[in]'
 dnf: Duke Nukem Forever came out. Your argument is invalid.
 nigger: NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA
 dinner: http://www.whatthefuckshouldimakefordinner.com/
-dvno: DVNO, four capital letters printed in gold...
+dvno:
+  - "\x0308DVNO\x03, four capital letters printed in gold"
+  - "'Cause details make the girls sweat even more"
+  - While they're shaking their belts
+  - No need to ask my name to figure out how cool I am
 dnvo: http://instantboss.org/
 souljaboy: Soulja boy up in this hoe, Watch me crank it, Watch me roll, Watch me crank dat soulja boy, Then superman that hoe!!
 fancyboy: Soldier boy is in the presence of a prostitute. Observe one cranking it as well as rolling it. Observe one cranking the soldier boy, and then "superman" the aforementioned prostitute.
@@ -27,18 +65,19 @@ dickpunch:
 despair: "I AM IN DESPAIR! cap/[in] HAS LEFT ME IN DESPAIR!!"
 # --- INSERTED 2013-02-03, *-04
 moustache: where yo curly mustache at
-wahaha: http://imgur.com/inoXW9V
+wahaha: http://i.imgur.com/inoXW9V.jpg
 confetti: "\u00034'\u00038,\u00037`\u00033'\u000312.\u0003\n\u000313.\u00039,\u000311'\u00036·\u000310`\u000F confetti woo party yeah -copyright drfoppy"
 # ---
-sip: http://imgur.com/40PfuCH
+sip: http://i.imgur.com/40PfuCH.jpg
 alart:
   type: random
   lines:
+  - ⚠︎ cap/(ALART)[in] ⚠︎
   - /!\ cap/(ALART)[in] /!\
   - /// cap/(ALART)[in] ///
   - /// cap/(ALART)[in] \\\
-bod:
-  - "[in] should go eat a bag full of DICKS!!!!"
+bod: "[in] should go eat a bag full of DICKS!!!!"
+ruffty: <ruffty> thats hot
 alice:
   - cap/(alice)[in]
   - WHO THE !@*$ IS cap/(alice)[in]
