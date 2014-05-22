@@ -32,6 +32,17 @@ qb:
 moo: moooooooooooooooooooo
 wryyy: WRYYYYYYYYYYYYYYYYYYYY!!
 mon: "[in]mon is best mon."
+panzer:
+  type: random
+  lines:
+  - "PANZER VOR!"
+  - "Panzer vor means panzer vor."
+  - "Life is life. Panzer, panzer."
+  - "(Life)[in] is (life)[in]. Panzer, panzer."
+  - "[in] is [in]. Panzer, panzer."
+  - "[channel] is [channel]. Panzer, panzer."
+  - "[bot] is [bot]. Panzer, panzer."
+  - "[self] is [self]. Panzer, panzer."
 spam:
   type: random
   lines:
