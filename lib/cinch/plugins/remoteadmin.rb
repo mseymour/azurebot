@@ -10,60 +10,72 @@ module Cinch
 
       listen_to :private, method: :listen_private
       def listen_private(m, message = nil, target = nil)
-        return if m.ctcp? || m.events.include?(:notice)
-        each_online_admin {|admin|
-          admin.notice prettify(nick: m.user.nick, source: m.target.name, type: m.command, string: m.message)
-        }
+        synchronize(:remoteadmn) do
+          return if m.ctcp? || m.events.include?(:notice)
+          each_online_admin {|admin|
+            admin.notice prettify(nick: m.user.nick, source: m.target.name, type: m.command, string: m.message)
+          }
+        end
       end
 
       listen_to :notice, method: :listen_notice
       def listen_notice(m, message = nil, target = nil)
-        return if m.ctcp? || !m.user
-        if m.user.nick =~ /^.+serv$|^global$/i
-          each_online_admin {|admin|
-            admin.notice prettify(nick: m.user.nick, source: m.target.name, type: m.command, string: m.message)
-          }
-        else
-          each_controlchannel {|channel|
-            channel.msg prettify(nick: m.user.nick, source: m.target.name, type: m.command, string: m.message)
-          }
+        synchronize(:remoteadmn) do
+          return if m.ctcp? || !m.user
+          if m.user.nick =~ /^.+serv$|^global$/i
+            each_online_admin {|admin|
+              admin.notice prettify(nick: m.user.nick, source: m.target.name, type: m.command, string: m.message)
+            }
+          else
+            each_controlchannel {|channel|
+              channel.msg prettify(nick: m.user.nick, source: m.target.name, type: m.command, string: m.message)
+            }
+          end
         end
       end
 
       listen_to :ctcp, method: :listen_ctcp
       def listen_ctcp(m, message = nil, target = nil)
-        return if !m.ctcp? || m.action?
-        return if m.ctcp_command.eql?('PING')
-        if m.user.nick =~ /^.+serv$/i
-          each_online_admin {|admin|
-            admin.notice prettify(nick: m.user.nick, source: m.target.name, type: "CTCP", string: m.ctcp_message)
-          }
-        else
-          each_controlchannel {|channel|
-            channel.msg prettify(nick: m.user.nick, source: m.target.name, type: "CTCP", string: m.ctcp_message)
-          }
+        synchronize(:remoteadmn) do
+          return if !m.ctcp? || m.action?
+          return if m.ctcp_command.eql?('PING')
+          if m.user.nick =~ /^.+serv$/i
+            each_online_admin {|admin|
+              admin.notice prettify(nick: m.user.nick, source: m.target.name, type: "CTCP", string: m.ctcp_message)
+            }
+          else
+            each_controlchannel {|channel|
+              channel.msg prettify(nick: m.user.nick, source: m.target.name, type: "CTCP", string: m.ctcp_message)
+            }
+          end
         end
       end
 
       listen_to :admin, method: :listen_hook
       def listen_hook(m, message, target)
-        each_controlchannel {|channel|
-          channel.msg prettify(nick: m.user.nick, source: m.target.name, type: "ADMIN", string: message)
-        }
+        synchronize(:remoteadmn) do
+          each_controlchannel {|channel|
+            channel.msg prettify(nick: m.user.nick, source: m.target.name, type: "ADMIN", string: message)
+          }
+        end
       end
 
       listen_to :private_admin, method: :private_listen_hook
       def private_listen_hook(m, message, target)
-        each_online_admin {|admin|
-          admin.notice prettify(nick: m.user.nick, source: m.target.name, type: "P.ADMIN", string: message)
-        }
+        synchronize(:remoteadmn) do
+          each_online_admin {|admin|
+            admin.notice prettify(nick: m.user.nick, source: m.target.name, type: "P.ADMIN", string: message)
+          }
+        end
       end
 
       listen_to :timeban, method: :timeban_listen_hook
       def timeban_listen_hook(m, message, target)
-        each_controlchannel {|channel|
-          channel.msg prettify(nick: m.user.nick, source: m.target.name, type: "TIMEBAN", string: message)
-        }
+        synchronize(:remoteadmn) do
+          each_controlchannel {|channel|
+            channel.msg prettify(nick: m.user.nick, source: m.target.name, type: "TIMEBAN", string: message)
+          }
+        end
       end
 
       # listen_to :antispam, method: :listen_hook_antispam
