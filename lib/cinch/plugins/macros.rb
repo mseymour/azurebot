@@ -42,6 +42,7 @@ module Cinch
         # =>   sent_as: (string) ['reply','action'] (optional)
         # =>   sleep: (numeric) a number that represents how many seconds the bot will wait for each line
         # =>   lines: (array, string, hash) an object that represents the individual lines.
+        # NOTE: Attributes/options (type, sent_as, etc.) WILL pass through unless specifically stated.
 
         # Guide to writing macros v3 templates:
         # transform/(default text)[template]

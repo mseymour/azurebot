@@ -7,6 +7,7 @@
 # =>   sent_as: (string) ['reply','action'] (optional)
 # =>   sleep: (numeric) a number that represents how many seconds the bot will wait for each line
 # =>   lines: (array, string, hash) an object that represents the individual lines.
+# NOTE: Attributes/options (type, sent_as, etc.) WILL pass through unless specifically stated.
 
 # Guide to writing macros v3 templates:
 # transform/(default text)[template]
@@ -126,12 +127,14 @@ drpepper:
   lines: 
     - dispenses a Dr Pepper for [in]
     - gives [in] a Dr Pepper
-    - lines:
+    - type: notrandom
+      lines:
         - gives [in] a Mr Peter
         - sent_as: reply
           sleep: 24
           lines: ... Au!
-    - lines:
+    - type: also notrandom
+      lines:
         - gives [in] a Dk Pepper
         - sent_as: reply
           sleep: 24
