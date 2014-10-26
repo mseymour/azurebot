@@ -122,6 +122,7 @@ alice:
 hi5: "[in] (from [self]): http://www.ihighfive.com/"
 drpepper:
   sent_as: action
+  type: random
   lines: 
     - dispenses a Dr Pepper for [in]
     - gives [in] a Dr Pepper
