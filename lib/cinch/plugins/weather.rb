@@ -20,7 +20,7 @@ module Cinch
       }
 
       # Moon phases based on the age of the moon.
-      MOON_PHASES = ['New Moon 🌑', 'Waxing Crescent 🌒', 'First Quarter 🌓', 'Waxing Gibbious 🌔', 'Full Moon 🌕', 'Waning Gibbious 🌖', 'Last Quarter 🌗', 'Waning Crescent 🌘']
+      MOON_PHASES = ['New Moon 🌑', 'Waxing Crescent 🌒', 'First Quarter 🌓', 'Waxing Gibbous 🌔', 'Full Moon 🌕', 'Waning Gibbous 🌖', 'Last Quarter 🌗', 'Waning Crescent 🌘']
 
       # Fancy unicode icons!
       UNICODE_ICONS = {
