@@ -38,7 +38,7 @@ module Cinch
         maximum.times {|round|
           rounds << list.sample
         }
-        best = rounds.group_by! { |n| n }.values.max_by(&:size)
+        best = rounds.group_by { |n| n }.values.max_by(&:size)
         best_count, best_value = best.count, best.first
 
         m.reply "#{best_value} wins #{best_count} out of #{maximum}!"
