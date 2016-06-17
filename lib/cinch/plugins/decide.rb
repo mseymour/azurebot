@@ -12,18 +12,37 @@ module Cinch
       include Cinch::Plugin
       set(
         plugin_name: "Decider",
-        help: "Helps you decide on things.\nUsage: `!decide [a list of items separated by \", \", \", or\", or \" or \"]`; Usage: `!coin`; Usage: `!rand [x] [y]`")
+        help: "Helps you decide on things.\nUsage: `!decide [a comma-separated list that can also include \"or\" and \", or\"]`; Usage: !best [max] [a comma-separated list that can also include \"or\" and \", or\"]; Usage: `!coin`; Usage: `!rand [x] [y]`")
 
       def decide!(list)
+        decide_list_to_array(list).sample
+      end
+
+      def decide_list_to_array(list)
         list = list.gsub(/\x03([0-9]{2}(,[0-9]{2})?)?/,"") #strips IRC colors
-        options = list.gsub(/ or /i, ",").split(",").map(&:strip).reject(&:empty?)
-        options[Random.new.rand(1..options.length)-1]
+        return list.gsub(/ or /i, ",").split(",").map(&:strip).reject(&:empty?)
       end
 
       match /decide (.+)/, method: :execute_decision
       match /choose (.+)/, method: :execute_decision
       def execute_decision(m, list)
         m.safe_reply("I choose \"#{decide! list}\"!",true);
+      end
+
+      match /best (\d+) (.+)/, method: :execute_best_out_of_x
+      def execute_best_out_of_x(m, maximum, list)
+        minimum = minumum.to_i
+        maximum = maximum.to_i
+        return m.reply("#{maximum} must not be greater than 100") if maximum > 100
+        list = decide_list_to_array list
+        rounds = []
+        maximum.times {|round|
+          rounds << list.sample
+        }
+        best = rounds.group_by! { |n| n }.values.max_by(&:size)
+        best_count, best_value = best.count, best.first
+
+        m.reply "#{best_value} wins #{best_count} out of #{maximum}!"
       end
 
       match "coin", method: :execute_coinflip
