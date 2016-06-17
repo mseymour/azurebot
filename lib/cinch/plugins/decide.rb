@@ -31,7 +31,6 @@ module Cinch
 
       match /best (\d+) (.+)/, method: :execute_best_out_of_x
       def execute_best_out_of_x(m, maximum, list)
-        minimum = minumum.to_i
         maximum = maximum.to_i
         return m.reply("#{maximum} must not be greater than 100") if maximum > 100
         list = decide_list_to_array list
