@@ -14,7 +14,7 @@ module Cinch
       def execute(m)
         doc = Nokogiri::HTML(open('http://xkeeper.net/grandma.php'))
         line = doc.at("div").children.select {|n| n.text? and n.content }[1].text
-        m.reply Format(:bold,"Grandma Alton:") + " #{line}"
+        m.reply Format(:bold,"Grandma Alton:") + " \"#{line}\""
       end
 
     end

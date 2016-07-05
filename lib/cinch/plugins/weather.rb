@@ -20,30 +20,39 @@ module Cinch
       }
 
       # Moon phases based on the age of the moon.
-      MOON_PHASES = ['New Moon 🌑', 'Waxing Crescent 🌒', 'First Quarter 🌓', 'Waxing Gibbous 🌔', 'Full Moon 🌕', 'Waning Gibbous 🌖', 'Last Quarter 🌗', 'Waning Crescent 🌘']
+      MOON_PHASES = [
+        'New Moon 🌚',
+        'Waxing Crescent 🌒',
+        'First Quarter 🌓',
+        'Waxing Gibbous 🌔',
+        'Full Moon 🌝',
+        'Waning Gibbous 🌖',
+        'Third Quarter 🌗',
+        'Waning Crescent 🌘'
+      ]
 
       # Fancy unicode icons!
       UNICODE_ICONS = {
-        chanceflurries:'❄',
-        chancerain:'☂',
-        chancesleet:'☂❄',
-        chancesnow:'☃',
-        chancetstorms:'☈',
-        clear:'☀',
-        cloudy:'☁',
-        flurries:'❄',
-        fog:'☁',
-        hazy:'☁',
-        mostlycloudy:'☁',
-        mostlysunny:'☀',
-        partlycloudy:'☁',
-        partlysunny:'☀',
-        sleet:'☂❄',
-        rain:'☂',
-        snow:'☃',
-        sunny:'☀',
-        tstorms:'☈',
-        unknown:''
+        chanceflurries:'🌨❓',
+        chancerain:'🌦❓',
+        chancesleet:'🌨🌦❓',
+        chancesnow:'☃️❓',
+        chancetstorms:'⛈❓',
+        clear:'🌙',
+        cloudy:'☁️',
+        flurries:'🌨',
+        fog:'🌫',
+        hazy:'🌫',
+        mostlycloudy:'🌥',
+        mostlysunny:'🌤',
+        partlycloudy:'⛅',
+        partlysunny:'⛅',
+        sleet:'🌨🌦',
+        rain:'☔️',
+        snow:'☃️',
+        sunny:'🌞',
+        tstorms:'⛈',
+        unknown:'☄️'
       }
 
       def initialize(*args)

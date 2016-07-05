@@ -1,5 +1,7 @@
 require_relative '../helpers/check_user'
 require 'chronic_duration'
+require 'json'
+require 'tempfile'
 
 module Cinch
   module Plugins
@@ -55,6 +57,24 @@ module Cinch
           edited_time = ChronicDuration.output(Time.now.to_i - Time.parse(entry["edited.time"]).to_i)
           "#{Format(:bold,entry['term.case'])} is \"#{entry['dfn']}\" #{LAST_EDITED}" % [entry['edited.by'], edited_time]
         }
+      end
+
+      match 'getdefs', method: :execute_getdefs
+      def execute_getdefs(m)
+        return unless is_admin?(m.user)
+        keys = shared[:redis].keys('term:*');
+        defs = keys.map {|key|
+          shared[:redis].hgetall(key)
+        }
+
+        file = Tempfile.new "#{Time.now.to_s}.json"
+        begin
+          file.write defs.to_json
+          file.close
+          m.user.dcc_send(file)
+        ensure
+          file.unlink
+        end
       end
 
       private
