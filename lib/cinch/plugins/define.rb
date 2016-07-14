@@ -1,3 +1,4 @@
+require_relative "../admin"
 require_relative '../helpers/check_user'
 require 'chronic_duration'
 require 'json'
@@ -7,6 +8,7 @@ module Cinch
   module Plugins
     class Define
       include Cinch::Plugin
+      include Cinch::Admin
 
       LAST_EDITED = "(last edited by %s, %s ago)"
       DOES_NOT_EXIST = "I do not know what \"%s\" is."
@@ -67,11 +69,11 @@ module Cinch
           shared[:redis].hgetall(key)
         }
 
-        file = Tempfile.new "#{Time.now.to_s}.json"
+        file = Tempfile.new ["#{@bot.nick}_definitions_#{Time.now.to_i}", ".json"]
         begin
           file.write defs.to_json
           file.close
-          m.user.dcc_send(file)
+          m.user.dcc_send(file.open(), "#{@bot.nick}_definitions_#{Time.now.to_i}.json")
         ensure
           file.unlink
         end
