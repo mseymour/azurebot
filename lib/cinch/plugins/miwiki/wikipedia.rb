@@ -60,7 +60,7 @@ class Wikipedia
   end
 
   def get_search(title, query={})
-    query = { action: "opensearch", format: "json", search: title, limit: "10", namespace: "0", suggest: "", format: "json" }.merge(query)
+    query = { action: "opensearch", format: "json", search: title, limit: "10", namespace: "0", suggest: "" }.merge(query)
     response = self.class.get('/api.php', query: query)
     raise StandardError, 'No search results found.' if response[1].empty?
     return response
