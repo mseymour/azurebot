@@ -22,7 +22,7 @@ module Cinch
         return unless m.message.match(YOUTUBE_VIDEO_REGEXP)
         video_ids = m.message.scan(YOUTUBE_VIDEO_REGEXP).flatten.reject(&:'nil?').uniq
         response = HTTParty.get(YOUTUBE_API_VIDEO_URL % [video_ids.join(','), config[:api_key]], headers: {'User-Agent' => "HTTParty/#{HTTParty::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}"})
-        raise StandardError, '%s - %s (%d)' % [response['error']['message'], v, response['error']['code']] if response['error']
+        raise StandardError, '%s - %s (%d)' % [response['error']['message'], video_ids.join(', '), response['error']['code']] if response['error']
         videos = response['items']
 
         videos.each {|video|
