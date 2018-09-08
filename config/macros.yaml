@@ -80,7 +80,7 @@ carl:
   - seconds: 4
     lines: 'THAT KILLS cap/(people)[in]'
 dnf: Duke Nukem Forever came out. Your argument is invalid.
-nigger: NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA
+nigga: NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA NIGGA
 dinner: http://www.whatthefuckshouldimakefordinner.com/
 dvno:
   - "\x0308DVNO\x03, four capital letters printed in gold"
@@ -237,27 +237,6 @@ dcoil:
       - ! '25: "According to the Coil data, in the beginning, the Null Carrier was a radar
         device that collected pieces of souls."'
       - '26: "According to urban legends, after they die, cyberpets go live somewhere else."'
-fact:
-  type: random
-  lines:
-    - Go to the kitchen, [in].
-    - Go back to the kitchen, [in].
-    - Stop walking into walls, [in].
-    - Make me a sandwich, [in].
-    - ! '[in]: Home Economics is that way.'
-    - ! '[in]: Go and lose ten pounds--no, wait, make it 50.'
-    - Be quiet [in], the adults are talking.
-    - How cute [in], you think your opinion matters.
-    - Looks like [in] is our new village bicycle.
-    - ! '[in], please remove your muffin top from this room.'
-    - ! '[in], cover up your god damn face. It''s revolting.'
-    - Great, [in] is here. Out of the way everyone, thunder thighs is in the room.
-    - Hey [in], why are you online. There is no laptop in the kitchen.
-    - ! '[in] warms the cockles of my heart, MUA HA HA HA HA!'
-    - Hey, hey, [in], I have a better idea. EAT A FUCKING DICK YOU SMELLY CUNT!
-    - ! '[in], if I have sex with you without permission, is it rape or shoplifting?'
-    - Why didn't you get those breast implants, [in]?
-    - ! '[in], I love you.'
 haha: HA! HA! I'm using the (INTERNET)[in]!!!1
 judgement: JAJUMENTO DESU NO!
 baka:
