@@ -26,7 +26,7 @@ module Cinch
         videos = response['items']
 
         videos.each {|video|
-          m.reply "#{Format(:bold,'YouTube »')} #{Format(:purple,'%<title>s')} (%<length>s) · by %<uploader>s on %<uploaded>s · #{Format(:green,'☝%<likes>s')} #{Format(:red,'☟%<dislikes>s')} · %<views>s views" % {
+          m.reply "#{Format(:bold,'YouTube »')} #{Format(:purple,'%<title>s')} (%<length>s) · by %<uploader>s on %<uploaded>s · #{Format(:green,'⬆︎%<likes>s')} #{Format(:red,'⬇︎%<dislikes>s')} · %<views>s views" % {
             title: video['snippet']['title'],
             uploader: video['snippet']['channelTitle'],
             uploaded: Time.parse(video['snippet']['publishedAt']).strftime('%F'),

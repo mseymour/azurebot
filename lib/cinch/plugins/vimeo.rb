@@ -21,7 +21,7 @@ module Cinch
           response = HTTParty.get(VIMEO_API_VIDEO_URL % v, headers: {'User-Agent' => "HTTParty/#{HTTParty::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}"})
           #raise StandardError, '%s - %s (%d)' % [response['error']['message'], v, response['error']['code']] if response['error']
           video = response[0]
-          m.reply "#{Format(:bold,'Vimeo »')} #{Format(:purple,'%<title>s')} (%<length>s) · by %<uploader>s on %<uploaded>s · #{Format(:green,'☝%<likes>s')} · %<views>s views" % {
+          m.reply "#{Format(:bold,'Vimeo »')} #{Format(:purple,'%<title>s')} (%<length>s) · by %<uploader>s on %<uploaded>s · #{Format(:green,'⬆︎%<likes>s')} · %<views>s views" % {
             title: video['title'],
             uploader: video['user_name'],
             uploaded: Time.parse(video['upload_date']).strftime('%F'),
